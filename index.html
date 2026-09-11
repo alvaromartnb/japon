@@ -246,7 +246,7 @@ dialog.sheet::backdrop{background:rgba(32,36,42,.45)}
   /* en móvil: lo más útil primero */
   .grid{display:flex;flex-direction:column;gap:0}
   .grid > div,.grid > aside{display:contents}
-  #xp-cat{order:1}#xp-pre{order:2}#xp-day{order:3}#xp-list{order:4}
+  #xp-list{order:1}#xp-cat{order:2}#xp-day{order:3}#xp-plan{order:4}#xp-pre{order:5}
   #sec-plan{order:1}#routeCard{order:2}#sec-move{order:3}#sec-do{order:4}#sec-food{order:5}#sec-res{order:6}#sec-money{order:7}#sec-ours{order:8}#sec-notes{order:9}
 }
 @media(max-width:560px){
@@ -302,6 +302,14 @@ button.condition-pill:hover{border-color:#cdbfb2}
 .fx-rate strong{font-size:1.35rem;letter-spacing:-.02em}
 .fx-rate small{display:block;color:var(--muted);margin-top:2px}
 .expense .money b{display:block}
+.expense.forecast .money{white-space:normal;max-width:52%}
+.expense.forecast .money .eur{display:block;font-size:.8rem}
+.expense{grid-template-columns:auto minmax(0,1fr) auto}
+.xp-tools{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.xp-tools select{flex:1;min-width:0;width:100%;text-overflow:ellipsis}
+select{max-width:100%}
+.xp-sum{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--soft);border-radius:12px;padding:9px 12px;margin-bottom:12px;font-size:.88rem}
+.dayrow.on{background:var(--soft);border-radius:12px;padding-inline:10px}
 .bar .barsub{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:1px}
 .bar{grid-template-columns:1fr auto;grid-template-areas:"l a" "b b";row-gap:6px;align-items:end}
 .bar > span{grid-area:l}.bar > strong{grid-area:a;text-align:right}.bar > i{grid-area:b}
@@ -310,7 +318,6 @@ button.condition-pill:hover{border-color:#cdbfb2}
 .bar i b.pre{background:#6d1520}
 .bar i b:first-child{border-radius:999px 0 0 999px}
 .bar i b:last-child{border-radius:0 999px 999px 0}
-#xp-pre{order:2}
 @media(max-width:560px){.fx-quick{grid-template-columns:repeat(3,1fr)}}
   </style>
 </head>
@@ -371,13 +378,6 @@ button.condition-pill:hover{border-color:#cdbfb2}
             <h3>🍜 Dónde comer</h3>
             <div id="restaurants"></div>
           </section>
-
-          <section id="sec-money" class="card">
-            <h3>💶 Gastos del día</h3>
-            <div id="expenseList" class="expense-list"></div>
-            <div class="daytotal"><span>Total del día</span><span id="dayTotal">0,00 €</span></div>
-            <div class="add-row"><button class="btn red" data-action="add-expense">＋ Apuntar gasto</button></div>
-          </section>
         </div>
 
         <aside>
@@ -424,7 +424,7 @@ button.condition-pill:hover{border-color:#cdbfb2}
   <!-- ================= VISTA: PENDIENTES ================= -->
   <div class="view" data-view="todo" hidden><div id="todoView"></div></div>
 
-  <footer>Viaje a Japón · Vio y Álvaro · v20 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+  <footer>Viaje a Japón · Vio y Álvaro · v21 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
 </div>
 
 <!-- Diálogo: gasto -->
@@ -1053,6 +1053,7 @@ let current = inTrip() ? todayId() : (dayById(localStorage.getItem("jp_current")
 let view = "day";
 let editingId = null;
 let catFilter = "all";
+let dayFilter = "all";
 
 /* =====================================================================
    MONEDA · tipo de cambio online
@@ -1473,7 +1474,7 @@ function renderDay() {
 
   $("#transport").innerHTML = d.transport.map(t => `<div class="reservation"><div class="emoji">🚉</div><div><b>${t[0]} → ${t[1]}</b><small>${yen(t[2])}</small>${t[3] ? `<div class="actions">${ext(t[3], `↗ ${t[4] || "Abrir"}`)}</div>` : ""}</div></div>`).join("");
 
-  const jumps = [["sec-plan", "🧭 Plan"], d.routes?.length && ["routeCard", "🗺️ Ruta"], ["sec-move", "🚆 Moverse"], ["sec-do", "✨ Qué hacer"], ["sec-food", "🍜 Comer"], ["sec-res", "🎟 Reservas"], ["sec-money", "💶 Gastos"], ["sec-ours", "📌 Nuestro"], ["sec-notes", "📝 Notas"]].filter(Boolean);
+  const jumps = [["sec-plan", "🧭 Plan"], d.routes?.length && ["routeCard", "🗺️ Ruta"], ["sec-move", "🚆 Moverse"], ["sec-do", "✨ Qué hacer"], ["sec-food", "🍜 Comer"], ["sec-res", "🎟 Reservas"], ["sec-ours", "📌 Nuestro"], ["sec-notes", "📝 Notas"]].filter(Boolean);
   $("#jump").innerHTML = jumps.map(([id, l]) => `<button data-action="jump" data-target="${id}">${l}</button>`).join("");
 
   $("#notes").value = S.cols.notes[current]?.text || "";
@@ -1483,7 +1484,7 @@ function renderDay() {
 
 function expenseRow(e) {
   const cat = CAT[e.category] || CAT.otros;
-  const sub = e.currency === "JPY" ? `${fmtYen(e.amount)} · 1 € = ${fmtYen1(Number(e.rate) || jpyPerEur())}` : e.currency === "EUR" ? "Pagado en euros" : `${fmtNum(e.amount, 2)} ${esc(e.currency)}`;
+  const sub = e.currency === "JPY" ? fmtYen(e.amount) : e.currency === "EUR" ? "Pagado en euros" : `${fmtNum(e.amount, 2)} ${esc(e.currency)}`;
   return `<button class="expense" data-action="edit-expense" data-id="${esc(e.id)}">
     <span class="ecat" aria-hidden="true">${cat[1]}</span>
     <span class="etext"><b>${esc(e.concept)}</b><small>${cat[2]}</small></span>
@@ -1492,12 +1493,6 @@ function expenseRow(e) {
 
 function renderDayDynamic() {
   const d = dayById(current); if (!d) return;
-  const list = expensesArr().filter(e => e.day === current);
-  const planned = (plannedExpensesByDay[current] || []).map(x => `<div class="expense planned"><span class="ecat">🗓</span><span class="etext"><b>${x.concept}</b><small>Previsto · ${x.note}</small></span><span class="money">${yen(x.display)}</span></div>`).join("");
-  $("#expenseList").innerHTML = planned + (list.length ? list.map(expenseRow).join("") : (planned ? "" : `<div class="empty">Todavía no hay gastos este día.</div>`));
-  const t = totals(list);
-  $("#dayTotal").innerHTML = `${fmtEUR(t.eur)}${t.jpy ? ` <small>(${fmtYen(t.jpy)} en yenes)</small>` : ""}`;
-
   $("#reservations").innerHTML = d.reservations.map(r => {
     const pending = isPendingRes(r), key = resKey(d.id, r), done = !!S.cols.checks[key]?.done;
     const lead = pending ? `<button class="check${done ? " on" : ""}" data-action="toggle-check" data-key="${key}" aria-pressed="${done}" aria-label="Marcar como hecho">${done ? "✓" : ""}</button>` : `<div class="emoji">${r[0]}</div>`;
@@ -1577,14 +1572,20 @@ function renderExpensesView() {
       return `<div class="bar"><span>${c[1]} ${c[2]}<small class="barsub">${sub}</small></span><i><b class="pre" style="width:${(pre / maxCat * 100).toFixed(1)}%"></b><b style="width:${(trip / maxCat * 100).toFixed(1)}%"></b></i><strong>${fmtEUR(tot)}<small class="barsub">${Math.round(tot / grand * 100)}%</small></strong></div>`;
     }).join("");
   const prepaidHtml = PREPAID.map(x => `<div class="expense planned"><span class="ecat">${CAT[x.category][1]}</span><span class="etext"><b>${x.concept}</b><small>${x.detail}</small><small>${x.nights ? `${fmtEUR(x.amount / x.nights)}/noche · ` : ""}${fmtEUR(x.amount / PEOPLE)}/persona${x.estimated ? " · calculado" : ""}</small></span><span class="money"><b>${fmtEUR(x.amount)}</b></span></div>`).join("");
-  const dayRows = daysData.map(d => ({ d, list: all.filter(e => e.day === d.id) })).filter(r => r.list.length)
-    .map(r => `<button class="dayrow" data-action="go-day" data-day="${r.d.id}"><span><b>${r.d.label} · ${r.d.city}</b><small>${r.list.length} ${r.list.length === 1 ? "gasto" : "gastos"}</small></span><strong>${fmtEUR(totals(r.list).eur)}</strong></button>`).join("");
-  const present = CATEGORIES.filter(c => catTotals[c[0]]);
-  if (catFilter !== "all" && !catTotals[catFilter]) catFilter = "all";
-  const filtered = all.filter(e => catFilter === "all" || (CAT[e.category] ? e.category : "otros") === catFilter);
+  const dayTotals = daysData.map(d => ({ d, list: all.filter(e => e.day === d.id) }));
+  const dayRows = dayTotals.filter(r => r.list.length)
+    .map(r => `<button class="dayrow${dayFilter === r.d.id ? " on" : ""}" data-action="day-filter" data-day="${r.d.id}"><span><b>${r.d.label} · ${r.d.city}</b><small>${r.list.length} ${r.list.length === 1 ? "gasto" : "gastos"}</small></span><strong>${fmtEUR(totals(r.list).eur)}</strong></button>`).join("");
+  const present = ALL_CATS.filter(c => all.some(e => (CAT[e.category] ? e.category : "otros") === c[0]));
+  if (catFilter !== "all" && !present.some(c => c[0] === catFilter)) catFilter = "all";
+  if (dayFilter !== "all" && !dayById(dayFilter)) dayFilter = "all";
+  const filtered = all.filter(e => (catFilter === "all" || (CAT[e.category] ? e.category : "otros") === catFilter) && (dayFilter === "all" || e.day === dayFilter));
+  const ft = totals(filtered);
   const groups = [...daysData].reverse().map(d => ({ d, list: filtered.filter(e => e.day === d.id).reverse() })).filter(g => g.list.length);
-  const listHtml = groups.length ? groups.map(g => `<div class="group-title">${g.d.label} · ${g.d.title} · ${fmtEUR(totals(g.list).eur)}</div><div class="expense-list" style="margin-top:0">${g.list.map(expenseRow).join("")}</div>`).join("") : `<div class="empty">Todavía no hay gastos. Pulsa ＋ para apuntar el primero.</div>`;
-
+  const emptyMsg = all.length ? "No hay gastos con este filtro." : "Todavía no hay gastos. Pulsa ＋ para apuntar el primero.";
+  const listHtml = groups.length ? groups.map(g => `<div class="group-title">${g.d.label} · ${g.d.title} · ${fmtEUR(totals(g.list).eur)}</div><div class="expense-list" style="margin-top:0">${g.list.map(expenseRow).join("")}</div>`).join("") : `<div class="empty">${emptyMsg}</div>`;
+  const today = todayId();
+  const dayOptions = `<option value="all">Todos los días</option>` + dayTotals.map(r => `<option value="${r.d.id}"${dayFilter === r.d.id ? " selected" : ""}>${r.d.id === today ? "Hoy · " : ""}${r.d.label} · ${r.d.city}${r.list.length ? ` · ${fmtEUR(totals(r.list).eur)}` : ""}</option>`).join("");
+  const plannedHtml = Object.entries(plannedExpensesByDay).flatMap(([id, arr]) => arr.map(x => `<div class="expense planned forecast"><span class="ecat">🗓</span><span class="etext"><b>${x.concept}</b><small>${dayById(id)?.label || ""} · ${x.note}</small></span><span class="money"><b>${yen(x.display)}</b></span></div>`)).join("");
   $("#expensesView").innerHTML = `
     <section class="stats">
       <div class="stat"><small>Gastado en el viaje</small><strong>${fmtEUR(t.eur)}</strong><span>${fmtEUR(t.eur / PEOPLE)} por persona${t.jpy ? ` · ${fmtYen(t.jpy)} en yenes` : ""}</span></div>
@@ -1594,16 +1595,22 @@ function renderExpensesView() {
     <div class="grid">
       <div>
         <section id="xp-list" class="card">
-          <h3>🧾 Todos los gastos</h3>
-          ${present.length > 1 ? `<div class="filters"><button class="${catFilter === "all" ? "on" : ""}" data-action="cat-filter" data-f="all">Todos</button>${present.map(c => `<button class="${catFilter === c[0] ? "on" : ""}" data-action="cat-filter" data-f="${c[0]}">${c[1]} ${c[2]}</button>`).join("")}</div>` : ""}
+          <h3>🧾 Gastos del viaje <button class="btn red small h3-extra" data-action="add-expense">＋ Apuntar</button></h3>
+          <div class="xp-tools">
+            <select id="dayFilterSel" aria-label="Filtrar por día">${dayOptions}</select>
+            ${inTrip() && dayFilter !== today ? `<button class="btn small" data-action="day-filter" data-day="${today}">Hoy</button>` : ""}
+          </div>
+          ${present.length > 1 ? `<div class="filters"><button class="${catFilter === "all" ? "on" : ""}" data-action="cat-filter" data-f="all">Todas</button>${present.map(c => `<button class="${catFilter === c[0] ? "on" : ""}" data-action="cat-filter" data-f="${c[0]}">${c[1]} ${c[2]}</button>`).join("")}</div>` : ""}
+          ${all.length && (dayFilter !== "all" || catFilter !== "all") ? `<div class="xp-sum"><span>${filtered.length} ${filtered.length === 1 ? "gasto" : "gastos"} · <b>${fmtEUR(ft.eur)}</b>${ft.jpy ? ` <span class="muted">(${fmtYen(ft.jpy)})</span>` : ""}</span><button class="linkbtn" data-action="clear-filters">Quitar filtros</button></div>` : ""}
           ${listHtml}
         </section>
       </div>
       <aside>
         <section id="xp-pre" class="card"><h3>✅ Ya pagado antes del viaje</h3><div class="expense-list" style="margin-top:0">${prepaidHtml}</div><div class="daytotal"><span>Total pagado</span><span>${fmtEUR(BASE_COST)}</span></div></section>
         <section id="xp-cat" class="card"><h3>📊 Por categoría</h3>${bars ? `<div class="bars">${bars}</div>` : `<div class="empty">Aparecerá cuando apuntéis gastos.</div>`}</section>
-        <section id="xp-day" class="card"><h3>📅 Por día</h3>${dayRows || `<div class="empty">Aparecerá cuando apuntéis gastos.</div>`}</section>
-        <p id="xp-note" class="muted" style="order:5">Los gastos en yenes se pasan a euros con el tipo del momento en que se apuntaron. Tipo actual: 1 € = ${fmtYen1(jpyPerEur())} (${rateLine()}).</p>
+        <section id="xp-day" class="card"><h3>📅 Por día</h3>${dayRows ? `<p class="section-note">Toca un día para ver solo sus gastos.</p>${dayRows}` : `<div class="empty">Aparecerá cuando apuntéis gastos.</div>`}</section>
+        ${plannedHtml ? `<section id="xp-plan" class="card"><h3>🗓 Previstos (aún sin pagar)</h3><div class="expense-list" style="margin-top:0">${plannedHtml}</div></section>` : ""}
+        <p id="xp-note" class="muted" style="order:6">Los gastos en yenes se pasan a euros con el tipo del momento en que se apuntaron. Tipo actual: 1 € = ${fmtYen1(jpyPerEur())} (${rateLine()}).</p>
       </aside>
     </div>`;
 }
@@ -1740,7 +1747,7 @@ function openExpense(id, preset = {}) {
   f.amount.value = e ? String(e.amount).replace(".", ",") : (preset.amount || "");
   f.elements.currency.value = e ? (e.currency === "EUR" ? "EUR" : "JPY") : (preset.currency || localStorage.getItem("jp3_lastcur") || "JPY");
   f.elements.category.value = e?.category && CAT[e.category] ? e.category : (e ? "otros" : "comida");
-  f.day.value = e?.day || (view === "day" ? current : (inTrip() ? todayId() : current));
+  f.day.value = e?.day || (view === "day" ? current : dayFilter !== "all" ? dayFilter : (inTrip() ? todayId() : current));
   $("#expDelete").hidden = !e;
   updateConv();
   $("#expDialog").showModal();
@@ -1807,6 +1814,8 @@ document.addEventListener("click", ev => {
       break;
     case "export": exportData(); break;
     case "cat-filter": catFilter = el.dataset.f; renderExpensesView(); break;
+    case "day-filter": dayFilter = el.dataset.day; renderExpensesView(); document.getElementById("xp-list")?.scrollIntoView({ behavior: "smooth", block: "start" }); break;
+    case "clear-filters": dayFilter = "all"; catFilter = "all"; renderExpensesView(); break;
   }
 });
 document.addEventListener("submit", ev => {
@@ -1834,6 +1843,7 @@ document.addEventListener("submit", ev => {
 });
 document.addEventListener("change", ev => {
   if (ev.target.id === "docInput") saveDocument(ev);
+  if (ev.target.id === "dayFilterSel") { dayFilter = ev.target.value; renderExpensesView(); }
   if (ev.target.id === "importFile" && ev.target.files[0]) {
     if (confirm("¿Importar los datos de este archivo? Se añadirán a los que ya hay.")) importData(ev.target.files[0]);
     ev.target.value = "";

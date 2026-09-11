@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#a81f2b" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Japón" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <title>Viaje a Japón · Vio y Álvaro</title>
+  <style>
+    :root{
+      --bg:#f4f1ec; --paper:#fff; --ink:#20242a; --muted:#747b84;
+      --line:#e4ded5; --red:#a81f2b; --red2:#cf4350; --soft:#f6e7e8;
+      --green:#39715b; --amber:#8a6520; --blue:#355d82;
+      --radius:22px; --shadow:0 10px 30px rgba(35,31,27,.08);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);background:
+      radial-gradient(circle at 100% 0%,rgba(168,31,43,.09),transparent 28rem),var(--bg);
+    }
+    button,input,textarea,select{font:inherit}
+    button,a{transition:.15s ease}
+    a{color:inherit}
+    .app{max-width:1180px;margin:auto;padding:18px 18px 72px}
+    header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding:12px 0 18px}
+    .eyebrow{font-size:.75rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+    h1{font-size:clamp(2rem,5.6vw,4rem);letter-spacing:-.055em;line-height:.94;margin:.35rem 0 .6rem}
+    .sub{color:var(--muted);max-width:760px}
+    .pill{display:inline-flex;gap:7px;align-items:center;border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:999px;font-weight:750;font-size:.86rem}
+    .top-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .stats{display:grid;grid-template-columns:1.25fr .85fr .85fr;gap:12px;margin-bottom:18px}
+    .stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:17px;box-shadow:var(--shadow)}
+    .stat small{display:block;color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.08em;font-size:.69rem}
+    .stat strong{display:block;font-size:1.45rem;margin-top:7px;letter-spacing:-.03em}
+    .stat span{display:block;color:var(--muted);font-size:.82rem;margin-top:4px}
+    .daysbar{position:sticky;top:0;z-index:20;margin:0 -18px 18px;padding:10px 18px;background:rgba(244,241,236,.92);backdrop-filter:blur(12px);border-block:1px solid rgba(228,222,213,.8)}
+    .days{display:flex;gap:8px;overflow:auto;padding-bottom:4px}
+    .daybtn{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:16px;padding:9px 12px;text-align:left;min-width:90px;color:var(--ink)}
+    .daybtn b{display:block;font-size:.92rem}.daybtn span{display:block;color:var(--muted);font-size:.74rem;margin-top:2px}
+    .daybtn.active{background:var(--red);border-color:var(--red);color:#fff;transform:translateY(-1px)}
+    .daybtn.active span{color:#f7dfe2}
+    .dayhead{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start;background:linear-gradient(135deg,#fff,#fbf7f3);border:1px solid var(--line);border-radius:26px;padding:22px;box-shadow:var(--shadow);margin-bottom:14px}
+    .dayhead h2{font-size:clamp(1.55rem,4vw,2.6rem);letter-spacing:-.045em;margin:.15rem 0 .5rem}
+    .dayhead p{margin:0;color:var(--muted)}
+    .citytag{border-radius:999px;background:var(--soft);color:var(--red);font-weight:900;padding:9px 12px;white-space:nowrap}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+    .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+    .card h3{display:flex;align-items:center;gap:9px;margin:0 0 14px;font-size:1rem;letter-spacing:-.01em}
+    .section-note{color:var(--muted);font-size:.86rem;margin:-5px 0 14px}
+    .timeline{display:grid;gap:0}
+    .event{display:grid;grid-template-columns:64px 20px 1fr;gap:10px;min-height:66px}
+    .event .time{font-weight:850;font-size:.82rem;padding-top:2px}
+    .rail{position:relative}.rail:before{content:"";position:absolute;left:8px;top:17px;bottom:-8px;width:2px;background:var(--line)}.event:last-child .rail:before{display:none}
+    .dot{width:18px;height:18px;border:5px solid var(--soft);background:var(--red);border-radius:50%;position:relative;z-index:2}
+    .event h4{margin:0;font-size:.95rem}.event p{margin:.22rem 0 0;color:var(--muted);font-size:.84rem;line-height:1.4}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+    .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:8px 11px;font-weight:800;font-size:.8rem;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(20,20,20,.07)}
+    .btn.red{background:var(--red);border-color:var(--red);color:#fff}
+    .btn.soft{background:var(--soft);border-color:transparent;color:var(--red)}
+    .activity,.restaurant,.docrow{border-top:1px solid var(--line);padding:13px 0}
+    .activity:first-of-type,.restaurant:first-of-type,.docrow:first-of-type{border-top:0;padding-top:0}
+    .activity:last-child,.restaurant:last-child,.docrow:last-child{padding-bottom:0}
+    .rowtop{display:flex;justify-content:space-between;gap:12px;align-items:start}
+    .rowtop b{font-size:.94rem}.meta{color:var(--muted);font-size:.8rem;margin-top:3px}
+    .badge{font-size:.69rem;font-weight:900;border-radius:999px;padding:5px 8px;background:#f2f2f2;white-space:nowrap}
+    .badge.green{background:#e5f2ec;color:var(--green)}.badge.amber{background:#f7eedb;color:var(--amber)}.badge.blue{background:#e5edf5;color:var(--blue)}
+    .restaurant .desc{font-size:.83rem;color:var(--muted);line-height:1.45;margin-top:7px}
+    .expense-form{display:grid;grid-template-columns:1.2fr .65fr .7fr auto;gap:8px}
+    input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px;color:var(--ink);outline:none}
+    input:focus,textarea:focus,select:focus{border-color:#c9aeb1;box-shadow:0 0 0 3px rgba(168,31,43,.07)}
+    textarea{min-height:105px;resize:vertical}
+    .iconbtn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 12px;font-weight:900}
+    .expense-list{margin-top:12px;display:grid;gap:7px}
+    .expense{display:grid;grid-template-columns:1fr auto auto;gap:9px;align-items:center;padding:9px 10px;background:#faf8f5;border-radius:12px}
+    .expense small{color:var(--muted)}.expense .money{font-weight:900}
+    .daytotal{display:flex;justify-content:space-between;align-items:center;margin-top:12px;border-top:1px solid var(--line);padding-top:12px;font-weight:900}
+    .upload{border:1.5px dashed #d7cbc0;background:#fcfaf7;border-radius:16px;padding:14px}
+    .upload input{border:0;padding:0;background:transparent}
+    .muted{color:var(--muted);font-size:.82rem}
+    .reservation{display:flex;gap:11px;align-items:flex-start;padding:10px;border-radius:15px;background:#faf8f5;margin-top:8px}
+    .reservation .emoji{font-size:1.25rem}.reservation b{display:block}.reservation small{display:block;color:var(--muted);margin-top:2px}
+    .notesave{margin-top:8px}
+    footer{color:var(--muted);font-size:.79rem;padding:16px 2px}
+    .empty{color:var(--muted);font-size:.84rem;padding:8px 0}
+    @media(max-width:850px){
+      .stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.top-actions{display:none}
+    }
+    @media(max-width:560px){
+      .app{padding-inline:12px}.daysbar{margin-inline:-12px;padding-inline:12px}
+      .stats{grid-template-columns:1fr 1fr}.stat{padding:14px}.stat strong{font-size:1.12rem}
+      .dayhead{grid-template-columns:1fr;padding:18px}.citytag{justify-self:start}
+      .expense-form{grid-template-columns:1fr 1fr}.expense-form input:first-child{grid-column:1/-1}
+      .expense-form button{grid-column:1/-1}
+      .event{grid-template-columns:55px 18px 1fr;gap:8px}
+    }
+  
+.dayconditions{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.condition-pill{display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid var(--line,#e7e1da);border-radius:999px;background:rgba(255,255,255,.72);font-size:.88rem;line-height:1.2}
+.weather-pill{min-width:0}
+@media(max-width:620px){.dayconditions{gap:6px}.condition-pill{font-size:.82rem;padding:7px 9px}}
+/* ============ v18 · sincronización, gastos compartidos, móvil ============ */
+[hidden]{display:none!important}
+button{cursor:pointer;color:inherit}
+button:disabled{opacity:.35;cursor:default}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.app{padding-bottom:40px}
+header{padding-bottom:12px}
+.routeline{color:var(--muted);font-size:.92rem;margin:0}
+.countdown{display:inline-block;margin-left:8px;padding:3px 8px;border-radius:999px;background:var(--soft);letter-spacing:.04em}
+.top-actions{align-items:center}
+.pill.sync{white-space:nowrap}
+header .top-actions{flex-wrap:nowrap}
+.weather-pill{display:block}
+
+/* estado de sincronización */
+.pill.sync i{width:9px;height:9px;border-radius:50%;background:#b7aea3;display:inline-block;flex:0 0 auto}
+.pill.sync.ok i{background:#2f9e6e}
+.pill.sync.busy i{background:#d69a2d;animation:pulse 1.1s ease-in-out infinite}
+.pill.sync.offline i{background:#8b9096}
+.pill.sync.error i{background:var(--red)}
+.pill.sync.error{border-color:#e7b9be;color:var(--red)}
+@keyframes pulse{50%{opacity:.35}}
+
+/* navegación */
+.tabbar{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px;margin:0 0 16px;width:max-content;box-shadow:var(--shadow)}
+.tab{border:0;background:transparent;border-radius:999px;padding:9px 15px;font-weight:800;color:var(--muted);display:flex;gap:7px;align-items:center;position:relative;font-size:.9rem}
+.tab.active{background:var(--ink);color:#fff}
+.tab.add{background:var(--red);color:#fff}
+.tab .count{min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--red);color:#fff;font-size:.68rem;display:inline-grid;place-items:center}
+.tab.active .count{background:#fff;color:var(--ink)}
+
+/* aviso de configuración */
+.banner{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-left:4px solid var(--red);border-radius:16px;padding:12px 14px;margin:0 0 14px;box-shadow:var(--shadow)}
+.banner p{margin:0;font-weight:750;font-size:.92rem}
+.banner .actions{margin:0}
+
+/* día */
+.days{position:relative;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.daybtn.today:not(.active){border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.dayhead-side{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.daynav{display:flex;gap:6px;align-items:center}
+.daynav .iconbtn{width:42px;height:42px;padding:0;font-size:1.3rem;line-height:1}
+.todaytag{display:inline-block;background:var(--red);color:#fff;border-radius:999px;padding:2px 8px;margin-left:6px;letter-spacing:.06em}
+.jump{display:flex;gap:6px;overflow:auto;margin:0 0 14px;padding-bottom:2px;scrollbar-width:none}
+.jump::-webkit-scrollbar{display:none}
+.jump button{flex:0 0 auto;font-size:.8rem;font-weight:800;padding:7px 11px;border-radius:999px;background:#fff;border:1px solid var(--line)}
+.card{scroll-margin-top:92px}
+.card h3 .h3-extra{margin-left:auto}
+.btn.small{padding:6px 10px;font-size:.76rem}
+.btn.danger{color:var(--red);border-color:#ecc6ca}
+.btn.big{padding:12px 18px;font-size:.95rem}
+
+/* gastos */
+.expense-list{gap:6px}
+.expense{grid-template-columns:auto 1fr auto;width:100%;border:0;text-align:left;color:var(--ink)}
+button.expense:hover{background:#f3efe9}
+.expense .ecat{font-size:1.15rem;width:28px;text-align:center}
+.expense .etext b{display:block;font-size:.92rem;overflow-wrap:anywhere}
+.expense .etext small{display:block;margin-top:2px}
+.expense .money{text-align:right;white-space:nowrap}
+.expense .money small{display:block;font-weight:700;color:var(--muted)}
+.expense.planned{grid-template-columns:auto 1fr auto}
+.expense.adjust{background:#eef3f0}
+.daytotal small{color:var(--muted);font-weight:700}
+.add-row{margin-top:10px}
+.balance-big{font-size:clamp(1.3rem,4vw,1.8rem);font-weight:900;letter-spacing:-.03em;margin:2px 0 6px}
+.paidline{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.paidline span{background:#faf8f5;border-radius:12px;padding:8px 10px;font-size:.86rem}
+.bars{display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:minmax(110px,150px) 1fr auto;gap:10px;align-items:center;font-size:.86rem}
+.bar i{display:block;height:10px;border-radius:999px;background:var(--soft);overflow:hidden}
+.bar i b{display:block;height:100%;border-radius:inherit;background:var(--red)}
+.dayrow{display:flex;justify-content:space-between;gap:10px;align-items:center;width:100%;padding:11px 0;border:0;border-top:1px solid var(--line);background:none;text-align:left;font-size:.9rem}
+.dayrow:first-child{border-top:0}
+.dayrow span small{display:block;color:var(--muted)}
+.group-title{font-weight:900;font-size:.85rem;margin:16px 0 8px;color:var(--muted)}
+.group-title:first-child{margin-top:0}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.filters button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-weight:800;font-size:.8rem}
+.filters button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* pendientes */
+.check{flex:0 0 auto;width:28px;height:28px;border-radius:9px;border:2px solid #d5cabe;background:#fff;display:grid;place-items:center;color:#fff;font-weight:900;font-size:.95rem;padding:0}
+.check.on{background:var(--green);border-color:var(--green)}
+.done-row b{text-decoration:line-through;color:var(--muted)}
+.done-row small{opacity:.8}
+.reservation small.by{color:var(--green);font-weight:750}
+.progress{height:10px;border-radius:999px;background:var(--soft);overflow:hidden;margin:10px 0 4px}
+.progress b{display:block;height:100%;background:var(--green);border-radius:inherit;transition:width .3s}
+.inline-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:12px}
+.inline-form.three{grid-template-columns:1.3fr 1fr auto}
+.linkbtn{border:0;background:none;padding:0;color:var(--blue);font-weight:800;font-size:.8rem;text-decoration:underline}
+
+/* hojas / diálogos */
+dialog.sheet{border:0;padding:0;border-radius:24px;max-width:520px;width:calc(100% - 24px);background:var(--paper);color:var(--ink);box-shadow:0 30px 80px rgba(0,0,0,.25)}
+dialog.sheet::backdrop{background:rgba(32,36,42,.45)}
+.sheet-in{padding:18px 18px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sheet-head h3{margin:0;font-size:1.2rem;letter-spacing:-.02em}
+.sheet-head .iconbtn{width:40px;height:40px;padding:0;font-size:1.2rem}
+.field{display:block;border:0;padding:0;margin:0 0 12px;min-width:0}
+.field > span,.field legend{display:block;font-size:.78rem;font-weight:850;color:var(--muted);margin-bottom:6px;padding:0}
+.row2{display:grid;grid-template-columns:1fr 130px;gap:8px}
+.conv{font-size:.84rem;color:var(--muted);margin:-4px 0 12px;min-height:1.2em}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;width:1px;height:1px}
+.chip span{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-weight:750;font-size:.86rem;background:#fff;cursor:pointer;user-select:none}
+.chip input:checked + span{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip input:focus-visible + span{outline:2px solid var(--red);outline-offset:2px}
+.sheet-actions{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+.sheet-actions .btn.red{margin-left:auto}
+.settings-block{border-top:1px solid var(--line);padding:14px 0}
+.settings-block:first-of-type{border-top:0;padding-top:0}
+.settings-block h4{margin:0 0 8px;font-size:.95rem}
+.settings-block p{margin:0 0 10px;font-size:.88rem;color:var(--muted);line-height:1.45}
+.rates{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,16px);opacity:0;background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-weight:750;font-size:.88rem;z-index:100;transition:.2s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:850px){
+  .top-actions{display:flex}
+  .top-actions .settings-pill{display:none}
+  .app{padding-bottom:calc(110px + env(safe-area-inset-bottom))}
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;width:auto;margin:0;border-radius:0;border-width:1px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom));justify-content:space-around;align-items:flex-end;background:rgba(255,255,255,.97);box-shadow:0 -6px 24px rgba(35,31,27,.07)}
+  .tab{flex:1;flex-direction:column;gap:1px;font-size:.68rem;padding:5px 2px;justify-content:center}
+  .tab .ico{font-size:1.3rem;line-height:1.2}
+  .tab.active{background:transparent;color:var(--red)}
+  .tab .count{position:absolute;top:0;right:calc(50% - 22px)}
+  .tab.active .count{background:var(--red);color:#fff}
+  .tab.add{flex:0 0 58px;height:58px;border-radius:50%;margin:-26px 4px 2px;box-shadow:0 8px 20px rgba(168,31,43,.35)}
+  .tab.add .ico{font-size:1.9rem;font-weight:400}
+  .tab.add .lbl{display:none}
+  .toast{bottom:calc(96px + env(safe-area-inset-bottom))}
+  /* en móvil: lo más útil primero */
+  .grid{display:flex;flex-direction:column;gap:0}
+  .grid > div,.grid > aside{display:contents}
+  #xp-balance{order:1}#xp-cat{order:2}#xp-day{order:3}#xp-list{order:4}
+  #sec-plan{order:1}#routeCard{order:2}#sec-move{order:3}#sec-do{order:4}#sec-food{order:5}#sec-res{order:6}#sec-money{order:7}#sec-ours{order:8}#sec-notes{order:9}
+}
+@media(max-width:560px){
+  header{display:block;position:relative;padding-top:8px}
+  header .top-actions{position:absolute;top:4px;right:0}
+  header .eyebrow{padding-right:0;max-width:calc(100% - 150px)}
+  header .eyebrow{letter-spacing:.07em}
+  .countdown{display:block;width:max-content;margin:6px 0 0}
+  .stats .stat:first-child{grid-column:1/-1}
+  header h1{font-size:1.9rem}
+  .pill.sync{padding:7px 10px;font-size:.78rem}
+  .dayhead-side{flex-direction:row;justify-content:space-between;align-items:center;width:100%}
+  .bar{grid-template-columns:100px 1fr auto}
+  dialog.sheet{margin:auto 0 0;width:100%;max-width:none;border-radius:24px 24px 0 0}
+  .inline-form.three{grid-template-columns:1fr 1fr}
+  .inline-form.three input:first-child{grid-column:1/-1}
+  .rates{grid-template-columns:1fr 1fr 1fr}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+/* ============ v19 · euros, conversor, avisos de lluvia ============ */
+button.condition-pill{font:inherit;color:var(--ink);cursor:pointer}
+button.condition-pill:hover{border-color:#cdbfb2}
+.fx-pill b{font-weight:850}
+.eur{color:var(--green);font-weight:750;white-space:nowrap}
+.daybtn .wxicon{margin-left:3px}
+.wx-alert{border:1px solid #c7d7e6;background:linear-gradient(135deg,#eaf2f9,#fff 70%);border-radius:var(--radius);padding:16px 18px;margin:0 0 14px;box-shadow:var(--shadow)}
+.wx-alert.alta{border-color:#8fb0cf;border-left:5px solid var(--blue)}
+.wx-alert.nieve{border-color:#d6dde6;background:linear-gradient(135deg,#f1f4f8,#fff 70%)}
+.wx-alert h3{margin:0 0 4px;font-size:1.05rem;color:var(--blue);letter-spacing:-.01em}
+.wx-alert.nieve h3{color:#4b5b6e}
+.wx-alert p{margin:4px 0;font-size:.9rem;line-height:1.45}
+.wx-alert ul{margin:6px 0 0;padding-left:18px}
+.wx-alert li{margin:5px 0;font-size:.88rem;line-height:1.4}
+.wx-alert .sub{font-weight:850;font-size:.82rem;margin-top:12px;color:var(--ink)}
+.wx-alert .actions{margin-top:6px}
+.hours{display:flex;gap:2px;margin:10px 0 2px;align-items:flex-end;height:34px}
+.hours span{flex:1;background:#d7e4f0;border-radius:3px 3px 0 0;min-height:3px;position:relative}
+.hours span.wet{background:var(--blue)}
+.hours-l{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;width:100%}
+.seg label{flex:1;position:relative}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg span{display:block;text-align:center;padding:10px 6px;font-weight:800;cursor:pointer}
+.seg input:checked + span{background:var(--ink);color:#fff}
+.seg input:focus-visible + span{outline:2px solid var(--red);outline-offset:-2px}
+.fx-big{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}
+.fx-big .swap{padding-bottom:22px;font-size:1.2rem;color:var(--muted);text-align:center}
+.fx-big input{font-size:1.25rem;font-weight:800}
+.fx-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:4px 0 12px}
+.fx-quick button{border:1px solid var(--line);background:#faf8f5;border-radius:12px;padding:8px 6px;text-align:center;font-size:.84rem}
+.fx-quick button b{display:block;font-size:.95rem}
+.fx-rate{background:#faf8f5;border-radius:14px;padding:12px 14px;margin-bottom:14px}
+.fx-rate strong{font-size:1.35rem;letter-spacing:-.02em}
+.fx-rate small{display:block;color:var(--muted);margin-top:2px}
+.expense .money b{display:block}
+@media(max-width:560px){.fx-quick{grid-template-columns:repeat(3,1fr)}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <div class="eyebrow">20 dic 2026 → 6 ene 2027 <span id="countdown" class="countdown"></span></div>
+      <h1>Viaje a Japón · Vio y Álvaro</h1>
+      <p class="routeline">Osaka → Kioto → Takayama → Tokio, con Nara y Shirakawa-go</p>
+    </div>
+    <div class="top-actions">
+      <button id="syncPill" class="pill sync local" data-action="open-settings"><i></i><span>…</span></button>
+      <button class="pill settings-pill" data-action="open-settings">⚙ Ajustes</button>
+    </div>
+  </header>
+
+  <nav class="tabbar" aria-label="Secciones">
+    <button class="tab active" data-action="view" data-view="day"><span class="ico">📅</span><span class="lbl">Día a día</span></button>
+    <button class="tab" data-action="view" data-view="expenses"><span class="ico">💶</span><span class="lbl">Gastos</span></button>
+    <button class="tab add" data-action="add-expense" aria-label="Apuntar gasto"><span class="ico">＋</span><span class="lbl">Apuntar gasto</span></button>
+    <button class="tab" data-action="view" data-view="todo"><span class="ico">✅</span><span class="lbl">Pendientes</span><span id="todoCount" class="count" hidden></span></button>
+    <button class="tab" data-action="open-fx"><span class="ico">💱</span><span class="lbl">Conversor</span></button>
+  </nav>
+
+  <div id="banner"></div>
+
+  <!-- ================= VISTA: DÍA A DÍA ================= -->
+  <div class="view" data-view="day">
+    <div class="daysbar"><div id="days" class="days"></div></div>
+    <main>
+      <section id="dayHead" class="dayhead"></section>
+      <section class="dayconditions" aria-label="Luz, tiempo y moneda">
+        <div id="sunInfo" class="condition-pill">☀️ —</div>
+        <div id="weatherInfo" class="condition-pill weather-pill">🌦️ —</div>
+        <button id="fxPill" class="condition-pill fx-pill" data-action="open-fx">💱 —</button>
+      </section>
+      <section id="wxAlert" class="wx-alert" hidden></section>
+      <nav id="jump" class="jump" aria-label="Ir a"></nav>
+      <div class="grid">
+        <div>
+          <section id="sec-plan" class="card">
+            <h3>🧭 Plan del día</h3>
+            <div id="timeline" class="timeline"></div>
+          </section>
+
+          <section id="routeCard" class="card" style="display:none">
+            <h3>🗺️ Ruta del día</h3>
+            <div id="routeList"></div>
+          </section>
+
+          <section id="sec-do" class="card">
+            <h3>✨ Cosas que hacer</h3>
+            <div id="activities"></div>
+          </section>
+
+          <section id="sec-food" class="card">
+            <h3>🍜 Dónde comer</h3>
+            <div id="restaurants"></div>
+          </section>
+
+          <section id="sec-money" class="card">
+            <h3>💶 Gastos del día</h3>
+            <div id="expenseList" class="expense-list"></div>
+            <div class="daytotal"><span>Total del día</span><span id="dayTotal">0,00 €</span></div>
+            <div class="add-row"><button class="btn red" data-action="add-expense">＋ Apuntar gasto</button></div>
+          </section>
+        </div>
+
+        <aside>
+          <section id="sec-move" class="card">
+            <h3>🚆 Cómo movernos</h3>
+            <div id="transport"></div>
+          </section>
+
+          <section id="sec-res" class="card">
+            <h3>🎟 Reservas y billetes</h3>
+            <div id="reservations"></div>
+            <div class="upload" style="margin-top:12px">
+              <b>Guardar un documento</b>
+              <div class="muted" style="margin:5px 0 10px">PDF, imagen o tarjeta de embarque. Se guarda solo en este móvil (no se sincroniza) y funciona sin conexión.</div>
+              <input id="docInput" type="file">
+            </div>
+            <div id="docs"></div>
+          </section>
+
+          <section id="sec-ours" class="card">
+            <h3>📌 Añadido por nosotros</h3>
+            <p id="oursNote" class="section-note"></p>
+            <div id="ideas"></div>
+            <form id="ideaForm" class="inline-form three" autocomplete="off">
+              <input name="ititle" placeholder="Sitio o idea" required maxlength="140">
+              <input name="extra" placeholder="Enlace o nota (opcional)" maxlength="500">
+              <button class="btn red">Añadir</button>
+            </form>
+          </section>
+
+          <section id="sec-notes" class="card">
+            <h3>📝 Notas del día <span id="noteStatus" class="muted h3-extra"></span></h3>
+            <textarea id="notes" placeholder="Ideas, horarios, compras pendientes, qué nos gustó…"></textarea>
+            <div class="muted" style="margin-top:6px">Se guarda solo mientras escribes.</div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= VISTA: GASTOS ================= -->
+  <div class="view" data-view="expenses" hidden><div id="expensesView"></div></div>
+
+  <!-- ================= VISTA: PENDIENTES ================= -->
+  <div class="view" data-view="todo" hidden><div id="todoView"></div></div>
+
+  <footer>Viaje a Japón · Vio y Álvaro · v19 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+</div>
+
+<!-- Diálogo: gasto -->
+<dialog id="expDialog" class="sheet">
+  <div class="sheet-in">
+    <form id="expForm" autocomplete="off" novalidate>
+      <div class="sheet-head"><h3 id="expTitle">Nuevo gasto</h3><button type="button" class="iconbtn" data-action="close-dialog" aria-label="Cerrar">×</button></div>
+      <label class="field"><span>Concepto</span><input name="concept" placeholder="Ramen, metro, entrada…" maxlength="120"></label>
+      <div class="row2">
+        <label class="field"><span>Importe</span><input name="amount" inputmode="decimal" placeholder="0"></label>
+        <fieldset class="field"><legend>Moneda</legend>
+          <div class="seg"><label><input type="radio" name="currency" value="JPY"><span>¥</span></label><label><input type="radio" name="currency" value="EUR"><span>€</span></label></div>
+        </fieldset>
+      </div>
+      <div id="expConv" class="conv"></div>
+      <fieldset class="field"><legend>Categoría</legend><div class="chips" id="catChips"></div></fieldset>
+      <label class="field"><span>Día</span><select name="day" id="expDay"></select></label>
+      <div class="sheet-actions">
+        <button type="button" id="expDelete" class="btn danger" data-action="delete-expense" hidden>Borrar</button>
+        <button type="submit" class="btn red big">Guardar gasto</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<!-- Diálogo: conversor -->
+<dialog id="fxDialog" class="sheet">
+  <div class="sheet-in">
+    <div class="sheet-head"><h3>Conversor yen ⇄ euro</h3><button type="button" class="iconbtn" data-action="close-dialog" aria-label="Cerrar">×</button></div>
+    <div id="fxRate" class="fx-rate"></div>
+    <div class="fx-big">
+      <label class="field"><span>Yenes</span><input id="fxJpy" inputmode="decimal" placeholder="¥ 0" autocomplete="off"></label>
+      <div class="swap" aria-hidden="true">⇄</div>
+      <label class="field"><span>Euros</span><input id="fxEur" inputmode="decimal" placeholder="0,00 €" autocomplete="off"></label>
+    </div>
+    <div id="fxQuick" class="fx-quick"></div>
+    <p class="muted">Tipo de referencia del mercado. El banco puede cobrar algo más por la tarjeta.</p>
+    <div class="sheet-actions"><button class="btn" data-action="fx-refresh">Actualizar tipo</button><button class="btn red" data-action="fx-to-expense">Apuntar como gasto</button></div>
+  </div>
+</dialog>
+
+<!-- Diálogo: ajustes -->
+<dialog id="settingsDialog" class="sheet">
+  <div class="sheet-in">
+    <div class="sheet-head"><h3>Ajustes</h3><button type="button" class="iconbtn" data-action="close-dialog" aria-label="Cerrar">×</button></div>
+    <div id="settingsBody"></div>
+  </div>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script type="module">
+/* =====================================================================
+   CONFIGURACIÓN (la rellena la publicación; no hace falta tocarla)
+   ===================================================================== */
+const SYNC = { owner: "alvaromartnb", repo: "japon-datos", path: "datos.json", branch: "main" };
+const GITHUB_API = "https://api.github.com";
+const BASE_COST = 3605.22;       // gasto base ya reservado
+const PEOPLE = 2;                // para el cálculo "por persona"
+const FALLBACK_JPY = 180;        // yenes por euro si aún no hay tipo online
+
+/* =====================================================================
+   DATOS DEL ITINERARIO (edita aquí el plan)
+   ===================================================================== */
+const daysData = [
+ {id:"2026-12-20",label:"Dom 20",city:"Vuelo",title:"Madrid → Osaka",subtitle:"Empieza el viaje · salida de Madrid a las 10:30",
+  timeline:[
+   ["07:00","Aeropuerto de Madrid","Llegar con margen para facturación, seguridad y embarque."],
+   ["10:30","MAD → PVG · MU710","China Eastern · Turista · 12 h 50 min · 2 asientos seleccionados."]
+  ],
+  activities:[["Aeropuerto sin prisas","Desayuno, documentos y descarga offline de mapas.","Plan"]],
+  restaurants:[["Aeropuerto MAD","Comer antes de embarcar o llevar algo sencillo para el vuelo.","€€","maps","Adolfo Suárez Madrid-Barajas Airport"]],
+  transport:[["MAD","PVG","China Eastern MU710 · salida 10:30"]],
+  reservations:[
+   ["🛂","HACER ANTES DE SALIR · Visit Japan Web","Completar entrada a Japón (inmigración + aduanas) para los dos y guardar el QR antes de volar.","https://www.vjw.digital.go.jp/","Abrir Visit Japan Web"],
+   ["✈️","Vuelo MU710","Localizador PJ1HKT · 2 asientos seleccionados"]
+  ]
+ },
+ {id:"2026-12-21",label:"Lun 21",city:"Osaka",title:"Llegada a Osaka",subtitle:"KIX 12:10 · JR directo a Taisho · comida cerca del hotel · Dotonbori",
+  timeline:[
+   ["06:20","Llegada a Shanghái PVG","Escala de 2 h 35 min."],
+   ["08:55","PVG → KIX · MU225","China Eastern · 2 h 15 min · 2 asientos seleccionados."],
+   ["12:10","Llegada a Kansai KIX","Inmigración + maletas. Después ir a Terminal 1 / estación JR-WEST siguiendo los carteles “Trains”."],
+   ["12:50–13:20","ICOCA + internet","En la estación: buscar JR-WEST en AZUL y las máquinas azules con logo ICOCA. Comprar 1 ICOCA por persona. Si usamos eSIM Sakura Mobile, activarla aquí."],
+   ["13:32 / 13:47 / 14:02","Trenes objetivo","JR Kansai-Airport Rapid (関空快速) hacia Osaka/Kyobashi. Sin transbordos. Elegir el primero que podamos coger sin correr."],
+   ["14:32–15:02","Bajarse en TAISHO","Parada: JR Taisho Station (大正駅). Precio: ¥1.060 por persona (≈ 5,89 €). El hotel está a ~1 min andando."],
+   ["15:00","Hotel Sobial Osaka Dome","Check-in. Si tenemos hambre: takoyaki, udon o ramen cerca de Taisho antes de ir al centro."],
+   ["17:30–18:00","Hotel → Dotonbori","Elegir según energía: 🚇 metro vía Shinsaibashi o 🚶 paseo directo. <strong>Andando desde el hotel: ~29–33 min.</strong>"],
+   ["18:15","Dotonbori + Hozenji Yokocho","Primer paseo, luces, canal y cena. Para volver: Shinsaibashi (N15) → Taisho (N11). Último metro actual: 00:23. ♨️ El baño del hotel cierra a la 01:00."]
+  ],
+  routes:[
+   ["Hotel Sobial → Dotonbori a pie","Alternativa al metro si tenemos energía. ~2,5–2,8 km. <strong>ANDANDO: ~29–33 MIN</strong>.","https://www.google.com/maps/dir/?api=1&origin=Hotel+Sobial+Osaka+Dome&destination=Dotonbori+Osaka&travelmode=walking"]
+  ],
+  activities:[
+   ["Comprar ICOCA","Máquinas JR-WEST normales de color azul, junto a los tornos. Buscar el logo ICOCA, poner el idioma en English → “Purchase ICOCA”. Cuesta ¥2.000 (≈ 11,11 €): ¥1.500 (≈ 8,33 €) quedan como saldo + ¥500 (≈ 2,78 €) de depósito. Se compra en efectivo.","Importante"],
+   ["Internet para todo el viaje","Recomendación: 2 eSIM Sakura Mobile Unlimited de 16 días, una por móvil. La compra se hace online antes del viaje; el enlace directo está en “Reservas y billetes”. Activarlas al llegar a Japón.","Importante"],
+   ["Dotonbori","Paseo por el canal, carteles luminosos y ambiente de Osaka.","Imprescindible"],
+   ["Hozenji Yokocho","Callejón tradicional muy cerca de Dotonbori.","Corto"],
+   ["Shinsaibashi","Galerías comerciales si todavía hay energía.","Opcional"]
+  ],
+  restaurants:[
+   ["Jumbo Sohonten · JR Taisho","Takoyaki justo junto a la estación. Muy buena primera toma de contacto con Osaka si llegamos con hambre; precio bajo y comida rápida.","€","maps","Jumbo Sohonten JR Taisho Station Osaka","Comida"],
+   ["Shin Taisho An","Udon local a unos 2–3 min de Taisho Station. Sencillo, barato y japonés; buena opción para comer al llegar si queremos sentarnos.","€","maps","Shin Taisho An Osaka","Comida"],
+   ["Mentomi Tenyo Taishobashi","Ramen / tsukemen muy cerca de Taisho Station. Buena alternativa local; comprobar horario actualizado el día anterior.","€–€€","maps","Mentomi Tenyo Taishobashi Osaka","Comida"],
+   ["Mizuno","Okonomiyaki en Dotonbori. Muy buena opción para la primera cena típica de Osaka.","€€","maps","Mizuno Osaka Dotonbori","Cena"],
+   ["Wanaka","Takoyaki, rápido, callejero y muy típico de Osaka.","€","maps","Takoyaki Wanaka Sennichimae","Cena"],
+   ["Dotonbori Imai","Udon y soba; opción clásica si apetece algo caliente y tranquilo.","€€","maps","Dotonbori Imai Osaka","Cena"]
+  ],
+  transport:[
+   ["KIX · Llegadas","Kansai-airport Station","Desde Terminal 1 seguir “Trains”. Cruzar el puente a la estación. Allí JR-WEST está señalizado en AZUL (Nankai es rojo). Para nuestro tren usar JR-WEST. Las máquinas normales para billetes/ICOCA son AZULES y tienen interfaz en inglés.","https://www.westjr.co.jp/global/en/travel/shopping/access/train.html","Guía oficial JR-WEST"],
+   ["KIX","JR Taisho Station","🚆 JR Kansai-Airport Rapid / 関空快速 · SIN TRANSBORDOS · ¥1.060 por persona (≈ 5,89 €). Horarios objetivo actuales: 13:32 → ~14:32 · 13:47 → ~14:47 · 14:02 → ~15:02. No reservar: cogemos el primero que nos cuadre. Estos horarios se volverán a comprobar cerca del viaje.","https://www.jorudan.co.jp/time/to/%E9%96%A2%E8%A5%BF%E7%A9%BA%E6%B8%AF_%E5%A4%A9%E7%8E%8B%E5%AF%BA/?r=%E9%96%A2%E8%A5%BF%E7%A9%BA%E6%B8%AF%E7%B7%9A","Ver horario"],
+   ["JR Taisho","Hotel Sobial Osaka Dome","Bajarse exactamente en 大正 / TAISHO. El hotel está en 1-17-29 Sangenyahigashi y queda aproximadamente a 1 minuto andando desde la estación.","https://www.google.com/maps/search/?api=1&query=Hotel+Sobial+Osaka+Dome","Google Maps"],
+   ["Hotel / Taisho (N11)","Dotonbori","🚇 Nagahori Tsurumi-ryokuchi Line dirección Kadoma-minami → Shinsaibashi (N15). 4 paradas · ~7 min · ¥190/persona (≈ 1,06 €). Frecuencia por la tarde: aprox. cada 4–7 min. Último metro actual de vuelta Shinsaibashi → Taisho: 00:23. Desde Shinsaibashi quedan ~10–12 min andando hasta Dotonbori.<br><br>Si no estamos cansados, podemos ir directamente andando desde el hotel y ver la ciudad por el camino: ~2,5–2,8 km.<br><strong>🚶 ANDANDO DESDE EL HOTEL: ~29–33 MIN</strong>","https://www.google.com/maps/dir/?api=1&origin=Hotel+Sobial+Osaka+Dome&destination=Dotonbori+Osaka&travelmode=walking","Ruta andando en Maps"],["Hotel Sobial Osaka Dome","Dotonbori · a pie","🚶 Alternativa recomendada si tenemos energía. Son unos 2,5–2,8 km y nos permite ir viendo Osaka de camino.<br><strong>TIEMPO ANDANDO: ~29–33 MIN</strong>","https://www.google.com/maps/dir/?api=1&origin=Hotel+Sobial+Osaka+Dome&destination=Dotonbori+Osaka&travelmode=walking","Abrir paseo en Maps"]
+  ],
+  reservations:[
+   ["🏨","Hotel Sobial Osaka Dome","21–23 dic · 91 € · reserva confirmada","https://www.google.com/maps/search/?api=1&query=Hotel+Sobial+Osaka+Dome","Google Maps"],["♨️","Baño público · Hotel Sobial Osaka Dome","3F hombres / 2F mujeres · 15:00–01:00 y 05:00–09:00.","https://sobial.jp/facilities/index.html","Web oficial"],
+   ["✈️","Vuelo MU225","PVG 08:55 → KIX 12:10 · localizador PJ1HKT"],
+   ["💱","Cambiar efectivo al llegar · KIX","KIX CURRENCY EXCHANGE · Terminal 1, planta 1, zona de llegadas internacionales norte. Dirección: 1 Senshukukokita, Izumisano, Osaka 549-0001, Japan. Horario actual: 06:15–23:00.","https://www.google.com/maps/search/?api=1&query=KIX+CURRENCY+EXCHANGE+International+Arrival+Area+1F+North+Shop","Abrir en Google Maps"],
+   ["📶","COMPRAR eSIM · Sakura Mobile Unlimited","Comprar 2 × plan de 16 días, una por móvil. Datos 5G ilimitados; seleccionar las fechas del viaje al comprar. Revisar compatibilidad antes del pago.","https://www.sakuramobile.jp/travel/esim/","Comprar eSIM oficial"],
+   ["📱","Alternativa SIM física","Sakura Mobile ofrece SIM Unlimited y recogida en aeropuerto. Para cubrir todo el viaje habría que escoger 21 días y pedirla antes. En KIX T1 1F hay mostrador Sakura Mobile 06:00–23:00.","https://www.sakuramobile.jp/travel/sim/","Ver SIM física"]
+  ]
+ },
+ {id:"2026-12-22",label:"Mar 22",city:"Osaka",title:"Osaka",subtitle:"Castillo, mercado y ciudad de noche",
+  timeline:[
+   ["09:00","Osaka Castle","Castillo + jardines."],
+   ["12:30","Kuromon / Namba","Comida y paseo."],
+   ["15:45","Cambio de divisa · Umeda","OSAKA Money Exchange · Osaka Ekimae 2nd Building B2F. Hacerlo antes de subir hacia Umeda Sky Building."],
+   ["16:15","Umeda","Ir hacia Umeda Sky Building para llegar con margen antes del atardecer."],
+   ["19:30","Namba / Shinsekai","Cena y ambiente."]
+  ],
+  activities:[
+   ["Osaka Castle","Parque y visita al castillo.","Principal"],
+   ["Kuromon Ichiba","Mercado para picar varias cosas.","Comida"],
+   ["Umeda Sky Building","Mirador para el atardecer.","Mirador"],
+   ["Shinsekai + Tsutenkaku","Osaka retro y callejera.","Opcional"],
+   ["☔ Curso Ramen + Gyoza · Sakura Cook","Alternativa interior para una tarde lluviosa. 17:30–20:00 · ¥12.000/persona (≈ 66,67 €). Cocinamos ramen y gyoza y lo cenamos allí.","Opcional lluvia","https://www.sakuracook.jp/","Ver / reservar"],
+   ["☔ Curso de Sushi · Sakura Cook","Otra alternativa de tarde/cena: 17:30–20:00 · ¥15.000/persona (≈ 83,33 €). Nigiri, gunkan, maki, yakitori y miso.","Opcional lluvia","https://www.sakuracook.jp/sushi-course/","Ver / reservar"],
+   ["⭐ Shinsekai Food Tour","Tour gastronómico de 3 h en grupo pequeño: 13–15 platos en 5 locales (puesto callejero, izakaya, etc.) + 2 bebidas. Muy buena opción si queremos que un local nos lleve a sitios menos obvios; sustituiría la cena normal de ese día.","Opcional tour","https://www.getyourguide.com/osaka-l1204/osaka-shinsekai-food-tour-t315237/","Ver disponibilidad"]
+  ],
+  restaurants:[
+   ["Kuromon Market","Mejor como zona para probar varios puestos que como una única reserva.","€–€€","maps","Kuromon Ichiba Market Osaka","Comida"],
+   ["Kushikatsu Daruma","Kushikatsu; varias sucursales en Osaka.","€€","maps","Kushikatsu Daruma Shinsekai","Cena"],
+   ["Okonomiyaki Kiji","Okonomiyaki cerca de Umeda; comprobar cola/horario.","€€","maps","Okonomiyaki Kiji Umeda Osaka","Cena"]
+  ],
+  transport:[["Metro Osaka","Día urbano","Usar ICOCA. El Amazing Pass solo compensa si finalmente añadimos varias atracciones de pago además del castillo."]],
+  reservations:[
+   ["💱","Cambio de divisa · Umeda","OSAKA Money Exchange · B2 Floor, Osaka Ekimae 2nd Building, 1-2-2 Umeda, Kita-ku, Osaka 530-0001, Japan. Dentro de Ticket Lab. Horario actual: 10:30–19:00.","https://www.google.com/maps/search/?api=1&query=OSAKA+Money+Exchange+Osaka+Ekimae+2nd+Building+B2","Abrir en Google Maps"],
+   ["🎫","Osaka Amazing Pass · NO COMPRAR DE MOMENTO","1 día ¥3.500 (≈ 19,44 €) por persona · transporte participante + ~40 atracciones. Con nuestro plan actual no compensa. Replantearlo si añadimos Tsutenkaku + crucero/Tombori u otra atracción de pago.","https://osaka-amazing-pass.com/en/","Ver Amazing Pass"],
+   ["🏨","Hotel Sobial Osaka Dome","Segunda noche"],
+   ["♨️","Baño público · Hotel Sobial Osaka Dome","3F hombres / 2F mujeres · 15:00–01:00 y 05:00–09:00.","https://sobial.jp/facilities/index.html","Web oficial"]
+  ]
+ },
+ {id:"2026-12-23",label:"Mié 23",city:"Kioto",title:"Osaka → Kioto",subtitle:"JR Taisho → Osaka → 新快速 a Kyoto · dejar maletas · Fushimi Inari",
+  timeline:[
+   ["08:10","Check-out Osaka","Salir andando hacia JR Taisho Station (~1 min)."],
+   ["08:20 aprox.","Taisho → Osaka","JR Osaka Loop Line 外回り / Outer Loop dirección Nishikujo · Osaka. Sin reserva. ~13 min · ¥200/persona (≈ 1,11 €)."],
+   ["08:56","Osaka → Kyoto · 新快速","OBJETIVO: JR Kyoto Line Special Rapid (新快速) hacia Kusatsu. En el horario actual sale sobre 08:56 (andén 9) y tarda ~29–30 min. No reservar; ICOCA."],
+   ["09:25 aprox.","Llegada JR Kyoto","Seguir a Kyoto City Subway."],
+   ["09:35 aprox.","Kyoto → Kyoto Shiyakusho-mae","Karasuma Line dirección Kokusaikaikan → cambio en Karasuma Oike → Tozai Line → Kyoto Shiyakusho-mae. ~11 min · ¥260/persona (≈ 1,44 €)."],
+   ["09:50–10:00","Hotel Resol Trinity Kyoto","Salida 9 de Zest Oike; con maletas mejor salida 11 (ascensor/escalera mecánica). Hotel ~2 min andando. Dejar maletas."],
+   ["10:30","Fushimi Inari","Torii y subida parcial según ganas."],
+   ["14:00","Nishiki / centro","Comida y paseo por el centro."],
+   ["19:00","Pontocho / Gion","Cena y paseo nocturno."]
+  ],
+  activities:[
+   ["Fushimi Inari Taisha","Recorrido por los torii. No es obligatorio subir hasta arriba.","Principal"],
+   ["Nishiki Market","Comida y compras de productos japoneses.","Centro"],
+   ["Pontocho + río Kamo","Muy agradable de noche.","Noche"],
+   ["⭐ Tour a pie por Gion con guía","Opcional de unas 2 h en grupo pequeño (máx. 6) para entender mejor Gion, Pontocho, Hanamikoji, Yasaka y la cultura geisha. Guías disponibles en español/inglés/francés según disponibilidad. Lo haría solo si nos apetece contexto histórico, no porque sea necesario para movernos.","Opcional tour","https://www.getyourguide.com/kyoto-l96826/kyoto-gion-walking-tour-t675540/","Ver disponibilidad"]
+  ],
+  restaurants:[
+   ["Nishiki Market","Puestos y pequeñas tiendas para comer por partes.","€–€€","maps","Nishiki Market Kyoto","Comida"],
+   ["Pontocho Alley","Zona con muchas opciones; escogeremos 2–3 concretas para reservar.","€€–€€€","maps","Pontocho Alley Kyoto","Cena"],
+   ["Gion Tanto","Okonomiyaki cerca de Gion; verificar horarios y reserva.","€€","maps","Gion Tanto Kyoto","Cena"]
+  ],
+  transport:[
+   ["Hotel Sobial / JR Taisho","JR Osaka Station","🚆 JR Osaka Loop Line 外回り (Outer Loop) vía Nishikujo → Osaka. Objetivo: salir sobre 08:20. ~13 min · ¥200/persona (≈ 1,11 €) · ICOCA. No reservar.","https://www.google.com/maps/dir/?api=1&origin=Hotel+Sobial+Osaka+Dome&destination=Osaka+Station&travelmode=transit","Ruta a Osaka Station"],
+   ["JR Osaka Station","JR Kyoto Station","🚆 TREN OBJETIVO: JR Kyoto Line SPECIAL RAPID / 新快速. Horario de referencia laborable 2026: 08:56 salida de Osaka, actualmente andén 9, dirección Kusatsu; llegada ~09:25. ~29–30 min · ¥580/persona (≈ 3,22 €). NO necesita reserva: entrar con ICOCA. Si lo perdemos, hay otros 新快速 cada ~10–15 min. Revisar hora/andén cerca del viaje.","https://www.google.com/maps/dir/?api=1&origin=Osaka+Station&destination=Kyoto+Station&travelmode=transit","Abrir ruta en Maps"],
+   ["Kyoto Station","Hotel Resol Trinity Kyoto","🚇 Kyoto Subway: Karasuma Line dirección Kokusaikaikan → Karasuma Oike → cambiar a Tozai Line → Kyoto Shiyakusho-mae. ~11 min · ¥260/persona (≈ 1,44 €). Salida 9 de Zest Oike; con maletas, salida 11 tiene ascensor/escalera mecánica. Hotel ~2 min andando.","https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station&destination=Hotel+Resol+Trinity+Kyoto&travelmode=transit","Ruta al hotel"],
+   ["Kioto","Fushimi Inari","Tren local; cerraremos estación exacta después de dejar maletas."]
+  ],
+  reservations:[["🏨","Hotel Resol Trinity Kyoto","23–26 dic · 162 € · confirmada"],["♨️","Baño público · Hotel Resol Trinity Kyoto","No es onsen termal. Gran baño japonés Oike-no-Yu en 1F, solo para huéspedes. Horario oficial: 15:00–02:00 y 05:00–10:00. Llevar las toallas de la habitación.","https://www.resol-hotel.jp/trinity-kyoto/spa/","Web oficial del baño"]]
+ },
+ {id:"2026-12-24",label:"Jue 24",city:"Kioto",title:"Higashiyama + Gion",subtitle:"Kiyomizu-dera · Sannenzaka · Ninenzaka · Nochebuena",
+  timeline:[
+   ["08:00","Kiyomizu-dera","Empezar pronto."],
+   ["10:30","Sannenzaka + Ninenzaka","Calles históricas."],
+   ["13:00","Higashiyama","Comida por la zona."],
+   ["15:30","Chion-in → Yasaka / Gion","Añadir Chion-in al recorrido y seguir andando hacia Yasaka y Gion."],
+   ["19:30","Cena Nochebuena","Reservar con antelación."]
+  ],
+  routes:[
+   ["Higashiyama → Gion → Pontocho","Kiyomizu-dera → Sannenzaka → Ninenzaka → Kodai-ji → Chion-in → Yasaka Shrine → Hanamikoji (Gion) → Pontocho. ~3–3,5 km. <strong>ANDANDO SIN VISITAS: ~50–60 MIN · CON VISITAS/COMIDA: ~5–7 H</strong>. La idea es avanzar siempre hacia el centro sin volver sobre nuestros pasos.","https://www.google.com/maps/dir/?api=1&origin=Kiyomizu-dera%2C+Kyoto%2C+Japan&destination=Pontocho+Alley%2C+Kyoto%2C+Japan&travelmode=walking&waypoints=Sannenzaka%2C+Kyoto%2C+Japan%7CNinenzaka%2C+Kyoto%2C+Japan%7CKodai-ji%2C+Kyoto%2C+Japan%7CChion-in%2C+Kyoto%2C+Japan%7CYasaka+Shrine%2C+Kyoto%2C+Japan%7CHanamikoji+Street%2C+Gion%2C+Kyoto%2C+Japan"]
+  ],
+  activities:[
+   ["Kiyomizu-dera","Una de las visitas principales de Kioto.","Principal"],
+   ["Sannenzaka y Ninenzaka","Paseo fotogénico entre casas tradicionales.","Paseo"],
+   ["Chion-in","Añadido al recorrido principal de Higashiyama; encaja de camino hacia Yasaka/Gion.","Principal"],
+   ["Kodai-ji / Yasaka","Elegir según tiempo y energía.","Flexible"],
+   ["Gion","Paseo nocturno respetuoso por el barrio.","Noche"],
+   ["Ginkaku-ji + Philosopher’s Path + Nanzen-ji","Opcional solo si sobra bastante tiempo o cambiamos el plan. Es otro bloque de media jornada en el este de Kioto.","Opcional"],
+   ["Sanjusangen-do","Opcional cercano a Higashiyama; interesante sobre todo si llueve o queremos una visita interior.","Opcional"],
+   ["☔ Cooking Sun · Izakaya Class","Plan interior si llueve: 14:00–17:00 en una machiya de Kioto. Cocinamos platos de izakaya (karaage, okonomiyaki y más) y los vamos comiendo. Para 2 personas: ¥10.000/persona (≈ 55,56 €).","Opcional lluvia","https://www.cooking-sun.com/kyoto-cooking-class/","Ver / reservar"]
+  ],
+  restaurants:[
+   ["Izuju","Sushi estilo Kioto cerca de Yasaka. Buena opción de comida durante Higashiyama/Gion.","€€","maps","Izuju Kyoto","Comida"],
+   ["Gion Sushi Hira","Sushi omakase en barra. Curso actual ¥13.200/persona (≈ 73,33 €); turnos online 17:00 y 19:00. Muy buena candidata para Nochebuena.","€€€","maps","Gion Sushi Hira Kyoto","Cena","https://www.tablecheck.com/en/shops/sushi-hira/reserve"],
+   ["Gion Sushi Nakamura","Omakase de sushi más premium. Cena actual ¥23.100/persona (≈ 128,33 €): aperitivos, pescado y 12 nigiri.","€€€€","maps","Gion Sushi Nakamura Kyoto","Cena","https://www.tablecheck.com/en/shops/gion-sushi-nakamura/reserve"],
+   ["Kyoto Gion Tempura Endo Yasaka","Tempura de alta cocina en Gion. Para el 24/25 tiene cursos de cena; referencia: desde ¥16.000/persona (≈ 88,89 €) en opciones de cena, más servicio según asiento.","€€€€","maps","Kyoto Gion Tempura Endo Yasaka Main Branch","Cena","https://www.tablecheck.com/en/shops/honten-endo/reserve"],
+   ["Yakiniku Nikudoushi Kyoto Gion","Yakiniku/Wagyu para una Nochebuena menos formal y muy japonesa. Curso con sirloin ¥5.500/persona (≈ 30,56 €).","€€","maps","Yakiniku Nikudoushi Kyoto Gion","Cena","https://www.tablecheck.com/en/nikudoushi-kyotogion/reserve/experiences"],
+   ["Gion Karyo","Kaiseki de Kioto; mantener como alternativa tradicional si finalmente nos apetece un menú degustación japonés.","€€€€","maps","Gion Karyo Kyoto","Cena"]
+  ],
+  transport:[["Hotel","Higashiyama","Bus/metro + paseo. Prepararemos la ruta exacta desde el Resol Trinity."]],
+  reservations:[["🏨","Hotel Resol Trinity Kyoto","Noche 2 de 3"],["♨️","Baño público · Hotel Resol Trinity Kyoto","No es onsen termal. Gran baño japonés Oike-no-Yu en 1F, solo para huéspedes. Horario oficial: 15:00–02:00 y 05:00–10:00. Llevar las toallas de la habitación.","https://www.resol-hotel.jp/trinity-kyoto/spa/","Web oficial del baño"],["🍽️","Cena Nochebuena","PENDIENTE · reservar cuando elijamos restaurante"]]
+ },
+ {id:"2026-12-25",label:"Vie 25",city:"Kioto",title:"Arashiyama",subtitle:"Bambú · Tenryu-ji · Togetsukyo · posible Kinkaku-ji",
+  timeline:[
+   ["08:00","Arashiyama","Llegar temprano."],
+   ["09:00","Bambú + Tenryu-ji","Zona principal."],
+   ["12:30","Comida","Arashiyama."],
+   ["14:00","Salir de Arashiyama","Volver hacia el centro sin alargar demasiado la sobremesa."],
+   ["14:45–16:00","Nijo Castle","Añadido como visita principal. Castillo/palacio del shogunato; aporta algo distinto a los templos."],
+   ["16:15","Kinkaku-ji","Solo como opcional si el horario, la luz y la energía encajan; no forzarlo."]
+  ],
+  routes:[
+   ["Arashiyama a pie","Saga-Arashiyama Station → Tenryu-ji → Bamboo Grove → Nonomiya Shrine → Togetsukyo Bridge. ~2,5–3 km. <strong>ANDANDO SIN VISITAS: ~35–45 MIN · CON VISITAS: ~3–4 H</strong>. Kinkaku-ji queda fuera de este paseo y se haría después en transporte.","https://www.google.com/maps/dir/?api=1&origin=Saga-Arashiyama+Station%2C+Kyoto%2C+Japan&destination=Togetsukyo+Bridge%2C+Kyoto%2C+Japan&travelmode=walking&waypoints=Tenryu-ji%2C+Kyoto%2C+Japan%7CArashiyama+Bamboo+Forest%2C+Kyoto%2C+Japan%7CNonomiya+Shrine%2C+Kyoto%2C+Japan"]
+  ],
+  activities:[
+   ["Bosque de bambú","Mejor pronto para evitar la mayor afluencia.","Principal"],
+   ["Tenryu-ji","Templo y jardines.","Templo"],
+   ["Puente Togetsukyo","Paseo por el río.","Paseo"],
+   ["Nijo Castle","Añadido al plan principal al volver de Arashiyama.","Principal"],
+   ["Kinkaku-ji","Opcional; solo si encaja sin correr.","Opcional"],
+   ["☔ Cooking Sun · Izakaya Class","Si el 25 llueve mucho podemos cambiar parte de la tarde por este curso 14:00–17:00. ¥10.000/persona (≈ 55,56 €). Se cocina y se come durante la clase.","Opcional lluvia","https://www.cooking-sun.com/kyoto-cooking-class/","Ver / reservar"]
+  ],
+  restaurants:[
+   ["Arashiyama Yoshimura","Soba junto al río. Buena opción local y agradable sin convertir la comida en un evento largo.","€€","maps","Arashiyama Yoshimura Kyoto","Comida"],
+   ["Unagi Hirokawa","Mi candidata especial para Navidad al mediodía: restaurante de anguila en Arashiyama, totalmente distinto al sushi/kaiseki. Una-jyu desde ¥3.900 + impuestos (≈ 21,67 € antes de impuestos); curso B ¥6.900 + impuestos (≈ 38,33 €). Reserva obligatoria y abre reservas 1 mes antes.","€€€","maps","Unagi Hirokawa Arashiyama Kyoto","Comida","https://unagi-hirokawa.jp/en/reservation.html"],
+   ["Shoraian","Tofu-kyo ryori / estilo kaiseki en un entorno precioso de Arashiyama. Lo dejamos como alternativa, no como primera elección si el 24 hacemos degustación tradicional.","€€€","maps","Shoraian Kyoto","Comida","https://www.shoraian.com/reservation-contact/"],
+   ["Arashiyama zona estación","Opción rápida si vamos justos de tiempo.","€–€€","maps","Arashiyama Station Kyoto","Comida"],
+   ["Kyoto Tempura Ten no Meshi Gion","Tempura omakase para una cena diferente. Special Course ¥9.350/persona (≈ 51,94 €).","€€€","maps","Kyoto Tempura Ten no Meshi Gion","Cena","https://booking.ebica.jp/webrsv/plan_search/e014009386/32799?language=en"],
+   ["Wagyu Sukiyaki GOKU · Gion","Sukiyaki con A5 Wagyu. Set 250 g ¥7.800/persona (≈ 43,33 €). Muy distinto del sushi y buena opción para Navidad.","€€€","maps","WAGYU SUKIYAKI GOKU Kyoto Gion Shijo","Cena","https://www.tablecheck.com/es/goku-kyotogionshijo"],
+   ["Yakiniku Nikudoushi Kyoto Gion","Yakiniku de wagyu. Curso con sirloin ¥5.500/persona (≈ 30,56 €); opción especial pero bastante contenida de precio.","€€","maps","Yakiniku Nikudoushi Kyoto Gion","Cena","https://www.tablecheck.com/en/nikudoushi-kyotogion/reserve/experiences"],
+   ["Kawaramachi / Pontocho","Plan flexible sin reserva: izakaya, yakitori, ramen o sushi por el centro.","€€","maps","Kawaramachi Kyoto restaurants","Cena"]
+  ],
+  transport:[["Centro Kioto","Arashiyama","Cerraremos la ruta desde el hotel según JR/Hankyu y la hora de salida."],["Arashiyama","Nijo Castle","Hacer Nijo de vuelta hacia el centro. Cerraremos la combinación exacta cuando revisemos horarios de diciembre."]],
+  reservations:[["🏨","Hotel Resol Trinity Kyoto","Última noche"],["♨️","Baño público · Hotel Resol Trinity Kyoto","No es onsen termal. Gran baño japonés Oike-no-Yu en 1F, solo para huéspedes. Horario oficial: 15:00–02:00 y 05:00–10:00. Llevar las toallas de la habitación.","https://www.resol-hotel.jp/trinity-kyoto/spa/","Web oficial del baño"],["🧳","Envío de 2 maletas · Kioto → Takayama","Hotel Resol Trinity Kyoto → Takayama Ouan. Pedir en recepción y pagar en origen. Estimación actual: 2 maletas size 140 = ¥4.380 (≈ 24,33 €) · 2 maletas size 160 = ¥5.020 (≈ 27,89 €). Confirmar entrega para el 26; si no, enviarlas el 24.","https://www.kuronekoyamato.co.jp/ytc/en/send/services/takkyubin/","Yamato TA-Q-BIN"]]
+ },
+ {id:"2026-12-26",label:"Sáb 26",city:"Nara → Takayama",title:"Nara y traslado a Takayama",subtitle:"Cambio importante: vamos directos desde Nara, sin volver a Kioto",
+  timeline:[
+   ["07:00","Check-out Kioto","Salir temprano, idealmente con las maletas grandes ya enviadas a Takayama."],
+   ["08:15","Kintetsu-Nara Station","Empezar ruta circular: Kofuku-ji → Nara Park."],
+   ["08:45","Nara Park","Ciervos + paseo hacia Todai-ji."],
+   ["09:15","Todai-ji","Gran Buda. En invierno abre desde las 08:00."],
+   ["10:05","Nigatsudo","Parada corta por las vistas y seguir hacia Kasuga Taisha."],
+   ["10:40","Kasuga Taisha","Visita breve. Si vamos retrasados, verla por fuera o saltarla antes que sacrificar la comida/tren."],
+   ["11:25","Regreso hacia Kintetsu-Nara","Volver por el parque sin entretenernos demasiado."],
+   ["11:50–12:30","Comida cerca de Kintetsu-Nara","Sí: la comida está incluida. Mejor comer cerca de la estación para tener el tren controlado."],
+   ["12:40","Kintetsu-Nara Station","Baño / comprar agua-snack / estar listos para salir."],
+   ["~13:00","Nara → Nagoya","Conexión hacia Kintetsu-Nagoya. Cerraremos el tren exacto con horario de diciembre."],
+   ["~16:00","Nagoya → Takayama","Limited Express Hida reservado."],
+   ["~18:30","Takayama","Check-in, cena y onsen."]
+  ],
+  routes:[
+   ["Nara · ruta circular antes de Takayama","Kintetsu-Nara Station → Kofuku-ji → Nara Park → Todai-ji → Nigatsudo → Kasuga Taisha → regreso hacia Kintetsu-Nara. La comida queda al final cerca de la estación para no arriesgar el tren. <strong>ANDANDO SIN VISITAS: ~70–85 MIN · BLOQUE REAL CON VISITAS + COMIDA: ~4 H 15 MIN</strong>.","https://www.google.com/maps/dir/?api=1&origin=Kintetsu-Nara+Station%2C+Nara%2C+Japan&destination=Kintetsu-Nara+Station%2C+Nara%2C+Japan&travelmode=walking&waypoints=Kofuku-ji%2C+Nara%2C+Japan%7CNara+Park%2C+Nara%2C+Japan%7CTodai-ji%2C+Nara%2C+Japan%7CNigatsudo%2C+Nara%2C+Japan%7CKasuga+Taisha%2C+Nara%2C+Japan"]
+  ],
+  activities:[
+   ["Nara Park","Ciervos y paseo.","Principal"],
+   ["Todai-ji","Gran Buda y complejo del templo.","Principal"],
+   ["Kasuga Taisha","Solo si el ritmo del día lo permite.","Opcional"]
+  ],
+  restaurants:[
+   ["Nakatanidou","Mochi recién hecho cerca de Kintetsu-Nara. Parada rápida antes o después de comer.","€","maps","Nakatanidou Nara","Comida"],
+   ["Kamameshi Shizuka","Kamameshi japonés. Solo si el horario/cuando lleguemos permite comer sin prisas; si no, priorizar un local cercano a Kintetsu-Nara.","€€","maps","Kamameshi Shizuka Nara Park","Comida"],
+   ["Takayama · Hida beef","La cena importante del día la movería a Takayama, al llegar.","€€€","maps","Hida beef Takayama","Cena"]
+  ],
+  transport:[["Kioto","Nara","Salida temprana. Objetivo: estar en Kintetsu-Nara sobre 08:15. Al llegar, ruta circular a pie y comida al final junto a la estación."],["Nara","Nagoya","Ruta que cerraremos con horarios reales de diciembre."],["Nagoya","Takayama","Limited Express Hida; conviene reservar asiento."]],
+  reservations:[["🏨","Takayama Ouan","26–29 dic · 613 €"],["♨️","Onsen · Takayama Ouan","13ª planta · 15:00–01:00 y 05:00–10:00.","https://dormy-hotels.com/resort/hotels/takayama/hotspring/","Web oficial"],["🚆","Nagoya → Takayama","PENDIENTE · reservar cuando se publiquen/cerremos horarios"]]
+ },
+ {id:"2026-12-27",label:"Dom 27",city:"Takayama",title:"Takayama",subtitle:"Casco antiguo · mercados · sake · Hida beef · onsen",
+  timeline:[
+   ["08:30","Mercados matinales","Paseo y desayuno."],
+   ["10:00","Sanmachi Suji","Casco antiguo."],
+   ["12:30","Hida beef","Comida."],
+   ["15:00","Takayama Jinya / sake","Flexible."],
+   ["18:30","Onsen","Volver al hotel y descansar."]
+  ],
+  routes:[
+   ["Takayama centro · ruta circular","Takayama Ouan → Miyagawa Morning Market → Nakabashi Bridge → Takayama Jinya → Sanmachi Suji → Hida Kokubunji → hotel. La vuelta pasa por otra zona para no deshacer exactamente el paseo. ~3 km. <strong>ANDANDO SIN VISITAS: ~40–50 MIN · CON MERCADOS/JINYA/SAKE: ~4–5 H</strong>.","https://www.google.com/maps/dir/?api=1&origin=Takayama+Ouan%2C+Takayama%2C+Japan&destination=Takayama+Ouan%2C+Takayama%2C+Japan&travelmode=walking&waypoints=Miyagawa+Morning+Market%2C+Takayama%2C+Japan%7CNakabashi+Bridge%2C+Takayama%2C+Japan%7CTakayama+Jinya%2C+Takayama%2C+Japan%7CSanmachi+Suji%2C+Takayama%2C+Japan%7CHida+Kokubunji+Temple%2C+Takayama%2C+Japan"]
+  ],
+  activities:[
+   ["Sanmachi Suji","Calles históricas y tiendas.","Principal"],
+   ["Takayama Jinya","Edificio histórico; buen complemento.","Cultura"],
+   ["Sake breweries","Degustaciones por el casco antiguo.","Paseo"]
+  ],
+  restaurants:[
+   ["Hida beef sushi / nigiri","Buscar una barra/local de Hida beef sushi por Sanmachi Suji; opción muy típica y fácil de probar mientras paseamos.","€€","maps","Hida beef sushi Sanmachi Suji Takayama"],
+   ["Maruaki","Hida beef / yakiniku; candidato para reservar.","€€€","maps","Maruaki Hida Takayama"],
+   ["Sakaguchiya","Cocina local en el casco antiguo.","€€","maps","Sakaguchiya Takayama"]
+  ],
+  transport:[["A pie","Centro de Takayama","Gran parte del día se puede hacer andando desde el hotel."]],
+  reservations:[["🏨","Takayama Ouan","Noche 2 de 3"],["♨️","Onsen · Takayama Ouan","13ª planta · 15:00–01:00 y 05:00–10:00.","https://dormy-hotels.com/resort/hotels/takayama/hotspring/","Web oficial"]]
+ },
+ {id:"2026-12-28",label:"Lun 28",city:"Shirakawa-go",title:"Excursión a Shirakawa-go",subtitle:"Bus desde Takayama · nieve y aldeas gassho-zukuri",
+  timeline:[
+   ["07:35","Takayama Bus Center","Llegar con margen al bus reservado."],
+   ["07:50","Takayama → Shirakawa-go","Bus objetivo. Llegada ~08:40."],
+   ["08:40","Bus Terminal → Wada House","Empezar la ruta circular. Wada está a pocos minutos."],
+   ["09:00","Shuttle al mirador Shiroyama","En invierno no contamos con subir andando. Subir/bajar en shuttle y volver a la zona de Wada."],
+   ["10:00","Ruta por el pueblo","Wada → Kanda → Nagase → Myozenji → Hachiman Shrine."],
+   ["12:30","Comida","Algo caliente en Ogimachi."],
+   ["13:30","Deai Bridge → Minka-en","Cruzar el puente y visitar el museo al aire libre."],
+   ["14:25","Vuelta por la zona norte","Binen-yumeromu / Shirakawa-go no Yu → Bus Terminal, sin repetir exactamente el camino de ida."],
+   ["15:15","Bus Terminal","Estar aquí con 25–30 min de margen."],
+   ["15:45","Shirakawa-go → Takayama","Llegada prevista ~16:35."],
+   ["17:00","Takayama","Paseo final + onsen."]
+  ],
+  routes:[
+   ["Shirakawa-go por libre · ruta circular","Bus Terminal → Wada House → Kanda House → Nagase House → Myozenji → Hachiman Shrine → Deai Bridge → Minka-en → Binen-yumeromu → Shirakawa-go no Yu → Bus Terminal. El mirador Shiroyama se hace aparte en shuttle y NO está metido en la ruta peatonal. <strong>ANDANDO SIN VISITAS: ~55–70 MIN · BLOQUE COMPLETO: ~6 H 30 MIN</strong>.","https://www.google.com/maps/dir/?api=1&origin=Shirakawa-go+Bus+Terminal%2C+Japan&destination=Shirakawa-go+Bus+Terminal%2C+Japan&travelmode=walking&waypoints=Wada+House%2C+Shirakawa-go%2C+Japan%7CKanda+House%2C+Shirakawa-go%2C+Japan%7CNagase+House%2C+Shirakawa-go%2C+Japan%7CMyozenji%2C+Shirakawa-go%2C+Japan%7CShirakawa+Hachiman+Shrine%2C+Japan%7CDeai+Bridge%2C+Shirakawa-go%2C+Japan%7CShirakawa-go+Gassho-Zukuri+Minka-en%2C+Japan%7CBinen-yumeromu+Museum%2C+Shirakawa-go%2C+Japan%7CShirakawa-go+no+Yu%2C+Japan"]
+  ],
+  activities:[
+   ["Ogimachi","Zona principal de Shirakawa-go.","Principal"],
+   ["Shiroyama Viewpoint","Vista panorámica si acceso/clima lo permiten.","Mirador"],
+   ["Casas gassho-zukuri","Elegir 1–2 interiores.","Cultura"],
+   ["⭐ Tour oficial Shirakawa-go + Ainokura","Alternativa al bus por libre. Nohi Bus: 08:30–15:50 · ¥9.000/persona (≈ 50,00 €). Incluye Ainokura + Shirakawa-go, entrada al museo Gassho-zukuri Minkaen y shuttle al mirador. Elegiríamos este tour EN VEZ del bus por libre.","Opcional tour","https://japanbusonline.com/en/CourseDetail/index/12102010001","Reservar tour oficial"]
+  ],
+  restaurants:[
+   ["Shirakawa-go","Prioridad: comida caliente y sencilla sin perder el bus de vuelta.","€€","maps","Shirakawa-go restaurants","Comida"],
+   ["Takayama al regreso","Cena final en la ciudad si queremos repetir Hida beef o izakaya.","€€","maps","Takayama Station restaurants","Cena"]
+  ],
+  transport:[["Takayama","Shirakawa-go","Bus. En temporada alta/nieve conviene reservar; añadiremos enlace oficial y horas."],["Shirakawa-go","Takayama","Regreso en bus reservado."]],
+  reservations:[
+   ["🚌","BUS POR LIBRE · Takayama ↔ Shirakawa-go","Opción recomendada si queremos verlo a nuestro ritmo. Tarifa actual: ¥2.800 por persona y trayecto (≈ 15,56 €). Objetivo actual: 07:50 Takayama → 08:40 Shirakawa-go · vuelta 15:45 → 16:35. Elegir servicios marcados R (reserva obligatoria).","https://japanbusonline.com/en/CourseSearch/11900040002","Reservar bus"],
+   ["🗺️","TOUR OFICIAL · Shirakawa-go + Ainokura","Alternativa al bus por libre. 08:30–15:50 · ¥9.000/persona (≈ 50,00 €). Reserva requerida; se puede reservar hasta 3 meses antes según la página oficial.","https://japanbusonline.com/en/CourseDetail/index/12102010001","Reservar tour"],
+   ["🏨","Takayama Ouan","Última noche"],["♨️","Onsen · Takayama Ouan","13ª planta · 15:00–01:00 y 05:00–10:00.","https://dormy-hotels.com/resort/hotels/takayama/hotspring/","Web oficial"]]
+ },
+ {id:"2026-12-29",label:"Mar 29",city:"Tokio",title:"Takayama → Tokio",subtitle:"Mañana en Takayama · salida 15:17 · llegada al Airbnb ~20:00",
+  timeline:[
+   ["08:30","Check-out Takayama","Dejar maletas en recepción y aprovechar la mañana / primeras horas de la tarde con luz."],
+   ["13:00","Comida en Takayama","Comer sin prisas antes de recoger las maletas."],
+   ["14:55","Recoger maletas","Hotel → JR Takayama Station (~3 min andando)."],
+   ["15:17","Takayama → Toyama · Hida 11","Limited Express Hida 11 · llegada Toyama 16:44. Reservar asiento."],
+   ["17:09","Toyama → Tokio · Kagayaki 512","Hokuriku Shinkansen · llegada Tokyo Station ~19:14. Asiento reservado obligatorio."],
+   ["19:15–20:00","Tokyo → Airbnb","Traslado a Takada/Toshima. Objetivo realista: estar instalados alrededor de las 20:00."],
+   ["20:00","Cena cerca del Airbnb","Llegamos con margen para cenar y descansar pronto antes del día 30."]
+  ],
+  activities:[
+   ["Takada / Mejiro","Reconocer la zona del alojamiento.","Suave"],
+   ["Shinjuku","Cena y paseo si hay energía.","Noche"]
+  ],
+  restaurants:[
+   ["Takada / Takadanobaba","Hay muchísimas opciones económicas; escogeremos algunas cerca del Airbnb.","€–€€","maps","Takadanobaba restaurants Tokyo"],
+   ["Shinjuku","Izakaya/ramen para la primera noche.","€€","maps","Shinjuku restaurants"]
+  ],
+  transport:[
+   ["Takayama","Toyama","🚆 Limited Express Hida 11 · objetivo actual 15:17 → 16:44. ~1 h 27 min. Asiento reservado aprox. ¥3.220/persona (≈ 17,89 €).","https://www.google.com/maps/dir/?api=1&origin=Takayama+Station&destination=Toyama+Station&travelmode=transit","Abrir ruta"],
+   ["Toyama","Tokyo Station","🚄 Hokuriku Shinkansen KAGAYAKI 512 · objetivo actual 17:09 → 19:14. ~2 h 05 min. Asiento reservado obligatorio. Aprox. ¥12.980/persona (≈ 72,11 €).","https://www.google.com/maps/dir/?api=1&origin=Toyama+Station&destination=Tokyo+Station&travelmode=transit","Abrir ruta"],
+   ["Tokyo Station","Airbnb · Takada, Toshima","Traslado final al Airbnb. Objetivo realista: llegada ~20:00, con margen para cenar cerca y descansar.","https://www.google.com/maps/dir/?api=1&origin=Tokyo+Station&destination=3-chome-21-10+Takada%2C+Toshima+City%2C+Tokyo+171-0033%2C+Japan&travelmode=transit","Ruta al Airbnb"]
+  ],
+  reservations:[["🚆","Takayama → Tokio","Reservar Hida 11 + Kagayaki 512. Total orientativo actual: ¥16.200/persona (≈ 90,00 €) · ≈180 € los dos."],["🏠","Airbnb Tokio","29 dic–5 ene · 510 € · sin cambio de alojamiento"]]
+ },
+ {id:"2026-12-30",label:"Mié 30",city:"Tokio",title:"Asakusa + Ueno/Akihabara",subtitle:"Tokio tradicional por la mañana, ciudad por la tarde",
+  timeline:[
+   ["08:30","Asakusa","Senso-ji y Nakamise."],
+   ["12:00","Comida","Asakusa."],
+   ["14:00","Ueno","Parque/Ameyoko."],
+   ["17:00","Akihabara","Tiendas, arcades y luces."]
+  ],
+  routes:[
+   ["Asakusa → Ueno → Akihabara a pie","Senso-ji/Nakamise → Kappabashi → Ueno Park → Ameyoko → Akihabara Electric Town. Es una ruta lineal y permite cambiar al metro en cualquier momento si estamos cansados. ~5 km. <strong>ANDANDO SIN VISITAS: ~65–75 MIN · CON VISITAS/COMIDA: ~6–8 H</strong>.","https://www.google.com/maps/dir/?api=1&origin=Senso-ji%2C+Tokyo%2C+Japan&destination=Akihabara+Electric+Town%2C+Tokyo%2C+Japan&travelmode=walking&waypoints=Kappabashi+Dougu+Street%2C+Tokyo%2C+Japan%7CUeno+Park%2C+Tokyo%2C+Japan%7CAmeyoko+Shopping+District%2C+Tokyo%2C+Japan"]
+  ],
+  activities:[
+   ["Senso-ji","Templo y puerta Kaminarimon.","Principal"],
+   ["Nakamise","Tiendas tradicionales.","Paseo"],
+   ["Ameyoko","Mercado urbano bajo las vías.","Mercado"],
+   ["Akihabara","Electrónica, anime y recreativos.","Tarde"]
+  ],
+  restaurants:[
+   ["Asakusa Imahan","Sukiyaki; candidato reservable para comida especial.","€€€","maps","Asakusa Imahan Tokyo","Comida"],
+   ["Daikokuya Tempura","Tempura en Asakusa; verificar cola/horario.","€€","maps","Daikokuya Tempura Asakusa","Comida"],
+   ["Ueno / Ameyoko","Street food e izakayas sencillos.","€–€€","maps","Ameyoko restaurants Tokyo","Cena"]
+  ],
+  transport:[["Airbnb","Asakusa","Ruta desde Takada/Takadanobaba a cerrar con metro/JR."],["Asakusa","Ueno → Akihabara","Desplazamientos cortos en metro/JR."]],
+  reservations:[["🏠","Airbnb Tokio","Noche 2 de 7"]]
+ },
+ {id:"2026-12-31",label:"Jue 31",city:"Tokio",title:"Ginza + Marunouchi · Nochevieja",subtitle:"Día ligero y cena reservada antes de Zojoji/Tokyo Tower",
+  timeline:[
+   ["10:00","Ginza / Marunouchi","Paseo y compras según aperturas."],
+   ["14:00","Tokyo Station","Zona central."],
+   ["18:00","Cena Nochevieja","Reservar con mucha antelación."],
+   ["22:30","Zojoji / Tokyo Tower","Plan nocturno sujeto a operativa real de 2026."]
+  ],
+  activities:[
+   ["Marunouchi","Arquitectura, luces y paseo.","Paseo"],
+   ["Ginza","Tiendas y grandes almacenes según horario.","Compras"],
+   ["Zojoji + Tokyo Tower","Candidato para cerrar el año.","Noche"]
+  ],
+  restaurants:[
+   ["Marunouchi / Ginza","Este día solo meteremos restaurantes con apertura del 31 confirmada y reserva disponible.","€€€","maps","Marunouchi restaurants Tokyo"],
+   ["Tokyo Station Hotel / Marunouchi","Candidatos de hotel suelen ser útiles en festivos; investigaremos disponibilidad.","€€€€","maps","Tokyo Station Hotel restaurants"]
+  ],
+  transport:[["Airbnb","Ginza / Marunouchi","Metro/JR."],["Cena","Zojoji","Dejaremos ruta caminable o metro evitando depender de conexiones tardías."]],
+  reservations:[["🍽️","Cena Nochevieja","MUY IMPORTANTE · pendiente"],["🏠","Airbnb Tokio","Noche 3 de 7"]]
+ },
+ {id:"2027-01-01",label:"Vie 1",city:"Tokio",title:"Año Nuevo en Tokio",subtitle:"Hatsumode y día deliberadamente ligero",
+  timeline:[
+   ["10:30","Mañana lenta","Desayuno y comprobar aperturas."],
+   ["12:00","Hatsumode","Templo/santuario que elijamos."],
+   ["15:00","Paseo","Zona abierta y sin prisas."],
+   ["18:30","Cena","Reservada o cerca del Airbnb."]
+  ],
+  activities:[
+   ["Hatsumode","Primera visita del año a templo o santuario.","Especial"],
+   ["Paseo suave","No cargar el día: muchas cosas tendrán horarios especiales.","Flexible"]
+  ],
+  restaurants:[
+   ["Hotel / grandes complejos","Priorizaremos sitios con apertura de Año Nuevo confirmada.","€€€","maps","Tokyo restaurants open New Year's Day"],
+   ["Takadanobaba","Plan B cerca del Airbnb; cadenas y zonas universitarias pueden dar más opciones.","€–€€","maps","Takadanobaba restaurants"]
+  ],
+  transport:[["Tokio","Festivo","Rutas simples y margen extra. Confirmaremos horarios especiales de transporte."]],
+  reservations:[["🍽️","Comida/cena 1 de enero","PENDIENTE · verificar apertura real"],["🏠","Airbnb Tokio","Noche 4 de 7"]]
+ },
+ {id:"2027-01-02",label:"Sáb 2",city:"Tokio",title:"Meiji Jingu → Harajuku → Shibuya",subtitle:"Santuario, moda, Omotesando y luces de Shibuya",
+  timeline:[
+   ["09:00","Meiji Jingu","Visita temprana."],
+   ["11:30","Harajuku","Takeshita / calles secundarias."],
+   ["14:00","Omotesando","Comida y paseo."],
+   ["17:00","Shibuya","Crossing, Parco, Miyashita Park."]
+  ],
+  routes:[
+   ["Meiji Jingu → Harajuku → Shibuya","Meiji Jingu → Takeshita Street → Omotesando → Cat Street → Miyashita Park → Shibuya Crossing → Shibuya PARCO. Ruta ideal para terminar en Shibuya al anochecer. ~4 km. <strong>ANDANDO SIN VISITAS: ~55–65 MIN · CON TIENDAS/COMIDA: ~4–6 H</strong>.","https://www.google.com/maps/dir/?api=1&origin=Meiji+Jingu%2C+Tokyo%2C+Japan&destination=Shibuya+PARCO%2C+Tokyo%2C+Japan&travelmode=walking&waypoints=Takeshita+Street%2C+Tokyo%2C+Japan%7COmotesando%2C+Tokyo%2C+Japan%7CCat+Street%2C+Tokyo%2C+Japan%7CMIYASHITA+PARK%2C+Tokyo%2C+Japan%7CShibuya+Scramble+Crossing%2C+Tokyo%2C+Japan"]
+  ],
+  activities:[
+   ["Meiji Jingu","Santuario y bosque.","Principal"],
+   ["Harajuku","Moda y cultura joven.","Barrio"],
+   ["Omotesando","Arquitectura y tiendas.","Paseo"],
+   ["Shibuya Crossing","Llegar de tarde y quedarse al anochecer.","Noche"]
+  ],
+  restaurants:[
+   ["Harajuku / Omotesando","Cafés y restaurantes; filtraremos por algo que merezca la pena y no solo viral.","€€","maps","Omotesando restaurants Tokyo","Comida"],
+   ["Shibuya","Cena con reserva si queremos evitar colas del periodo festivo.","€€–€€€","maps","Shibuya restaurants Tokyo","Cena"]
+  ],
+  transport:[["Airbnb","Meiji Jingu","JR/metro."],["Omotesando","Shibuya","Se puede hacer parte andando."]],
+  reservations:[["🏠","Airbnb Tokio","Noche 5 de 7"]]
+ },
+ {id:"2027-01-03",label:"Dom 3",city:"Tokio",title:"Shinjuku",subtitle:"Mirador, calles, luces y cena",
+  timeline:[
+   ["10:30","Shinjuku","Explorar lado oeste/este."],
+   ["14:00","Tokyo Metropolitan Government Building","Mirador si está abierto."],
+   ["17:00","Kabukicho","Paseo."],
+   ["19:00","Omoide Yokocho / cena","Noche en Shinjuku."]
+  ],
+  routes:[
+   ["Shinjuku de oeste a este","Tokyo Metropolitan Government Building → Omoide Yokocho → Godzilla Head/Kabukicho → Hanazono Shrine → Golden Gai. Así empezamos por el mirador y terminamos en la zona de cena/copas. ~2,5–3 km. <strong>ANDANDO SIN PARAR: ~35–45 MIN · CON PARADAS/CENA: ~2–3 H</strong>.","https://www.google.com/maps/dir/?api=1&origin=Tokyo+Metropolitan+Government+Building%2C+Tokyo%2C+Japan&destination=Shinjuku+Golden+Gai%2C+Tokyo%2C+Japan&travelmode=walking&waypoints=Omoide+Yokocho%2C+Tokyo%2C+Japan%7CGodzilla+Head%2C+Shinjuku%2C+Tokyo%2C+Japan%7CHanazono+Shrine%2C+Tokyo%2C+Japan"]
+  ],
+  activities:[
+   ["Mirador Gobierno Metropolitano","Buen mirador gratuito si está operativo.","Mirador"],
+   ["Omoide Yokocho","Callejones y yakitori.","Noche"],
+   ["Kabukicho","Paseo por las luces; no hace falta dedicar horas.","Paseo"]
+  ],
+  restaurants:[
+   ["Fūunji","Tsukemen en Shinjuku; suele tener cola.","€","maps","Fuunji Shinjuku","Comida"],
+   ["Omoide Yokocho","Muchos locales pequeños de yakitori; ideal para picar.","€€","maps","Omoide Yokocho Tokyo","Cena"],
+   ["Shinjuku Kappo Nakajima","Candidato para comida japonesa más formal; comprobar apertura festiva.","€€","maps","Shinjuku Kappo Nakajima","Comida"]
+  ],
+  transport:[["Airbnb","Shinjuku","Muy sencillo desde la zona de Takadanobaba/Takada."]],
+  reservations:[["🏠","Airbnb Tokio","Noche 6 de 7"]]
+ },
+ {id:"2027-01-04",label:"Lun 4",city:"Tokio",title:"teamLab + Azabudai / Roppongi",subtitle:"Día cubierto y última gran noche en Tokio",
+  timeline:[
+   ["10:00","teamLab Borderless","Entrada con hora reservada."],
+   ["13:00","Azabudai Hills","Comida y paseo."],
+   ["16:00","Roppongi / Tokyo Tower","Última tarde."],
+   ["19:30","Cena final","Reservar algo que nos apetezca especialmente."]
+  ],
+  routes:[
+   ["Azabudai → Tokyo Tower → Roppongi","teamLab Borderless / Azabudai Hills → Tokyo Tower → Roppongi Hills. Paseo corto entre zonas, ideal si hace buen tiempo. ~2,5–3 km. <strong>ANDANDO SIN VISITAS: ~35–45 MIN · CON PARADAS: ~3–4 H</strong>.","https://www.google.com/maps/dir/?api=1&origin=teamLab+Borderless%2C+Tokyo%2C+Japan&destination=Roppongi+Hills%2C+Tokyo%2C+Japan&travelmode=walking&waypoints=Tokyo+Tower%2C+Tokyo%2C+Japan"]
+  ],
+  activities:[
+   ["teamLab Borderless","Comprar entrada con antelación.","Reserva"],
+   ["Azabudai Hills","Arquitectura, tiendas y comida.","Zona"],
+   ["Roppongi / Tokyo Tower","Elegir según ganas y tiempo.","Tarde"]
+  ],
+  restaurants:[
+   ["Azabudai Hills","Buen día para reservar comida allí y simplificar desplazamientos.","€€–€€€","maps","Azabudai Hills restaurants","Comida"],
+   ["Roppongi","Elegiremos la cena final según presupuesto: sushi, yakiniku o izakaya.","€€–€€€","maps","Roppongi restaurants Tokyo","Cena"]
+  ],
+  transport:[["Airbnb","Azabudai Hills","Metro; ruta exacta cuando tengamos hora de teamLab."]],
+  reservations:[["🎨","teamLab Borderless","PENDIENTE · comprar entrada con hora"],["🍽️","Cena final","PENDIENTE"],["🏠","Airbnb Tokio","Última noche"]]
+ },
+ {id:"2027-01-05",label:"Mar 5",city:"Tokio → Madrid",title:"Último día + Haneda",subtitle:"Vuelo HND 17:10 · llegar al aeropuerto con margen",
+  timeline:[
+   ["09:00","Check-out / maletas","Guardar equipaje si hace falta."],
+   ["10:00","Últimas compras","Cerca del alojamiento o estación conveniente."],
+   ["13:00","Hacia Haneda","No apurar."],
+   ["17:10","HND → PVG · FM896","Shanghai Airlines · Turista · 3 h 05 min · 2 asientos seleccionados."],
+   ["19:15","PVG","Escala de 5 h 35 min."]
+  ],
+  activities:[["Últimas compras","Nada que obligue a cruzar Tokio varias veces.","Suave"]],
+  restaurants:[
+   ["Haneda Airport","Comida temprana antes del vuelo; podemos elegir terminal/restaurante cuando sepamos puerta y terminal.","€€","maps","Haneda Airport restaurants"]
+  ],
+  transport:[["Airbnb","Haneda","Ruta exacta con maletas y margen; priorizar comodidad sobre ahorrar un transbordo."],["HND","PVG","Shanghai Airlines FM896 · 17:10"]],
+  reservations:[["✈️","Vuelo FM896","HND 17:10 → PVG 19:15 · localizador PJ1HKT · 2 asientos seleccionados"],["🏠","Airbnb Tokio","Check-out"]]
+ },
+ {id:"2027-01-06",label:"Mié 6",city:"Vuelo",title:"Shanghái → Madrid",subtitle:"Último tramo · llegada a Madrid a las 08:00",
+  timeline:[
+   ["00:50","PVG → MAD · MU709","China Eastern · Turista · 14 h 10 min · 2 asientos seleccionados."],
+   ["08:00","Madrid","Fin del viaje."]
+  ],
+  activities:[["Llegada","Recoger equipaje y volver a casa.","Fin"]],
+  restaurants:[],
+  transport:[["PVG","MAD","China Eastern MU709 · salida 00:50 · llegada 08:00"]],
+  reservations:[["✈️","Vuelo MU709","Localizador PJ1HKT · 2 asientos seleccionados"]]
+ }
+];
+
+
+const dayConditions = {
+ "2026-12-20":{place:"Madrid",lat:40.4168,lon:-3.7038,sunrise:"08:34",sunset:"17:51"},
+ "2026-12-21":{place:"Osaka",lat:34.6937,lon:135.5023,sunrise:"07:01",sunset:"16:51"},
+ "2026-12-22":{place:"Osaka",lat:34.6937,lon:135.5023,sunrise:"07:01",sunset:"16:51"},
+ "2026-12-23":{place:"Kioto",lat:35.0116,lon:135.7681,sunrise:"07:02",sunset:"16:50"},
+ "2026-12-24":{place:"Kioto",lat:35.0116,lon:135.7681,sunrise:"07:02",sunset:"16:50"},
+ "2026-12-25":{place:"Kioto",lat:35.0116,lon:135.7681,sunrise:"07:03",sunset:"16:51"},
+ "2026-12-26":{place:"Nara",lat:34.6851,lon:135.8048,sunrise:"07:02",sunset:"16:52"},
+ "2026-12-27":{place:"Takayama",lat:36.1461,lon:137.2522,sunrise:"07:00",sunset:"16:43"},
+ "2026-12-28":{place:"Shirakawa-go",lat:36.2571,lon:136.9065,sunrise:"07:02",sunset:"16:45"},
+ "2026-12-29":{place:"Takayama",lat:36.1461,lon:137.2522,sunrise:"07:01",sunset:"16:44"},
+ "2026-12-30":{place:"Tokio",lat:35.6762,lon:139.6503,sunrise:"06:50",sunset:"16:36"},
+ "2026-12-31":{place:"Tokio",lat:35.6762,lon:139.6503,sunrise:"06:50",sunset:"16:37"},
+ "2027-01-01":{place:"Tokio",lat:35.6762,lon:139.6503,sunrise:"06:51",sunset:"16:38"},
+ "2027-01-02":{place:"Tokio",lat:35.6762,lon:139.6503,sunrise:"06:51",sunset:"16:39"},
+ "2027-01-03":{place:"Tokio",lat:35.6762,lon:139.6503,sunrise:"06:51",sunset:"16:40"},
+ "2027-01-04":{place:"Tokio",lat:35.6762,lon:139.6503,sunrise:"06:52",sunset:"16:41"},
+ "2027-01-05":{place:"Tokio",lat:35.6762,lon:139.6503,sunrise:"06:52",sunset:"16:42"},
+ "2027-01-06":{place:"Madrid",lat:40.4168,lon:-3.7038,sunrise:"08:38",sunset:"18:03"}
+};
+
+const weatherLabels = {
+ 0:["☀️","Despejado"],1:["🌤️","Casi despejado"],2:["⛅","Parcialmente nublado"],3:["☁️","Nublado"],
+ 45:["🌫️","Niebla"],48:["🌫️","Niebla"],51:["🌦️","Llovizna"],53:["🌦️","Llovizna"],55:["🌧️","Llovizna"],
+ 61:["🌦️","Lluvia"],63:["🌧️","Lluvia"],65:["🌧️","Lluvia fuerte"],66:["🌧️","Lluvia helada"],67:["🌧️","Lluvia helada"],
+ 71:["🌨️","Nieve"],73:["🌨️","Nieve"],75:["❄️","Nieve fuerte"],77:["❄️","Nieve"],
+ 80:["🌦️","Chubascos"],81:["🌧️","Chubascos"],82:["🌧️","Chubascos fuertes"],
+ 85:["🌨️","Nieve"],86:["❄️","Nieve fuerte"],95:["⛈️","Tormenta"],96:["⛈️","Tormenta"],99:["⛈️","Tormenta"]
+};
+
+const plannedExpensesByDay = {
+  "2026-12-25":[
+    {
+      concept:"Envío de 2 maletas Kioto → Takayama",
+      display:"¥4.380–¥5.020 (≈ 24,33–27,89 €)",
+      note:"Estimado según tamaño 140–160. No se suma al gasto real hasta pagarlo."
+    }
+  ]
+};
+
+/* =====================================================================
+   APP · a partir de aquí no hace falta tocar nada
+   ===================================================================== */
+const COLLECTIONS = ["expenses", "notes", "checks", "tasks", "ideas"];
+const CATEGORIES = [
+  ["comida", "🍜", "Comida"], ["transporte", "🚆", "Transporte"], ["alojamiento", "🏨", "Alojamiento"],
+  ["entradas", "🎟", "Entradas y tours"], ["compras", "🛍", "Compras"], ["otros", "📦", "Otros"]
+];
+const CAT = Object.fromEntries(CATEGORIES.map(c => [c[0], c]));
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const slug = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+const mapsLink = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+const emptyCols = () => Object.fromEntries(COLLECTIONS.map(c => [c, {}]));
+const readJSON = (k, def) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? def; } catch { return def; } };
+
+function fmtNum(n, dec = 0) {
+  const fixed = Math.abs(Number(n) || 0).toFixed(dec);
+  const neg = Number(n) < 0 && Number(fixed) !== 0;
+  const [i, f] = fixed.split(".");
+  return (neg ? "-" : "") + i.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + (f ? "," + f : "");
+}
+const fmtEUR = n => `${fmtNum(n, 2)} €`;
+const fmtYen = n => `¥${fmtNum(n, 0)}`;
+function parseAmount(v) {
+  let s = String(v || "").replace(/[\s€¥]/g, "");
+  if (s.includes(",")) s = s.replace(/\./g, "").replace(",", ".");
+  else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, "");
+  const n = parseFloat(s);
+  return Number.isFinite(n) ? Math.round(n * 100) / 100 : NaN;
+}
+function todayId() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+const dateNum = id => { const [y, m, d] = id.split("-").map(Number); return Date.UTC(y, m - 1, d) / 864e5; };
+function timeAgo(ms) {
+  if (!ms) return "";
+  const s = (Date.now() - ms) / 1000;
+  if (s < 60) return "hace un momento";
+  if (s < 3600) return `hace ${Math.round(s / 60)} min`;
+  if (s < 86400) return `hace ${Math.round(s / 3600)} h`;
+  return new Date(ms).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
+}
+let toastTimer;
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2300);
+}
+
+const dayById = id => daysData.find(d => d.id === id);
+const dayIdx = id => daysData.findIndex(d => d.id === id);
+const TRIP_START = daysData[0].id, TRIP_END = daysData[daysData.length - 1].id;
+const inTrip = () => !!dayById(todayId());
+
+let current = inTrip() ? todayId() : (dayById(localStorage.getItem("jp_current")) ? localStorage.getItem("jp_current") : "2026-12-21");
+let view = "day";
+let editingId = null;
+let catFilter = "all";
+
+/* =====================================================================
+   MONEDA · tipo de cambio online
+   ===================================================================== */
+const RATE_KEY = "jp3_rate";
+const rateInfo = () => readJSON(RATE_KEY, null);
+const jpyPerEur = () => rateInfo()?.rate || FALLBACK_JPY;
+const yenToEur = n => (Number(n) || 0) / jpyPerEur();
+const LEGACY = { CNY: 8.3, USD: 1.17 };
+function eurOf(e) {
+  if (e.currency === "EUR") return Number(e.amount) || 0;
+  if (e.currency === "JPY") return (Number(e.amount) || 0) / (Number(e.rate) || jpyPerEur());
+  return (Number(e.amount) || 0) / (LEGACY[e.currency] || 1);
+}
+let rateBusy = false;
+async function refreshRate(force = false) {
+  const info = rateInfo();
+  if (rateBusy || (!force && info && Date.now() - info.at < 2 * 3600e3)) return;
+  if (!navigator.onLine) return;
+  rateBusy = true;
+  const sources = [
+    async () => { const j = await (await fetch("https://api.frankfurter.dev/v2/rate/EUR/JPY", { cache: "no-store" })).json(); return { rate: +j.rate, date: j.date }; },
+    async () => { const j = await (await fetch("https://api.frankfurter.dev/v1/latest?symbols=JPY", { cache: "no-store" })).json(); return { rate: +j.rates.JPY, date: j.date }; },
+    async () => { const j = await (await fetch("https://open.er-api.com/v6/latest/EUR", { cache: "no-store" })).json(); return { rate: +j.rates.JPY, date: "" }; }
+  ];
+  let ok = false;
+  for (const src of sources) {
+    try {
+      const v = await src();
+      if (v.rate > 50 && v.rate < 500) {
+        const changed = !info || Math.abs(info.rate - v.rate) > 0.001;
+        localStorage.setItem(RATE_KEY, JSON.stringify({ ...v, at: Date.now() }));
+        ok = true;
+        if (changed) rateChanged(); else renderFx();
+        break;
+      }
+    } catch { }
+  }
+  rateBusy = false;
+  if (force) toast(ok ? `1 € = ${fmtYen1(jpyPerEur())}` : "No se pudo actualizar el tipo (¿sin conexión?)");
+}
+const fmtYen1 = r => `¥${fmtNum(r, 1)}`;
+function rateLine() {
+  const i = rateInfo();
+  if (!i) return `orientativo (¥${FALLBACK_JPY}) hasta tener conexión`;
+  const d = i.date ? new Date(i.date + "T12:00:00").toLocaleDateString("es-ES", { day: "numeric", month: "short" }) : "";
+  return `${d ? `tipo del ${d} · ` : ""}comprobado ${timeAgo(i.at)}`;
+}
+function rateChanged() { renderFx(); renderDay(); if (view === "expenses") renderExpensesView(); }
+function renderFx() {
+  $("#fxPill").innerHTML = `💱 <b>1 € = ${fmtYen1(jpyPerEur())}</b> <span style="opacity:.6">· ¥1.000 = ${fmtEUR(yenToEur(1000))}</span>`;
+  if ($("#fxDialog").open) renderFxDialog(false);
+}
+
+// Convierte a euros (con el tipo actual) todos los precios en yenes del itinerario
+function yen(html) {
+  if (!html || typeof html !== "string" || html.indexOf("¥") < 0) return html;
+  const num = s => Number(s.replace(/\./g, ""));
+  return html
+    .replace(/\s?\(≈\s?[\d.,]+(?:\s?[–-]\s?[\d.,]+)?\s?€[^)]*\)/g, "")
+    .replace(/\s?·\s?≈\s?[\d.,]+\s?€ los dos/g, "")
+    .replace(/¥\s?(\d{1,3}(?:\.\d{3})+|\d+)(?:\s?[–-]\s?¥\s?(\d{1,3}(?:\.\d{3})+|\d+))?(\/persona)?/g, (m, a, b) =>
+      `${m} <span class="eur">≈ ${fmtNum(yenToEur(num(a)), 2)}${b ? `–${fmtNum(yenToEur(num(b)), 2)}` : ""} €</span>`);
+}
+
+/* =====================================================================
+   TIEMPO · previsión online + avisos de lluvia
+   ===================================================================== */
+const WX_TTL = 30 * 60e3;
+const SNOW = new Set([71, 73, 75, 77, 85, 86]), STORM = new Set([95, 96, 99]);
+const RAIN = new Set([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82]);
+const wxKey = m => `jp3_wx_${m.lat},${m.lon}`;
+const daysAway = id => dateNum(id) - dateNum(todayId());
+const forecastable = id => daysAway(id) >= -1 && daysAway(id) <= 15;
+let wxBusy = false;
+async function refreshWeather(force = false) {
+  if (wxBusy || !navigator.onLine) return;
+  const metas = {};
+  daysData.forEach(d => { const m = dayConditions[d.id]; if (m && forecastable(d.id)) metas[`${m.lat},${m.lon}`] = m; });
+  const list = Object.values(metas).filter(m => force || !(readJSON(wxKey(m), null)?.at > Date.now() - WX_TTL));
+  if (!list.length) return;
+  wxBusy = true;
+  await Promise.all(list.map(async m => {
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${m.lat}&longitude=${m.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,snowfall_sum,sunrise,sunset&hourly=precipitation_probability,weather_code&timezone=auto&forecast_days=16&past_days=1`;
+      const r = await fetch(url, { cache: "no-store" });
+      if (!r.ok) throw new Error("weather");
+      const j = await r.json();
+      localStorage.setItem(wxKey(m), JSON.stringify({ at: Date.now(), daily: j.daily, hourly: { time: j.hourly?.time || [], pp: j.hourly?.precipitation_probability || [], code: j.hourly?.weather_code || [] } }));
+    } catch { }
+  }));
+  wxBusy = false;
+  weatherChanged();
+}
+function dayWx(id) {
+  const m = dayConditions[id]; if (!m) return null;
+  const c = readJSON(wxKey(m), null); if (!c?.daily?.time) return null;
+  const i = c.daily.time.indexOf(id); if (i < 0) return null;
+  const D = c.daily, hours = [];
+  (c.hourly?.time || []).forEach((t, k) => { if (t.startsWith(id)) { const h = +t.slice(11, 13); if (h >= 7 && h <= 22) hours.push({ h, pp: c.hourly.pp[k], code: c.hourly.code[k] }); } });
+  return {
+    code: D.weather_code?.[i], max: Math.round(D.temperature_2m_max?.[i]), min: Math.round(D.temperature_2m_min?.[i]),
+    rain: D.precipitation_probability_max?.[i], sum: D.precipitation_sum?.[i], snow: D.snowfall_sum?.[i],
+    sunrise: D.sunrise?.[i]?.slice(11, 16), sunset: D.sunset?.[i]?.slice(11, 16), hours, at: c.at, place: m.place
+  };
+}
+function hoursRange(hs) {
+  if (!hs.length) return "";
+  const groups = []; let a = hs[0], b = hs[0];
+  for (const h of hs.slice(1)) { if (h === b + 1) b = h; else { groups.push([a, b]); a = b = h; } }
+  groups.push([a, b]);
+  return groups.map(([x, y]) => `${x}–${y + 1} h`).join(" y ");
+}
+function alertFor(w) {
+  if (!w || !Number.isFinite(w.max)) return null;
+  const pp = Number.isFinite(w.rain) ? w.rain : null;
+  const wetHours = w.hours.filter(x => (x.pp ?? 0) >= 50).map(x => x.h);
+  const rainyCode = RAIN.has(w.code) || STORM.has(w.code);
+  const snowy = SNOW.has(w.code) || (w.snow ?? 0) >= 1;
+  let level = null;
+  if (STORM.has(w.code) || (pp ?? 0) >= 70 || (rainyCode && (pp ?? 60) >= 55)) level = "alta";
+  else if ((pp ?? 0) >= 40 || rainyCode) level = "media";
+  if (snowy && !rainyCode) return { type: "nieve", level: "info", pp, wetHours, range: hoursRange(wetHours) };
+  if (!level) return null;
+  return { type: STORM.has(w.code) ? "tormenta" : "lluvia", level, pp, wetHours, range: hoursRange(wetHours) };
+}
+function weatherChanged() {
+  renderDaysBar();
+  const d = dayById(current); if (d) { renderConditions(d); renderWeatherAlert(d); }
+  renderBanner();
+}
+function renderConditions(d) {
+  const meta = dayConditions[d.id];
+  const sun = $("#sunInfo"), weather = $("#weatherInfo");
+  if (!meta) { sun.textContent = "☀️ —"; weather.textContent = "🌦️ —"; return; }
+  const w = dayWx(d.id);
+  sun.innerHTML = `🌅 ${w?.sunrise || meta.sunrise} <span style="opacity:.45">·</span> 🌇 ${w?.sunset || meta.sunset} <span style="opacity:.62">(${meta.place})</span>`;
+  const away = daysAway(d.id);
+  if (away > 15) { weather.innerHTML = `🌦️ Tiempo: aparecerá solo ${away - 15 === 1 ? "mañana" : `en ${away - 15} días`} <span style="opacity:.6">(16 días antes)</span>`; return; }
+  if (away < -1 && !w) { weather.innerHTML = `🌦️ Tiempo: día pasado`; return; }
+  if (!w) { weather.innerHTML = navigator.onLine ? `🌦️ Actualizando ${meta.place}…` : `🌦️ Sin conexión · la previsión aparecerá al conectarse`; return; }
+  const [icon, label] = weatherLabels[w.code] || ["🌦️", "Variable"];
+  weather.innerHTML = `${icon} ${label} · ${w.min}–${w.max} °C${Number.isFinite(w.rain) ? ` · lluvia ${w.rain}%` : ""} <span style="opacity:.6">· ${timeAgo(w.at)}</span>`;
+}
+function rainAlternatives(d) {
+  const place = dayConditions[d.id]?.place;
+  const seen = new Set(), out = [];
+  daysData.filter(x => dayConditions[x.id]?.place === place || x.id === d.id).forEach(x => x.activities.forEach(a => {
+    if (/lluvia/i.test(a[2] || "") && !seen.has(a[0])) { seen.add(a[0]); out.push({ a, day: x }); }
+  }));
+  return out;
+}
+function renderWeatherAlert(d) {
+  const box = $("#wxAlert");
+  const w = dayWx(d.id), al = alertFor(w);
+  if (!al || daysAway(d.id) < 0) { box.hidden = true; box.innerHTML = ""; return; }
+  box.className = `wx-alert ${al.type === "nieve" ? "nieve" : al.level}`;
+  const bars = w.hours.length ? `<div class="hours" aria-hidden="true">${w.hours.map(x => `<span class="${(x.pp ?? 0) >= 50 ? "wet" : ""}" style="height:${Math.max(8, x.pp ?? 0)}%" title="${x.h} h · ${x.pp ?? "?"}%"></span>`).join("")}</div><div class="hours-l"><span>${w.hours[0].h} h</span><span>Probabilidad de lluvia por horas</span><span>${w.hours[w.hours.length - 1].h} h</span></div>` : "";
+  if (al.type === "nieve") {
+    box.innerHTML = `<h3>❄️ Nieve prevista en ${esc(w.place)}</h3><p>${w.min}–${w.max} °C. Ropa de abrigo, calzado que agarre y margen extra: los buses y trenes de montaña pueden ir con retraso.</p>`;
+    box.hidden = false; return;
+  }
+  const title = al.level === "alta" ? (al.type === "tormenta" ? "⛈️ Tormenta prevista" : "☔ Lluvia muy probable") : "🌦️ Posible lluvia";
+  const clash = d.timeline.filter(e => { const m = String(e[0]).match(/(\d{1,2}):(\d{2})/); return m && al.wetHours.includes(+m[1]); });
+  const place = dayConditions[d.id]?.place;
+  const better = daysData.filter(x => x.id !== d.id && dayConditions[x.id]?.place === place && daysAway(x.id) >= 0)
+    .map(x => ({ x, w: dayWx(x.id) })).filter(o => o.w && !alertFor(o.w));
+  const alts = rainAlternatives(d);
+  const tips = [];
+  if (clash.length) tips.push(`Coincide con la lluvia: ${clash.map(e => `<b>${e[0]}</b> ${e[1]}`).join(" · ")}. Si es al aire libre, adelántalo o retrásalo${al.range ? " fuera de esas horas" : ""}.`);
+  if (better.length) tips.push(`${better.map(o => `<button class="linkbtn" data-action="go-day" data-day="${o.x.id}">${o.x.label}</button> (lluvia ${Number.isFinite(o.w.rain) ? o.w.rain + "%" : "baja"})`).join(", ")} ${better.length === 1 ? "pinta" : "pintan"} mejor en ${esc(place)}: podéis intercambiar los planes de exterior.`);
+  if (!clash.length && !better.length) tips.push("Priorizad visitas a cubierto (templos con sala interior, museos, mercados cubiertos) y dejad miradores y paseos para cuando pare.");
+  tips.push("Llevad paraguas: en cualquier konbini los venden por unos ¥500 " + `<span class="eur">≈ ${fmtNum(yenToEur(500), 2)} €</span>.`);
+  box.innerHTML = `<h3>${title}${Number.isFinite(al.pp) ? ` (${al.pp}%)` : ""} en ${esc(w.place)}</h3>
+    <p>${al.range ? `Sobre todo de <b>${al.range}</b>. ` : ""}${w.min}–${w.max} °C${Number.isFinite(w.sum) && w.sum > 0 ? ` · ${fmtNum(w.sum, 1)} mm` : ""}. Conviene revisar el plan.</p>
+    ${bars}
+    <ul>${tips.map(t => `<li>${t}</li>`).join("")}</ul>
+    ${alts.length ? `<div class="sub">Planes a cubierto que ya teníamos pensados</div><ul>${alts.map(({ a, day }) => `<li><b>${a[0]}</b>${day.id !== d.id ? ` <span class="muted">(apuntado el ${day.label})</span>` : ""}${a[3] ? ` · <a class="linkbtn" target="_blank" rel="noopener" href="${a[3]}">${a[4] || "Ver"}</a>` : ""}</li>`).join("")}</ul>` : ""}`;
+  box.hidden = false;
+}
+
+/* =====================================================================
+   SINCRONIZACIÓN · archivo privado en GitHub
+   ===================================================================== */
+const SYNC_KEY = "jp3_sync";
+let token = localStorage.getItem("jp3_token") || "";
+const syncState = (() => {
+  const o = readJSON(SYNC_KEY, null);
+  return { remote: normalize(o?.remote), sha: o?.sha || null, etag: o?.etag || null, ops: o?.ops || [], seq: o?.seq || 0, lastSync: o?.lastSync || 0 };
+})();
+const syncMeta = { busy: false, again: false, error: null };
+function normalize(o) { const c = emptyCols(); if (o) COLLECTIONS.forEach(k => { if (o[k] && typeof o[k] === "object") c[k] = o[k]; }); return c; }
+function applyOps(base, ops) {
+  const c = JSON.parse(JSON.stringify(base));
+  ops.forEach(op => { if (!c[op.c]) c[op.c] = {}; if (op.t === "put") c[op.c][op.id] = op.data; else delete c[op.c][op.id]; });
+  return c;
+}
+let S = { cols: applyOps(syncState.remote, syncState.ops) };
+const saveSync = () => localStorage.setItem(SYNC_KEY, JSON.stringify(syncState));
+const recompute = () => { S.cols = applyOps(syncState.remote, syncState.ops); };
+function pushOp(op) {
+  op.n = ++syncState.seq;
+  syncState.ops.push(op);
+  const last = new Map(); syncState.ops.forEach((o, i) => last.set(o.c + "/" + o.id, i));
+  syncState.ops = syncState.ops.filter((o, i) => last.get(o.c + "/" + o.id) === i);
+  saveSync(); recompute(); onData(); renderSync(); scheduleSync(1200);
+}
+const store = {
+  put: (c, id, data) => pushOp({ t: "put", c, id, data }),
+  del: (c, id) => pushOp({ t: "del", c, id })
+};
+const b64encode = str => { const bytes = new TextEncoder().encode(str); let bin = ""; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(bin); };
+const b64decode = b64 => new TextDecoder().decode(Uint8Array.from(atob(String(b64).replace(/\s/g, "")), ch => ch.charCodeAt(0)));
+const syncReady = () => !!(SYNC.owner && token);
+function httpErr(r) { const e = new Error("HTTP " + r.status); e.kind = r.status === 401 || r.status === 404 ? "auth" : r.status === 403 ? (r.headers.get("x-ratelimit-remaining") === "0" ? "rate" : "auth") : "net"; return e; }
+
+let syncTimer = null;
+function scheduleSync(ms) { clearTimeout(syncTimer); syncTimer = setTimeout(syncNow, ms); }
+async function syncNow() {
+  if (!syncReady()) { renderSync(); return; }
+  if (syncMeta.busy) { syncMeta.again = true; return; }
+  if (!navigator.onLine) { syncMeta.error = "offline"; renderSync(); return; }
+  syncMeta.busy = true; renderSync();
+  const base = `${GITHUB_API}/repos/${SYNC.owner}/${SYNC.repo}`;
+  const url = `${base}/contents/${SYNC.path}`;
+  const auth = { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" };
+  try {
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const pending = syncState.ops.slice();
+      const h = { ...auth };
+      if (syncState.etag && !pending.length) h["If-None-Match"] = syncState.etag;
+      const r = await fetch(`${url}?ref=${SYNC.branch}`, { headers: h, cache: "no-store" });
+      let remote = syncState.remote, sha = syncState.sha;
+      if (r.status === 304) { /* sin cambios */ }
+      else if (r.ok) { const j = await r.json(); remote = normalize(JSON.parse(b64decode(j.content || "") || "{}")); sha = j.sha; syncState.etag = r.headers.get("ETag"); }
+      else if (r.status === 404) {
+        const rr = await fetch(base, { headers: auth, cache: "no-store" });
+        if (!rr.ok) throw httpErr(rr);
+        remote = emptyCols(); sha = null; syncState.etag = null;
+      } else throw httpErr(r);
+      if (!pending.length) { syncState.remote = remote; syncState.sha = sha; break; }
+      const merged = applyOps(remote, pending);
+      const body = { message: `Viaje · ${pending.length} ${pending.length === 1 ? "cambio" : "cambios"}`, content: b64encode(JSON.stringify(merged)), branch: SYNC.branch };
+      if (sha) body.sha = sha;
+      const p = await fetch(url, { method: "PUT", headers: { ...auth, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      if (p.status === 409 || p.status === 422) { syncState.etag = null; continue; } // otro móvil escribió a la vez: reintentar
+      if (!p.ok) throw httpErr(p);
+      const pj = await p.json();
+      syncState.remote = merged; syncState.sha = pj.content?.sha || null; syncState.etag = null;
+      const done = new Set(pending.map(o => o.n));
+      syncState.ops = syncState.ops.filter(o => !done.has(o.n));
+      if (!syncState.ops.length) break;
+    }
+    syncState.lastSync = Date.now(); syncMeta.error = null;
+  } catch (e) {
+    console.warn(e);
+    syncMeta.error = e.kind || (navigator.onLine ? "net" : "offline");
+  } finally {
+    syncMeta.busy = false; saveSync(); recompute(); onData(); renderSync();
+    if (syncMeta.again) { syncMeta.again = false; scheduleSync(300); }
+  }
+}
+function syncLabel() {
+  const n = syncState.ops.length;
+  if (!SYNC.owner) return ["local", "Solo en este móvil"];
+  if (!token) return ["error", "Sin conectar"];
+  if (syncMeta.error === "auth") return ["error", "Clave no válida"];
+  if (syncMeta.busy) return ["busy", "Sincronizando…"];
+  if (syncMeta.error === "offline" || !navigator.onLine) return ["offline", n ? `Sin conexión · ${n} por subir` : "Sin conexión"];
+  if (syncMeta.error === "rate") return ["error", "Espera un momento"];
+  if (syncMeta.error) return ["offline", n ? `Reintentando · ${n} por subir` : "Reintentando…"];
+  if (n) return ["busy", `${n} por subir`];
+  return ["ok", "Sincronizado"];
+}
+function renderSync() {
+  const [cls, label] = syncLabel();
+  const p = $("#syncPill");
+  p.className = `pill sync ${cls}`;
+  p.innerHTML = `<i></i><span>${label}</span>`;
+}
+
+let rafPending = false;
+function onData() {
+  if (rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => {
+    rafPending = false;
+    renderDayDynamic(); renderBanner(); renderTodoCount();
+    if (view === "expenses") renderExpensesView();
+    if (view === "todo") renderTodo();
+    const sd = $("#settingsDialog"), ae = document.activeElement;
+    if (sd.open && !(ae && sd.contains(ae) && ae.tagName === "INPUT")) renderSettings();
+  });
+}
+
+/* ---------------- datos anteriores (v17 / v18) ---------------- */
+function importOldVersions() {
+  if (localStorage.getItem("jp3_import_done")) return;
+  daysData.forEach(d => {
+    try {
+      JSON.parse(localStorage.getItem(`jp_expenses_${d.id}`) || "[]").forEach(x => {
+        store.put("expenses", "legacy-" + x.id, { day: d.id, concept: String(x.concept || ""), amount: Number(x.amount) || 0, currency: x.currency || "EUR", rate: x.currency === "JPY" ? 180 : null, category: "otros", createdAt: Number(x.id) || Date.now() });
+      });
+    } catch { }
+    const note = localStorage.getItem(`jp_notes_${d.id}`);
+    if (note && note.trim()) store.put("notes", d.id, { text: note, updatedAt: Date.now() });
+  });
+  const v18 = readJSON("jp2_local", null);
+  if (v18) COLLECTIONS.forEach(c => Object.entries(v18[c] || {}).forEach(([id, data]) => {
+    if (c === "expenses") { const { payer, split, by, updatedBy, ...rest } = data; data = { ...rest, rate: rest.currency === "JPY" ? 180 : null }; }
+    store.put(c, id, data);
+  }));
+  localStorage.setItem("jp3_import_done", "1");
+}
+
+/* ---------------- cálculos ---------------- */
+const expensesArr = () => Object.entries(S.cols.expenses).map(([id, x]) => ({ id, ...x })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+function totals(list) {
+  let eur = 0, jpy = 0;
+  list.forEach(e => { eur += eurOf(e); if (e.currency === "JPY") jpy += Number(e.amount) || 0; });
+  return { eur, jpy };
+}
+function isPendingRes(r) {
+  const t = r[1] || "", s = r[2] || "";
+  if (/NO COMPRAR/i.test(t)) return false;
+  return /PENDIENTE/i.test(t + " " + s) || /^(HACER ANTES|COMPRAR)/i.test(t) || /^Reservar\b/i.test(s);
+}
+const resKey = (dayId, r) => `res-${dayId}-${slug(r[1])}`;
+function autoPending() {
+  const out = [];
+  daysData.forEach(d => d.reservations.forEach(r => { if (isPendingRes(r)) out.push({ key: resKey(d.id, r), day: d, r }); }));
+  return out;
+}
+const tasksArr = () => Object.entries(S.cols.tasks).map(([id, t]) => ({ id, ...t })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+const pendingCount = () => autoPending().filter(a => !S.cols.checks[a.key]?.done).length + tasksArr().filter(t => !t.done).length;
+
+/* =====================================================================
+   RENDER · cabecera y navegación
+   ===================================================================== */
+function renderCountdown() {
+  const t = dateNum(todayId()), s = dateNum(TRIP_START), e = dateNum(TRIP_END);
+  $("#countdown").textContent = t < s ? (s - t === 1 ? "¡Mañana empieza!" : `Faltan ${s - t} días`) : t <= e ? `Día ${t - s + 1} de ${e - s + 1}` : "Viaje terminado";
+}
+function renderTodoCount() { const n = pendingCount(), el = $("#todoCount"); el.hidden = !n; el.textContent = n; }
+function renderBanner() {
+  const parts = [];
+  if (SYNC.owner && !token) parts.push(`<div class="banner"><p>Este móvil no está conectado: lo que apuntes no lo verá el otro.</p><div class="actions"><button class="btn red" data-action="open-settings">Conectar</button></div></div>`);
+  else if (syncMeta.error === "auth") parts.push(`<div class="banner"><p>La clave de este móvil no funciona (quizá ha caducado).</p><div class="actions"><button class="btn red" data-action="open-settings">Revisar</button></div></div>`);
+  const rainy = daysData.filter(d => daysAway(d.id) >= 0 && daysAway(d.id) <= 15).map(d => ({ d, a: alertFor(dayWx(d.id)) })).filter(o => o.a && o.a.type !== "nieve" && o.a.level === "alta");
+  if (rainy.length) parts.push(`<div class="banner" style="border-left-color:var(--blue)"><p>☔ Lluvia prevista: ${rainy.slice(0, 4).map(o => `${o.d.label} ${o.d.city}${Number.isFinite(o.a.pp) ? ` (${o.a.pp}%)` : ""}`).join(" · ")}</p><div class="actions">${rainy.slice(0, 3).map(o => `<button class="btn small" data-action="go-day" data-day="${o.d.id}">Ver ${o.d.label}</button>`).join("")}</div></div>`);
+  $("#banner").innerHTML = parts.join("");
+}
+function setView(v) {
+  flushNote();
+  view = v;
+  document.querySelectorAll(".view").forEach(el => { el.hidden = el.dataset.view !== v; });
+  document.querySelectorAll(".tab[data-view]").forEach(t => t.classList.toggle("active", t.dataset.view === v));
+  if (v === "expenses") renderExpensesView();
+  if (v === "todo") renderTodo();
+  if (v === "day") renderDaysBar();
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+/* =====================================================================
+   RENDER · día a día
+   ===================================================================== */
+function renderDaysBar() {
+  const box = $("#days"), today = todayId(), left = box.scrollLeft;
+  box.innerHTML = daysData.map(d => {
+    const al = forecastable(d.id) && daysAway(d.id) >= 0 ? alertFor(dayWx(d.id)) : null;
+    const ic = al ? (al.type === "nieve" ? "❄️" : al.level === "alta" ? "☔" : "🌦️") : "";
+    return `<button class="daybtn${d.id === current ? " active" : ""}${d.id === today ? " today" : ""}" data-action="go-day" data-day="${d.id}"><b>${d.label}${ic ? `<span class="wxicon">${ic}</span>` : ""}</b><span>${d.city}</span></button>`;
+  }).join("");
+  box.scrollLeft = left;
+}
+function centerActiveDay() { const box = $("#days"), a = box.querySelector(".active"); if (a) box.scrollLeft = a.offsetLeft - box.clientWidth / 2 + a.offsetWidth / 2; }
+function goDay(id) {
+  if (!dayById(id)) return;
+  flushNote();
+  current = id;
+  localStorage.setItem("jp_current", id);
+  renderDaysBar(); centerActiveDay(); renderDay();
+  const head = $("#dayHead");
+  if (head.getBoundingClientRect().top < 0) head.scrollIntoView({ behavior: "instant", block: "start" });
+}
+const ext = (href, label, cls = "btn soft") => `<a class="${cls}" target="_blank" rel="noopener" href="${href}">${label}</a>`;
+
+function renderDay() {
+  const d = dayById(current) || daysData[0];
+  const i = dayIdx(d.id), prev = daysData[i - 1], next = daysData[i + 1];
+  const isToday = d.id === todayId();
+  $("#dayHead").innerHTML = `<div><div class="eyebrow">${d.label} · ${d.city}${isToday ? ' <span class="todaytag">Hoy</span>' : ""}</div><h2>${d.title}</h2><p>${yen(d.subtitle)}</p></div>
+    <div class="dayhead-side"><div class="citytag">📍 ${d.city}</div><div class="daynav">
+      ${inTrip() && !isToday ? `<button class="btn soft" data-action="go-day" data-day="${todayId()}">Ir a hoy</button>` : ""}
+      <button class="iconbtn" data-action="go-day" data-day="${prev?.id || ""}" ${prev ? "" : "disabled"} aria-label="Día anterior">‹</button>
+      <button class="iconbtn" data-action="go-day" data-day="${next?.id || ""}" ${next ? "" : "disabled"} aria-label="Día siguiente">›</button>
+    </div></div>`;
+  renderConditions(d); renderWeatherAlert(d); renderFx();
+
+  $("#timeline").innerHTML = d.timeline.map(e => `<div class="event"><div class="time">${e[0]}</div><div class="rail"><div class="dot"></div></div><div><h4>${yen(e[1])}</h4><p>${yen(e[2])}</p></div></div>`).join("");
+
+  const routeCard = $("#routeCard");
+  if (d.routes && d.routes.length) {
+    routeCard.style.display = "block";
+    $("#routeList").innerHTML = d.routes.map(r => `<div class="reservation"><div class="emoji">🧭</div><div><b>${r[0]}</b><small>${yen(r[1])}</small><div class="actions">${ext(r[2], "📍 Abrir recorrido en Google Maps", "btn red")}</div></div></div>`).join("");
+  } else { routeCard.style.display = "none"; $("#routeList").innerHTML = ""; }
+
+  $("#activities").innerHTML = d.activities.length ? d.activities.map(a => `<div class="activity"><div class="rowtop"><div><b>${a[0]}</b><div class="meta">${yen(a[1])}</div>${a[3] ? `<div class="actions">${ext(a[3], `↗ ${a[4] || "Ver / reservar"}`)}</div>` : ""}</div><span class="badge green">${a[2]}</span></div></div>`).join("") : `<div class="empty">Sin actividades añadidas.</div>`;
+
+  const restaurantHtml = r => `<div class="restaurant"><div class="rowtop"><div><b>${r[0]}</b><div class="meta">${r[2]}</div></div><span class="badge amber">${r[5] || "Comida / cena"}</span></div><div class="desc">${yen(r[1])}</div><div class="actions">${ext(mapsLink(r[4]), "📍 Google Maps")}${r[6] ? ext(r[6], "📅 Reservar", "btn") : ""}</div></div>`;
+  const types = new Set(d.restaurants.map(r => r[5]).filter(Boolean));
+  const rest = $("#restaurants");
+  if (!d.restaurants.length) rest.innerHTML = `<div class="empty">Sin opciones añadidas.</div>`;
+  else if (types.has("Comida") && types.has("Cena")) {
+    rest.innerHTML = `<div style="font-weight:900;margin:2px 0 12px;font-size:.92rem">☀️ Comida</div>${d.restaurants.filter(r => r[5] === "Comida").map(restaurantHtml).join("")}` +
+      `<div style="font-weight:900;margin:20px 0 12px;font-size:.92rem">🌙 Cena</div>${d.restaurants.filter(r => r[5] === "Cena").map(restaurantHtml).join("")}`;
+  } else rest.innerHTML = d.restaurants.map(restaurantHtml).join("");
+
+  $("#transport").innerHTML = d.transport.map(t => `<div class="reservation"><div class="emoji">🚉</div><div><b>${t[0]} → ${t[1]}</b><small>${yen(t[2])}</small>${t[3] ? `<div class="actions">${ext(t[3], `↗ ${t[4] || "Abrir"}`)}</div>` : ""}</div></div>`).join("");
+
+  const jumps = [["sec-plan", "🧭 Plan"], d.routes?.length && ["routeCard", "🗺️ Ruta"], ["sec-move", "🚆 Moverse"], ["sec-do", "✨ Qué hacer"], ["sec-food", "🍜 Comer"], ["sec-res", "🎟 Reservas"], ["sec-money", "💶 Gastos"], ["sec-ours", "📌 Nuestro"], ["sec-notes", "📝 Notas"]].filter(Boolean);
+  $("#jump").innerHTML = jumps.map(([id, l]) => `<button data-action="jump" data-target="${id}">${l}</button>`).join("");
+
+  $("#notes").value = S.cols.notes[current]?.text || "";
+  renderDocs();
+  renderDayDynamic();
+}
+
+function expenseRow(e) {
+  const cat = CAT[e.category] || CAT.otros;
+  const sub = e.currency === "JPY" ? `${fmtYen(e.amount)} · 1 € = ${fmtYen1(Number(e.rate) || jpyPerEur())}` : e.currency === "EUR" ? "Pagado en euros" : `${fmtNum(e.amount, 2)} ${esc(e.currency)}`;
+  return `<button class="expense" data-action="edit-expense" data-id="${esc(e.id)}">
+    <span class="ecat" aria-hidden="true">${cat[1]}</span>
+    <span class="etext"><b>${esc(e.concept)}</b><small>${cat[2]}</small></span>
+    <span class="money"><b>${fmtEUR(eurOf(e))}</b><small>${sub}</small></span></button>`;
+}
+
+function renderDayDynamic() {
+  const d = dayById(current); if (!d) return;
+  const list = expensesArr().filter(e => e.day === current);
+  const planned = (plannedExpensesByDay[current] || []).map(x => `<div class="expense planned"><span class="ecat">🗓</span><span class="etext"><b>${x.concept}</b><small>Previsto · ${x.note}</small></span><span class="money">${yen(x.display)}</span></div>`).join("");
+  $("#expenseList").innerHTML = planned + (list.length ? list.map(expenseRow).join("") : (planned ? "" : `<div class="empty">Todavía no hay gastos este día.</div>`));
+  const t = totals(list);
+  $("#dayTotal").innerHTML = `${fmtEUR(t.eur)}${t.jpy ? ` <small>(${fmtYen(t.jpy)} en yenes)</small>` : ""}`;
+
+  $("#reservations").innerHTML = d.reservations.map(r => {
+    const pending = isPendingRes(r), key = resKey(d.id, r), done = !!S.cols.checks[key]?.done;
+    const lead = pending ? `<button class="check${done ? " on" : ""}" data-action="toggle-check" data-key="${key}" aria-pressed="${done}" aria-label="Marcar como hecho">${done ? "✓" : ""}</button>` : `<div class="emoji">${r[0]}</div>`;
+    return `<div class="reservation${done ? " done-row" : ""}">${lead}<div><b>${pending ? r[0] + " " : ""}${r[1]}</b><small>${yen(r[2])}</small>${r[3] ? `<div class="actions">${ext(r[3], `↗ ${r[4] || "Abrir"}`)}</div>` : ""}</div></div>`;
+  }).join("");
+
+  const ideas = Object.entries(S.cols.ideas).map(([id, x]) => ({ id, ...x })).filter(x => x.day === current).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+  $("#oursNote").textContent = syncReady() ? "Sitios, ideas o enlaces para este día. También aparecen en el otro móvil." : "Sitios, ideas o enlaces para este día.";
+  $("#ideas").innerHTML = ideas.map(x => `<div class="reservation"><div class="emoji">📌</div><div style="flex:1;min-width:0"><b style="overflow-wrap:anywhere">${esc(x.title)}</b>${x.note ? `<small style="overflow-wrap:anywhere">${esc(x.note)}</small>` : ""}<div class="actions">${x.url ? ext(esc(x.url), "↗ Abrir enlace") : ext(mapsLink(x.title), "📍 Buscar en Maps")}<button class="btn" data-action="delete-idea" data-id="${esc(x.id)}">Quitar</button></div></div></div>`).join("");
+
+  syncNotesField();
+}
+
+/* notas con guardado automático */
+let noteTimer = null, noteDay = null;
+function syncNotesField() {
+  const ta = $("#notes");
+  if (document.activeElement === ta || noteDay) return;
+  const n = S.cols.notes[current], v = n?.text || "";
+  if (ta.value !== v) ta.value = v;
+  $("#noteStatus").textContent = n?.updatedAt ? `Guardado ${timeAgo(n.updatedAt)}` : "";
+}
+function flushNote() {
+  if (!noteDay) return;
+  clearTimeout(noteTimer); noteTimer = null;
+  store.put("notes", noteDay, { text: $("#notes").value, updatedAt: Date.now() });
+  noteDay = null;
+  $("#noteStatus").textContent = "Guardado";
+}
+$("#notes").addEventListener("input", () => { noteDay = current; $("#noteStatus").textContent = "Guardando…"; clearTimeout(noteTimer); noteTimer = setTimeout(flushNote, 900); });
+$("#notes").addEventListener("blur", flushNote);
+
+/* documentos locales (IndexedDB) */
+const DB = "japanTripFiles", STORE = "files";
+let docUrls = [];
+function dbOpen() { return new Promise((res, rej) => { const r = indexedDB.open(DB, 1); r.onupgradeneeded = () => r.result.createObjectStore(STORE, { keyPath: "id" }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function saveDocument(ev) {
+  const f = ev.target.files[0]; if (!f) return;
+  const db = await dbOpen(); const tx = db.transaction(STORE, "readwrite");
+  tx.objectStore(STORE).put({ id: `${current}_${Date.now()}`, day: current, name: f.name, type: f.type, data: f });
+  tx.oncomplete = () => { ev.target.value = ""; renderDocs(); toast("Documento guardado en este móvil"); };
+}
+async function getDocs(day) {
+  try { const db = await dbOpen(); return await new Promise((res, rej) => { const r = db.transaction(STORE).objectStore(STORE).getAll(); r.onsuccess = () => res(r.result.filter(x => x.day === day)); r.onerror = () => rej(r.error); }); }
+  catch { return []; }
+}
+async function deleteDoc(id) { if (!confirm("¿Borrar este documento de este móvil?")) return; const db = await dbOpen(); const tx = db.transaction(STORE, "readwrite"); tx.objectStore(STORE).delete(id); tx.oncomplete = renderDocs; }
+async function renderDocs() {
+  const day = current, docs = await getDocs(day), box = $("#docs");
+  if (day !== current) return;
+  docUrls.forEach(u => URL.revokeObjectURL(u)); docUrls = [];
+  if (!docs.length) { box.innerHTML = `<div class="empty">Sin documentos guardados para este día.</div>`; return; }
+  box.innerHTML = "";
+  docs.forEach(x => {
+    const u = URL.createObjectURL(x.data); docUrls.push(u);
+    const div = document.createElement("div"); div.className = "docrow";
+    div.innerHTML = `<div class="rowtop"><div><b>📎 ${esc(x.name)}</b><div class="meta">Solo en este móvil</div></div><button class="iconbtn" data-action="delete-doc" data-id="${esc(x.id)}" aria-label="Borrar">×</button></div><div class="actions"><a class="btn soft" target="_blank" rel="noopener">Abrir</a></div>`;
+    div.querySelector("a").href = u;
+    box.appendChild(div);
+  });
+}
+
+/* =====================================================================
+   RENDER · gastos
+   ===================================================================== */
+function renderExpensesView() {
+  const all = expensesArr(), t = totals(all);
+  const catTotals = {};
+  all.forEach(e => { const k = CAT[e.category] ? e.category : "otros"; catTotals[k] = (catTotals[k] || 0) + eurOf(e); });
+  const maxCat = Math.max(1, ...Object.values(catTotals));
+  const bars = CATEGORIES.filter(c => catTotals[c[0]]).sort((p, q) => catTotals[q[0]] - catTotals[p[0]])
+    .map(c => `<div class="bar"><span>${c[1]} ${c[2]}</span><i><b style="width:${(catTotals[c[0]] / maxCat * 100).toFixed(1)}%"></b></i><strong>${fmtEUR(catTotals[c[0]])}</strong></div>`).join("");
+  const dayRows = daysData.map(d => ({ d, list: all.filter(e => e.day === d.id) })).filter(r => r.list.length)
+    .map(r => `<button class="dayrow" data-action="go-day" data-day="${r.d.id}"><span><b>${r.d.label} · ${r.d.city}</b><small>${r.list.length} ${r.list.length === 1 ? "gasto" : "gastos"}</small></span><strong>${fmtEUR(totals(r.list).eur)}</strong></button>`).join("");
+  const present = CATEGORIES.filter(c => catTotals[c[0]]);
+  if (catFilter !== "all" && !catTotals[catFilter]) catFilter = "all";
+  const filtered = all.filter(e => catFilter === "all" || (CAT[e.category] ? e.category : "otros") === catFilter);
+  const groups = [...daysData].reverse().map(d => ({ d, list: filtered.filter(e => e.day === d.id).reverse() })).filter(g => g.list.length);
+  const listHtml = groups.length ? groups.map(g => `<div class="group-title">${g.d.label} · ${g.d.title} · ${fmtEUR(totals(g.list).eur)}</div><div class="expense-list" style="margin-top:0">${g.list.map(expenseRow).join("")}</div>`).join("") : `<div class="empty">Todavía no hay gastos. Pulsa ＋ para apuntar el primero.</div>`;
+
+  $("#expensesView").innerHTML = `
+    <section class="stats">
+      <div class="stat"><small>Gastado en el viaje</small><strong>${fmtEUR(t.eur)}</strong><span>${fmtEUR(t.eur / PEOPLE)} por persona${t.jpy ? ` · ${fmtYen(t.jpy)} en yenes` : ""}</span></div>
+      <div class="stat"><small>Gasto base</small><strong>${fmtEUR(BASE_COST)}</strong><span>${fmtEUR(BASE_COST / PEOPLE)} por persona</span></div>
+      <div class="stat"><small>Total del viaje</small><strong>${fmtEUR(BASE_COST + t.eur)}</strong><span>${fmtEUR((BASE_COST + t.eur) / PEOPLE)} por persona</span></div>
+    </section>
+    <div class="grid">
+      <div>
+        <section id="xp-list" class="card">
+          <h3>🧾 Todos los gastos</h3>
+          ${present.length > 1 ? `<div class="filters"><button class="${catFilter === "all" ? "on" : ""}" data-action="cat-filter" data-f="all">Todos</button>${present.map(c => `<button class="${catFilter === c[0] ? "on" : ""}" data-action="cat-filter" data-f="${c[0]}">${c[1]} ${c[2]}</button>`).join("")}</div>` : ""}
+          ${listHtml}
+        </section>
+      </div>
+      <aside>
+        <section id="xp-cat" class="card"><h3>📊 Por categoría</h3>${bars ? `<div class="bars">${bars}</div>` : `<div class="empty">Aparecerá cuando apuntéis gastos.</div>`}</section>
+        <section id="xp-day" class="card"><h3>📅 Por día</h3>${dayRows || `<div class="empty">Aparecerá cuando apuntéis gastos.</div>`}</section>
+        <p id="xp-note" class="muted" style="order:5">Los gastos en yenes se pasan a euros con el tipo del momento en que se apuntaron. Tipo actual: 1 € = ${fmtYen1(jpyPerEur())} (${rateLine()}).</p>
+      </aside>
+    </div>`;
+}
+
+/* =====================================================================
+   RENDER · pendientes
+   ===================================================================== */
+function renderTodo() {
+  const auto = autoPending(), custom = tasksArr();
+  const total = auto.length + custom.length;
+  const done = auto.filter(a => S.cols.checks[a.key]?.done).length + custom.filter(t => t.done).length;
+  const autoHtml = auto.map(({ key, day, r }) => {
+    const isDone = !!S.cols.checks[key]?.done;
+    return `<div class="reservation${isDone ? " done-row" : ""}"><button class="check${isDone ? " on" : ""}" data-action="toggle-check" data-key="${key}" aria-pressed="${isDone}" aria-label="Marcar como hecho">${isDone ? "✓" : ""}</button><div style="flex:1;min-width:0"><b>${r[0]} ${r[1]}</b><small>${yen(r[2])}</small><div class="actions"><button class="btn small" data-action="go-day" data-day="${day.id}">📅 ${day.label} · ${day.city}</button>${r[3] ? ext(r[3], `↗ ${r[4] || "Abrir"}`, "btn soft small") : ""}</div></div></div>`;
+  }).join("");
+  const customSorted = [...custom.filter(t => !t.done), ...custom.filter(t => t.done)];
+  const customHtml = customSorted.map(t => `<div class="reservation${t.done ? " done-row" : ""}"><button class="check${t.done ? " on" : ""}" data-action="toggle-task" data-id="${esc(t.id)}" aria-pressed="${!!t.done}" aria-label="Marcar como hecho">${t.done ? "✓" : ""}</button><div style="flex:1;min-width:0"><b style="overflow-wrap:anywhere">${esc(t.text)}</b><div class="actions">${dayById(t.day) ? `<button class="btn small" data-action="go-day" data-day="${t.day}">📅 ${dayById(t.day).label}</button>` : ""}<button class="btn small" data-action="delete-task" data-id="${esc(t.id)}">Quitar</button></div></div></div>`).join("");
+  $("#todoView").innerHTML = `
+    <div class="grid">
+      <div>
+        <section class="card">
+          <h3>✅ Antes y durante el viaje</h3>
+          <div><b>${done} de ${total}</b> <span class="muted">hechos</span></div>
+          <div class="progress"><b style="width:${total ? (done / total * 100).toFixed(1) : 0}%"></b></div>
+          <form id="taskForm" class="inline-form three" autocomplete="off">
+            <input name="text" placeholder="Nueva tarea, p. ej. comprar adaptador" required maxlength="160">
+            <select name="day"><option value="">Sin día</option>${daysData.map(d => `<option value="${d.id}">${d.label} · ${d.city}</option>`).join("")}</select>
+            <button class="btn red">Añadir</button>
+          </form>
+        </section>
+        <section class="card"><h3>📝 Nuestras tareas</h3>${customHtml || `<div class="empty">Añadid arriba lo que se os ocurra: comprar, reservar, llevar…</div>`}</section>
+      </div>
+      <aside>
+        <section class="card"><h3>🎟 Del plan del viaje</h3><p class="section-note">Salen solas de las reservas marcadas como pendientes en el itinerario.</p>${autoHtml || `<div class="empty">No hay reservas pendientes en el plan.</div>`}</section>
+      </aside>
+    </div>`;
+}
+
+/* =====================================================================
+   CONVERSOR
+   ===================================================================== */
+let fxLast = "jpy";
+function renderFxDialog(resetInputs = true) {
+  const r = jpyPerEur();
+  $("#fxRate").innerHTML = `<strong>1 € = ${fmtYen1(r)}</strong><small>¥1.000 = ${fmtEUR(1000 / r)} · ${rateLine()}</small>`;
+  $("#fxQuick").innerHTML = [100, 500, 1000, 2000, 5000, 10000].map(n => `<button data-action="fx-quick" data-jpy="${n}"><b>${fmtYen(n)}</b>${fmtEUR(n / r)}</button>`).join("");
+  if (resetInputs) { $("#fxJpy").value = ""; $("#fxEur").value = ""; }
+  else fxConvert(fxLast);
+}
+function fxConvert(from) {
+  fxLast = from;
+  const r = jpyPerEur();
+  if (from === "jpy") { const n = parseAmount($("#fxJpy").value); $("#fxEur").value = n > 0 ? fmtNum(n / r, 2) : ""; }
+  else { const n = parseAmount($("#fxEur").value); $("#fxJpy").value = n > 0 ? fmtNum(n * r, 0) : ""; }
+}
+$("#fxJpy").addEventListener("input", () => fxConvert("jpy"));
+$("#fxEur").addEventListener("input", () => fxConvert("eur"));
+function openFx() { renderFxDialog(true); $("#fxDialog").showModal(); refreshRate(); }
+
+/* =====================================================================
+   AJUSTES
+   ===================================================================== */
+function renderSettings() {
+  const [, label] = syncLabel();
+  let syncHtml;
+  if (!SYNC.owner) {
+    syncHtml = `<p>Esta copia de la web no está publicada todavía, así que todo se guarda solo en este dispositivo.</p>`;
+  } else if (token && syncMeta.error !== "auth") {
+    syncHtml = `<p>Estado: <b>${label}</b>${syncState.lastSync ? ` · última vez ${timeAgo(syncState.lastSync)}` : ""}.</p>
+      <div class="actions"><button class="btn red" data-action="share-link">Enviar enlace al otro móvil</button><button class="btn" data-action="sync-now">Sincronizar ahora</button><button class="btn" data-action="disconnect">Desconectar</button></div>`;
+  } else {
+    syncHtml = `${syncMeta.error === "auth" ? `<p style="color:var(--red)">La clave guardada no funciona. Pega una nueva o abre el enlace de conexión.</p>` : `<p>Abre en este móvil el enlace de conexión, o pega aquí la clave.</p>`}
+      <form id="keyForm" autocomplete="off"><label class="field"><span>Clave</span><input name="key" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="ghp_…"></label><button class="btn red">Conectar este móvil</button></form>`;
+  }
+  $("#settingsBody").innerHTML = `
+    <div class="settings-block"><h4>Sincronización entre móviles</h4>${syncHtml}</div>
+    <div class="settings-block"><h4>Moneda</h4><p>1 € = <b>${fmtYen1(jpyPerEur())}</b> · ${rateLine()}. Se actualiza solo cada pocas horas.</p>
+      <div class="actions"><button class="btn" data-action="fx-refresh">Actualizar ahora</button><button class="btn" data-action="open-fx">Abrir conversor</button></div></div>
+    <div class="settings-block"><h4>Tiempo</h4><p>La previsión aparece 16 días antes de cada día y se actualiza sola cada 30 minutos mientras la web está abierta. Si se prevé lluvia, el día se marca con ☔ y sale un aviso con ideas para cambiar el plan.</p>
+      <div class="actions"><button class="btn" data-action="wx-refresh">Actualizar ahora</button></div></div>
+    <div class="settings-block"><h4>Copia de seguridad</h4><p>Descarga todos los gastos, notas y tareas en un archivo, o importa una copia (también sirven las de versiones anteriores).</p>
+      <div class="actions"><button class="btn" data-action="export">⬇ Exportar datos</button><label class="btn" style="cursor:pointer">⬆ Importar<input id="importFile" type="file" accept=".json,application/json" hidden></label></div></div>`;
+}
+function openSettings() { renderSettings(); $("#settingsDialog").showModal(); }
+async function shareLink() {
+  if (!token) return;
+  const url = `${location.origin}${location.pathname}#clave=${encodeURIComponent(token)}`;
+  if (navigator.share) { try { await navigator.share({ title: "Viaje a Japón", text: "Abre este enlace para conectar la web del viaje:", url }); return; } catch { } }
+  try { await navigator.clipboard.writeText(url); toast("Enlace copiado"); } catch { prompt("Copia este enlace:", url); }
+}
+function exportData() {
+  const blob = new Blob([JSON.stringify({ app: "viaje-japon", version: 3, exportedAt: new Date().toISOString(), data: S.cols }, null, 2)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `viaje-japon-datos-${todayId()}.json`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+function importData(file) {
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const j = JSON.parse(r.result); let n = 0;
+      if (j.data) COLLECTIONS.forEach(c => Object.entries(j.data[c] || {}).forEach(([id, v]) => { store.put(c, id, v); n++; }));
+      else if (j.local) Object.entries(j.local).forEach(([k, v]) => {
+        let m = k.match(/^jp_expenses_(\d{4}-\d{2}-\d{2})$/);
+        if (m) JSON.parse(v || "[]").forEach(x => { store.put("expenses", "legacy-" + x.id, { day: m[1], concept: String(x.concept || ""), amount: Number(x.amount) || 0, currency: x.currency || "EUR", rate: x.currency === "JPY" ? 180 : null, category: "otros", createdAt: Number(x.id) || Date.now() }); n++; });
+        m = k.match(/^jp_notes_(\d{4}-\d{2}-\d{2})$/);
+        if (m && v && v.trim()) { store.put("notes", m[1], { text: v, updatedAt: Date.now() }); n++; }
+      });
+      else throw new Error("formato");
+      toast(`${n} elementos importados`);
+    } catch { alert("No se pudo leer el archivo. ¿Es una copia exportada desde esta web?"); }
+  };
+  r.readAsText(file);
+}
+
+/* =====================================================================
+   DIÁLOGO DE GASTO
+   ===================================================================== */
+$("#catChips").innerHTML = CATEGORIES.map(c => `<label class="chip"><input type="radio" name="category" value="${c[0]}"><span>${c[1]} ${c[2]}</span></label>`).join("");
+$("#expDay").innerHTML = daysData.map(d => `<option value="${d.id}">${d.label} · ${d.city}</option>`).join("");
+function updateConv() {
+  const f = $("#expForm"), n = parseAmount(f.amount.value), cur = f.elements.currency.value;
+  f.amount.placeholder = cur === "JPY" ? "¥ 1.200" : "0,00 €";
+  const prev = editingId ? S.cols.expenses[editingId] : null;
+  const r = (prev?.currency === "JPY" && Number(prev.rate)) || jpyPerEur();
+  $("#expConv").innerHTML = cur === "JPY" ? (n > 0 ? `<b>≈ ${fmtEUR(n / r)}</b> · 1 € = ${fmtYen1(r)}` : `1 € = ${fmtYen1(r)}`) : "";
+}
+function openExpense(id, preset = {}) {
+  flushNote();
+  const f = $("#expForm");
+  const e = id && S.cols.expenses[id] ? S.cols.expenses[id] : null;
+  editingId = e ? id : null;
+  $("#expTitle").textContent = e ? "Editar gasto" : "Nuevo gasto";
+  f.concept.value = e?.concept || "";
+  f.amount.value = e ? String(e.amount).replace(".", ",") : (preset.amount || "");
+  f.elements.currency.value = e ? (e.currency === "EUR" ? "EUR" : "JPY") : (preset.currency || localStorage.getItem("jp3_lastcur") || "JPY");
+  f.elements.category.value = e?.category && CAT[e.category] ? e.category : (e ? "otros" : "comida");
+  f.day.value = e?.day || (view === "day" ? current : (inTrip() ? todayId() : current));
+  $("#expDelete").hidden = !e;
+  updateConv();
+  $("#expDialog").showModal();
+  if (!e && matchMedia("(pointer:fine)").matches) f.concept.focus();
+}
+$("#expForm").addEventListener("input", updateConv);
+$("#expForm").addEventListener("change", updateConv);
+$("#expForm").addEventListener("submit", ev => {
+  ev.preventDefault();
+  const f = ev.target, concept = f.concept.value.trim(), amount = parseAmount(f.amount.value);
+  if (!concept) { toast("Escribe un concepto"); f.concept.focus(); return; }
+  if (!(amount > 0)) { toast("Escribe un importe válido"); f.amount.focus(); return; }
+  const prev = editingId ? S.cols.expenses[editingId] : null;
+  const currency = f.elements.currency.value || "JPY";
+  const rate = currency === "JPY" ? ((prev?.currency === "JPY" && Number(prev.rate)) || jpyPerEur()) : null;
+  const data = { day: f.day.value, concept, amount, currency, rate, category: f.elements.category.value || "otros", createdAt: prev?.createdAt || Date.now(), updatedAt: Date.now() };
+  store.put("expenses", editingId || uid(), data);
+  localStorage.setItem("jp3_lastcur", currency);
+  $("#expDialog").close();
+  toast(`${editingId ? "Gasto actualizado" : "Gasto guardado"} · ${fmtEUR(eurOf(data))}`);
+});
+
+/* =====================================================================
+   EVENTOS
+   ===================================================================== */
+document.querySelectorAll("dialog").forEach(dl => dl.addEventListener("click", e => { if (e.target === dl) dl.close(); }));
+document.addEventListener("click", ev => {
+  const el = ev.target.closest("[data-action]"); if (!el) return;
+  const id = el.dataset.id;
+  switch (el.dataset.action) {
+    case "view": setView(el.dataset.view); break;
+    case "go-day":
+      if (!el.dataset.day) break;
+      if (el.closest("dialog")) el.closest("dialog").close();
+      if (view !== "day") setView("day");
+      goDay(el.dataset.day); break;
+    case "jump": document.getElementById(el.dataset.target)?.scrollIntoView({ behavior: "smooth", block: "start" }); break;
+    case "add-expense": openExpense(); break;
+    case "edit-expense": openExpense(id); break;
+    case "delete-expense":
+      if (editingId && confirm("¿Borrar este gasto? Desaparecerá también del otro móvil.")) { store.del("expenses", editingId); $("#expDialog").close(); toast("Gasto borrado"); }
+      break;
+    case "close-dialog": el.closest("dialog").close(); break;
+    case "toggle-check": { const k = el.dataset.key; store.put("checks", k, { done: !S.cols.checks[k]?.done, at: Date.now() }); break; }
+    case "toggle-task": { const t = S.cols.tasks[id]; if (t) store.put("tasks", id, { ...t, done: !t.done, doneAt: Date.now() }); break; }
+    case "delete-task": if (confirm("¿Quitar esta tarea?")) store.del("tasks", id); break;
+    case "delete-idea": if (confirm("¿Quitar este elemento?")) store.del("ideas", id); break;
+    case "delete-doc": deleteDoc(id); break;
+    case "open-settings": openSettings(); break;
+    case "open-fx": openFx(); break;
+    case "fx-refresh": refreshRate(true); break;
+    case "fx-quick": $("#fxJpy").value = fmtNum(+el.dataset.jpy, 0); fxConvert("jpy"); break;
+    case "fx-to-expense": {
+      const n = parseAmount($("#fxJpy").value);
+      $("#fxDialog").close();
+      openExpense(null, n > 0 ? { amount: String(n), currency: "JPY" } : {});
+      break;
+    }
+    case "wx-refresh": refreshWeather(true).then(() => toast(navigator.onLine ? "Previsión actualizada" : "Sin conexión")); break;
+    case "share-link": shareLink(); break;
+    case "sync-now": syncNow().then(() => toast(syncMeta.error ? "No se pudo sincronizar" : "Sincronizado")); break;
+    case "disconnect":
+      if (confirm("Este móvil dejará de sincronizar hasta que vuelvas a abrir el enlace de conexión. Los datos compartidos no se borran. ¿Seguir?")) { localStorage.removeItem("jp3_token"); location.reload(); }
+      break;
+    case "export": exportData(); break;
+    case "cat-filter": catFilter = el.dataset.f; renderExpensesView(); break;
+  }
+});
+document.addEventListener("submit", ev => {
+  const f = ev.target;
+  if (f.id === "ideaForm") {
+    ev.preventDefault();
+    const title = f.elements.ititle.value.trim(), extra = f.elements.extra.value.trim(); if (!title) return;
+    let url = "", note = "";
+    if (/^https?:\/\/\S+$/i.test(extra)) url = extra;
+    else if (/^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(extra)) url = "https://" + extra;
+    else note = extra;
+    store.put("ideas", uid(), { day: current, title, url, note, createdAt: Date.now() });
+    f.reset(); toast("Añadido");
+  } else if (f.id === "taskForm") {
+    ev.preventDefault();
+    const text = f.elements.text.value.trim(); if (!text) return;
+    store.put("tasks", uid(), { text, day: f.elements.day.value || "", done: false, createdAt: Date.now() });
+    f.reset(); toast("Tarea añadida");
+  } else if (f.id === "keyForm") {
+    ev.preventDefault();
+    const k = f.elements.key.value.trim();
+    if (k.length < 20) { toast("Esa clave parece incompleta"); return; }
+    localStorage.setItem("jp3_token", k); location.reload();
+  }
+});
+document.addEventListener("change", ev => {
+  if (ev.target.id === "docInput") saveDocument(ev);
+  if (ev.target.id === "importFile" && ev.target.files[0]) {
+    if (confirm("¿Importar los datos de este archivo? Se añadirán a los que ya hay.")) importData(ev.target.files[0]);
+    ev.target.value = "";
+  }
+});
+
+/* =====================================================================
+   ARRANQUE Y ACTUALIZACIÓN AUTOMÁTICA
+   ===================================================================== */
+function refreshAll() { syncNow(); refreshWeather(); refreshRate(); renderCountdown(); }
+function boot() {
+  const m = location.hash.match(/clave=([^&]+)/);
+  if (m) { localStorage.setItem("jp3_token", decodeURIComponent(m[1]).trim()); token = localStorage.getItem("jp3_token"); history.replaceState(null, "", location.pathname + location.search); }
+  importOldVersions();
+  renderCountdown(); renderSync(); renderDaysBar(); centerActiveDay(); renderDay(); renderBanner(); renderTodoCount();
+  refreshAll();
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(() => { });
+}
+addEventListener("hashchange", () => { if (/clave=/.test(location.hash)) location.reload(); });
+addEventListener("online", () => { renderSync(); refreshAll(); });
+addEventListener("offline", renderSync);
+document.addEventListener("visibilitychange", () => { if (document.hidden) flushNote(); else refreshAll(); });
+setInterval(() => { if (!document.hidden) syncNow(); }, 20000);               // gastos y notas: cada 20 s
+setInterval(() => { if (!document.hidden) { refreshWeather(); refreshRate(); renderCountdown(); const d = dayById(current); if (d) renderConditions(d); syncNotesField(); } }, 5 * 60e3);
+boot();
+</script>
+</body>
+</html>

@@ -246,7 +246,7 @@ dialog.sheet::backdrop{background:rgba(32,36,42,.45)}
   /* en móvil: lo más útil primero */
   .grid{display:flex;flex-direction:column;gap:0}
   .grid > div,.grid > aside{display:contents}
-  #xp-balance{order:1}#xp-cat{order:2}#xp-day{order:3}#xp-list{order:4}
+  #xp-cat{order:1}#xp-pre{order:2}#xp-day{order:3}#xp-list{order:4}
   #sec-plan{order:1}#routeCard{order:2}#sec-move{order:3}#sec-do{order:4}#sec-food{order:5}#sec-res{order:6}#sec-money{order:7}#sec-ours{order:8}#sec-notes{order:9}
 }
 @media(max-width:560px){
@@ -259,7 +259,7 @@ dialog.sheet::backdrop{background:rgba(32,36,42,.45)}
   header h1{font-size:1.9rem}
   .pill.sync{padding:7px 10px;font-size:.78rem}
   .dayhead-side{flex-direction:row;justify-content:space-between;align-items:center;width:100%}
-  .bar{grid-template-columns:100px 1fr auto}
+
   dialog.sheet{margin:auto 0 0;width:100%;max-width:none;border-radius:24px 24px 0 0}
   .inline-form.three{grid-template-columns:1fr 1fr}
   .inline-form.three input:first-child{grid-column:1/-1}
@@ -302,6 +302,15 @@ button.condition-pill:hover{border-color:#cdbfb2}
 .fx-rate strong{font-size:1.35rem;letter-spacing:-.02em}
 .fx-rate small{display:block;color:var(--muted);margin-top:2px}
 .expense .money b{display:block}
+.bar .barsub{display:block;font-size:.72rem;font-weight:600;color:var(--muted);margin-top:1px}
+.bar{grid-template-columns:1fr auto;grid-template-areas:"l a" "b b";row-gap:6px;align-items:end}
+.bar > span{grid-area:l}.bar > strong{grid-area:a;text-align:right}.bar > i{grid-area:b}
+.bar i{display:flex}
+.bar i b{border-radius:0}
+.bar i b.pre{background:#6d1520}
+.bar i b:first-child{border-radius:999px 0 0 999px}
+.bar i b:last-child{border-radius:0 999px 999px 0}
+#xp-pre{order:2}
 @media(max-width:560px){.fx-quick{grid-template-columns:repeat(3,1fr)}}
   </style>
 </head>
@@ -415,7 +424,7 @@ button.condition-pill:hover{border-color:#cdbfb2}
   <!-- ================= VISTA: PENDIENTES ================= -->
   <div class="view" data-view="todo" hidden><div id="todoView"></div></div>
 
-  <footer>Viaje a Japón · Vio y Álvaro · v19 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+  <footer>Viaje a Japón · Vio y Álvaro · v20 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
 </div>
 
 <!-- Diálogo: gasto -->
@@ -473,7 +482,15 @@ button.condition-pill:hover{border-color:#cdbfb2}
    ===================================================================== */
 const SYNC = { owner: "alvaromartnb", repo: "japon-datos", path: "datos.json", branch: "main" };
 const GITHUB_API = "https://api.github.com";
-const BASE_COST = 3605.22;       // gasto base ya reservado
+// Lo que ya está pagado antes del viaje (sale en "Gastos" separado por categoría)
+const PREPAID = [
+  { concept: "Vuelos Madrid → Osaka · Tokio → Madrid", detail: "4 vuelos vía Shanghái · 2 personas · PJ1HKT", category: "vuelos", amount: 2229.22, day: "2026-12-20", estimated: true },
+  { concept: "Hotel Sobial Osaka Dome", detail: "21–23 dic · 2 noches", nights: 2, category: "alojamiento", amount: 91, day: "2026-12-21" },
+  { concept: "Hotel Resol Trinity Kyoto", detail: "23–26 dic · 3 noches", nights: 3, category: "alojamiento", amount: 162, day: "2026-12-23" },
+  { concept: "Takayama Ouan", detail: "26–29 dic · 3 noches", nights: 3, category: "alojamiento", amount: 613, day: "2026-12-26" },
+  { concept: "Airbnb Tokio", detail: "29 dic–5 ene · 7 noches", nights: 7, category: "alojamiento", amount: 510, day: "2026-12-29" }
+];
+const BASE_COST = PREPAID.reduce((a, x) => a + x.amount, 0); // 3.605,22 €
 const PEOPLE = 2;                // para el cálculo "por persona"
 const FALLBACK_JPY = 180;        // yenes por euro si aún no hay tipo online
 
@@ -982,7 +999,8 @@ const CATEGORIES = [
   ["comida", "🍜", "Comida"], ["transporte", "🚆", "Transporte"], ["alojamiento", "🏨", "Alojamiento"],
   ["entradas", "🎟", "Entradas y tours"], ["compras", "🛍", "Compras"], ["otros", "📦", "Otros"]
 ];
-const CAT = Object.fromEntries(CATEGORIES.map(c => [c[0], c]));
+const CAT = Object.fromEntries([["vuelos", "✈️", "Vuelos"], ...CATEGORIES].map(c => [c[0], c]));
+const ALL_CATS = [["vuelos", "✈️", "Vuelos"], ...CATEGORIES];
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -1547,11 +1565,18 @@ async function renderDocs() {
    ===================================================================== */
 function renderExpensesView() {
   const all = expensesArr(), t = totals(all);
-  const catTotals = {};
+  const catTotals = {}, catPre = {};
   all.forEach(e => { const k = CAT[e.category] ? e.category : "otros"; catTotals[k] = (catTotals[k] || 0) + eurOf(e); });
+  PREPAID.forEach(x => { catTotals[x.category] = (catTotals[x.category] || 0) + x.amount; catPre[x.category] = (catPre[x.category] || 0) + x.amount; });
+  const grand = Object.values(catTotals).reduce((p, q) => p + q, 0) || 1;
   const maxCat = Math.max(1, ...Object.values(catTotals));
-  const bars = CATEGORIES.filter(c => catTotals[c[0]]).sort((p, q) => catTotals[q[0]] - catTotals[p[0]])
-    .map(c => `<div class="bar"><span>${c[1]} ${c[2]}</span><i><b style="width:${(catTotals[c[0]] / maxCat * 100).toFixed(1)}%"></b></i><strong>${fmtEUR(catTotals[c[0]])}</strong></div>`).join("");
+  const bars = ALL_CATS.filter(c => catTotals[c[0]]).sort((p, q) => catTotals[q[0]] - catTotals[p[0]])
+    .map(c => {
+      const tot = catTotals[c[0]], pre = catPre[c[0]] || 0, trip = tot - pre;
+      const sub = pre && trip > 0.004 ? `${fmtEUR(pre)} ya pagado + ${fmtEUR(trip)} en el viaje` : pre ? "Ya pagado" : "En el viaje";
+      return `<div class="bar"><span>${c[1]} ${c[2]}<small class="barsub">${sub}</small></span><i><b class="pre" style="width:${(pre / maxCat * 100).toFixed(1)}%"></b><b style="width:${(trip / maxCat * 100).toFixed(1)}%"></b></i><strong>${fmtEUR(tot)}<small class="barsub">${Math.round(tot / grand * 100)}%</small></strong></div>`;
+    }).join("");
+  const prepaidHtml = PREPAID.map(x => `<div class="expense planned"><span class="ecat">${CAT[x.category][1]}</span><span class="etext"><b>${x.concept}</b><small>${x.detail}</small><small>${x.nights ? `${fmtEUR(x.amount / x.nights)}/noche · ` : ""}${fmtEUR(x.amount / PEOPLE)}/persona${x.estimated ? " · calculado" : ""}</small></span><span class="money"><b>${fmtEUR(x.amount)}</b></span></div>`).join("");
   const dayRows = daysData.map(d => ({ d, list: all.filter(e => e.day === d.id) })).filter(r => r.list.length)
     .map(r => `<button class="dayrow" data-action="go-day" data-day="${r.d.id}"><span><b>${r.d.label} · ${r.d.city}</b><small>${r.list.length} ${r.list.length === 1 ? "gasto" : "gastos"}</small></span><strong>${fmtEUR(totals(r.list).eur)}</strong></button>`).join("");
   const present = CATEGORIES.filter(c => catTotals[c[0]]);
@@ -1563,7 +1588,7 @@ function renderExpensesView() {
   $("#expensesView").innerHTML = `
     <section class="stats">
       <div class="stat"><small>Gastado en el viaje</small><strong>${fmtEUR(t.eur)}</strong><span>${fmtEUR(t.eur / PEOPLE)} por persona${t.jpy ? ` · ${fmtYen(t.jpy)} en yenes` : ""}</span></div>
-      <div class="stat"><small>Gasto base</small><strong>${fmtEUR(BASE_COST)}</strong><span>${fmtEUR(BASE_COST / PEOPLE)} por persona</span></div>
+      <div class="stat"><small>Ya pagado antes</small><strong>${fmtEUR(BASE_COST)}</strong><span>Vuelos y alojamientos · ${fmtEUR(BASE_COST / PEOPLE)} por persona</span></div>
       <div class="stat"><small>Total del viaje</small><strong>${fmtEUR(BASE_COST + t.eur)}</strong><span>${fmtEUR((BASE_COST + t.eur) / PEOPLE)} por persona</span></div>
     </section>
     <div class="grid">
@@ -1575,6 +1600,7 @@ function renderExpensesView() {
         </section>
       </div>
       <aside>
+        <section id="xp-pre" class="card"><h3>✅ Ya pagado antes del viaje</h3><div class="expense-list" style="margin-top:0">${prepaidHtml}</div><div class="daytotal"><span>Total pagado</span><span>${fmtEUR(BASE_COST)}</span></div></section>
         <section id="xp-cat" class="card"><h3>📊 Por categoría</h3>${bars ? `<div class="bars">${bars}</div>` : `<div class="empty">Aparecerá cuando apuntéis gastos.</div>`}</section>
         <section id="xp-day" class="card"><h3>📅 Por día</h3>${dayRows || `<div class="empty">Aparecerá cuando apuntéis gastos.</div>`}</section>
         <p id="xp-note" class="muted" style="order:5">Los gastos en yenes se pasan a euros con el tipo del momento en que se apuntaron. Tipo actual: 1 € = ${fmtYen1(jpyPerEur())} (${rateLine()}).</p>

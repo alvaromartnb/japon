@@ -369,11 +369,10 @@ select{max-width:100%}
   <nav class="tabbar" aria-label="Secciones">
     <button class="tab active" data-action="view" data-view="day"><span class="ico">📅</span><span class="lbl">Día a día</span></button>
     <button class="tab" data-action="view" data-view="expenses"><span class="ico">💶</span><span class="lbl">Gastos</span></button>
-    <button class="tab" data-action="view" data-view="phrases"><span class="ico">🈯</span><span class="lbl">Traducir</span></button>
-    <button class="tab" data-action="view" data-view="where"><span class="ico">📍</span><span class="lbl">Cerca</span></button>
+    <button class="tab" data-action="view" data-view="phrases"><span class="ico">🌐</span><span class="lbl">Traducir</span></button>
+    <button class="tab" data-action="open-fx"><span class="ico">💱</span><span class="lbl">Cambio</span></button>
     <button class="tab" data-action="view" data-view="todo"><span class="ico">✅</span><span class="lbl">Pendientes</span><span id="todoCount" class="count" hidden></span></button>
-    <button class="tab only-desktop" data-action="open-fx"><span class="ico">💱</span><span class="lbl">Conversor</span></button>
-    <button class="tab only-mobile" data-action="open-more"><span class="ico">⋯</span><span class="lbl">Más</span></button>
+
   </nav>
 
   <div id="banner"></div>
@@ -460,10 +459,7 @@ select{max-width:100%}
   <!-- ================= VISTA: FRASES ================= -->
   <div class="view" data-view="phrases" hidden><div id="phrasesView"></div></div>
 
-  <!-- ================= VISTA: DÓNDE ESTOY ================= -->
-  <div class="view" data-view="where" hidden><div id="whereView"></div></div>
-
-  <footer>Viaje a Japón · Vio y Álvaro · v23 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+  <footer>Viaje a Japón · Vio y Álvaro · v24 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
 </div>
 
 <!-- Diálogo: gasto -->
@@ -502,17 +498,6 @@ select{max-width:100%}
     <div id="fxQuick" class="fx-quick"></div>
     <p class="muted">Tipo de referencia del mercado. El banco puede cobrar algo más por la tarjeta.</p>
     <div class="sheet-actions"><button class="btn" data-action="fx-refresh">Actualizar tipo</button><button class="btn red" data-action="fx-to-expense">Apuntar como gasto</button></div>
-  </div>
-</dialog>
-
-<!-- Diálogo: más secciones -->
-<dialog id="moreDialog" class="sheet">
-  <div class="sheet-in">
-    <div class="sheet-head"><h3>Más</h3><button type="button" class="iconbtn" data-action="close-dialog" aria-label="Cerrar">×</button></div>
-    <div class="more-list">
-      <button data-action="add-expense"><span class="ico">＋</span>Apuntar un gasto</button>
-      <button data-action="open-fx"><span class="ico">💱</span>Conversor yen ⇄ euro</button>
-    </div>
   </div>
 </dialog>
 
@@ -1549,9 +1534,8 @@ function setView(v) {
   if (v === "expenses") renderExpensesView();
   if (v === "todo") renderTodo();
   if (v === "phrases") renderPhrases();
-  if (v === "where") renderWhere();
   if (v === "day") renderDaysBar();
-  $("#addFab").classList.toggle("on", v === "expenses");
+  $("#addFab").classList.toggle("on", v === "expenses" || v === "day");
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 
@@ -1811,7 +1795,7 @@ function renderPhrases() {
     <div class="grid">
       <div>
         <section class="card">
-          <h3>🈯 Traducir</h3>
+          <h3>🌐 Traducir y reconocer</h3>
           <div class="bigbtns">
             <button class="bigbtn" data-action="open-translate">
               <span class="bi">📷</span>
@@ -1821,14 +1805,20 @@ function renderPhrases() {
               <span class="bi">🔍</span>
               <span><b>¿Qué es esto?</b><small>Abre Google Lens para fotografiar un monumento o un sitio</small></span>
             </button>
+            <button class="bigbtn" data-action="locate" ${locating ? "disabled" : ""}>
+              <span class="bi">📍</span>
+              <span><b>${locating ? "Buscando…" : "¿Dónde estoy?"}</b><small>Qué sitios del viaje tienes cerca, sin salir de aquí</small></span>
+            </button>
           </div>
           <p class="muted" style="margin-top:14px">La primera vez elige japonés → español; luego lo recuerda.</p>
         </section>
+        ${whereCard()}
       </div>
       <aside>
         <section class="card">
           <h3>📶 Para que funcione sin cobertura</h3>
           <p class="section-note">En la app de Google Traductor: <b>Ajustes → Idiomas sin conexión</b> y descarga <b>japonés</b> y <b>español</b> antes del viaje. La cámara de Lens sí necesita conexión siempre.</p>
+          <p class="section-note">El GPS de aquí abajo sí funciona sin datos: los ${POIS.length} sitios de Osaka y Kioto van dentro de la web.</p>
         </section>
       </aside>
     </div>`;
@@ -1846,20 +1836,20 @@ function distKm(a, b, c, d) {
 }
 const fmtDist = km => km < 1 ? `${Math.round(km * 1000 / 10) * 10} m` : `${fmtNum(km, km < 10 ? 1 : 0)} km`;
 function locate() {
-  if (!navigator.geolocation) { locError = "Este navegador no puede dar la ubicación."; renderWhere(); return; }
-  locating = true; locError = ""; renderWhere();
+  if (!navigator.geolocation) { locError = "Este navegador no puede dar la ubicación."; renderPhrases(); return; }
+  locating = true; locError = ""; renderPhrases();
   navigator.geolocation.getCurrentPosition(
-    pos => { fix = { lat: pos.coords.latitude, lon: pos.coords.longitude, acc: pos.coords.accuracy, at: Date.now() }; locating = false; renderWhere(); },
+    pos => { fix = { lat: pos.coords.latitude, lon: pos.coords.longitude, acc: pos.coords.accuracy, at: Date.now() }; locating = false; renderPhrases(); },
     err => {
       locating = false;
       locError = err.code === 1 ? "Has denegado el permiso de ubicación. Actívalo para este sitio en los ajustes del navegador."
         : err.code === 3 ? "La ubicación ha tardado demasiado. Prueba otra vez al aire libre."
           : "No se ha podido obtener la ubicación.";
-      renderWhere();
+      renderPhrases();
     },
     { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 });
 }
-function renderWhere() {
+function whereCard() {
   let list = "";
   if (fix) {
     const near = POIS.map(p => ({ name: p[0], lat: p[1], lon: p[2], city: p[3], what: p[4], km: distKm(fix.lat, fix.lon, p[1], p[2]) }))
@@ -1874,32 +1864,7 @@ function renderWhere() {
       <p class="muted" style="margin-top:12px">Precisión de unos ${Math.round(fix.acc)} m · ${timeAgo(fix.at)}</p>
     </section>`;
   }
-  $("#whereView").innerHTML = `
-    <div class="grid">
-      <div>
-        <section class="card">
-          <h3>📍 Dónde estoy</h3>
-          <p class="section-note">Usa el GPS para decirte qué sitios del viaje tienes cerca y qué son. No necesita conexión una vez cargada la web.</p>
-          ${locError ? `<p style="color:var(--red);font-weight:750">${esc(locError)}</p>` : ""}
-          <div class="actions"><button class="btn red big" data-action="locate" ${locating ? "disabled" : ""}>${locating ? "Buscando…" : fix ? "🔄 Actualizar ubicación" : "📍 Usar mi ubicación"}</button></div>
-        </section>
-        ${list}
-      </div>
-      <aside>
-        <section class="card">
-          <h3>📷 Qué es este edificio</h3>
-          <p class="section-note">Para reconocer algo que no esté en nuestra lista, haz la foto con Google Lens: identifica monumentos, estatuas y carteles. Es gratis.</p>
-          <div class="tools">
-            <a class="btn red" target="_blank" rel="noopener" href="https://lens.google.com/">🔍 Abrir Google Lens</a>
-            <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=tourist+attractions+near+me">🗺 Ver qué hay alrededor</a>
-          </div>
-        </section>
-        <section class="card">
-          <h3>ℹ️ Qué sitios conoce</h3>
-          <p class="section-note">Ahora mismo tiene ${POIS.length} sitios de <b>Osaka</b> y <b>Kioto</b> con su explicación. Nara, Takayama y Tokio están pendientes de añadir.</p>
-        </section>
-      </aside>
-    </div>`;
+  return (locError ? `<section class="card"><p style="color:var(--red);font-weight:750;margin:0">${esc(locError)}</p></section>` : "") + list;
 }
 
 /* =====================================================================
@@ -2049,9 +2014,8 @@ document.addEventListener("click", ev => {
     case "delete-task": if (confirm("¿Quitar esta tarea?")) store.del("tasks", id); break;
     case "delete-idea": if (confirm("¿Quitar este elemento?")) store.del("ideas", id); break;
     case "delete-doc": deleteDoc(id); break;
-    case "open-settings": if (el.closest("#moreDialog")) $("#moreDialog").close(); openSettings(); break;
+    case "open-settings": openSettings(); break;
     case "open-fx": if (el.closest("dialog")) el.closest("dialog").close(); openFx(); break;
-    case "open-more": $("#moreDialog").showModal(); break;
     case "open-translate": openApp("translate"); break;
     case "open-lens": openApp("lens"); break;
     case "locate": locate(); break;

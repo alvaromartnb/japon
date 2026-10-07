@@ -324,21 +324,12 @@ select{max-width:100%}
 /* ============ v22 · frases y dónde estoy ============ */
 .only-mobile{display:none!important}
 .tab.more .ico{font-weight:900;letter-spacing:.08em}
-.catbar{display:flex;gap:6px;overflow:auto;margin:0 0 14px;padding-bottom:2px;scrollbar-width:none}
-.catbar::-webkit-scrollbar{display:none}
-.catbar button{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px;font-weight:800;font-size:.85rem}
-.catbar button.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.srch{width:100%;margin-bottom:12px}
-.phrase{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:0;border-top:1px solid var(--line);background:none;padding:13px 0;color:inherit}
-.phrase:first-child{border-top:0}
-.phrase .es{display:block;font-size:.84rem;color:var(--muted);font-weight:750}
-.phrase .ja{display:block;font-size:1.22rem;font-weight:800;letter-spacing:.01em;margin:3px 0 2px;overflow-wrap:anywhere}
-.phrase .ro{display:block;font-size:.78rem;color:var(--muted);font-style:italic}
-.phrase .say{flex:0 0 auto;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:1.2rem;display:grid;place-items:center}
-.phrase .say:active{background:var(--soft)}
-.big-ja{font-size:clamp(2rem,9vw,3.2rem);font-weight:900;line-height:1.3;letter-spacing:.01em;text-align:center;margin:18px 0;overflow-wrap:anywhere}
-.big-es{text-align:center;color:var(--muted);font-weight:750}
-.big-ro{text-align:center;color:var(--muted);font-style:italic;font-size:.9rem;margin-top:6px}
+.bigbtns{display:grid;gap:12px}
+.bigbtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:20px;padding:20px 18px;color:inherit;box-shadow:var(--shadow)}
+.bigbtn:active{background:var(--soft)}
+.bigbtn .bi{flex:0 0 auto;width:54px;height:54px;border-radius:16px;background:var(--soft);display:grid;place-items:center;font-size:1.6rem}
+.bigbtn b{display:block;font-size:1.08rem;letter-spacing:-.01em}
+.bigbtn small{display:block;color:var(--muted);margin-top:3px;font-size:.86rem;line-height:1.4}
 .tools{display:grid;gap:8px;grid-template-columns:1fr 1fr}
 .tools a{text-align:center}
 .poi{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;border-top:1px solid var(--line);padding:14px 0}
@@ -472,7 +463,7 @@ select{max-width:100%}
   <!-- ================= VISTA: DÓNDE ESTOY ================= -->
   <div class="view" data-view="where" hidden><div id="whereView"></div></div>
 
-  <footer>Viaje a Japón · Vio y Álvaro · v22 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+  <footer>Viaje a Japón · Vio y Álvaro · v23 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
 </div>
 
 <!-- Diálogo: gasto -->
@@ -511,14 +502,6 @@ select{max-width:100%}
     <div id="fxQuick" class="fx-quick"></div>
     <p class="muted">Tipo de referencia del mercado. El banco puede cobrar algo más por la tarjeta.</p>
     <div class="sheet-actions"><button class="btn" data-action="fx-refresh">Actualizar tipo</button><button class="btn red" data-action="fx-to-expense">Apuntar como gasto</button></div>
-  </div>
-</dialog>
-
-<!-- Diálogo: frase en grande -->
-<dialog id="phraseDialog" class="sheet">
-  <div class="sheet-in">
-    <div class="sheet-head"><h3>Enseña la pantalla</h3><button type="button" class="iconbtn" data-action="close-dialog" aria-label="Cerrar">×</button></div>
-    <div id="bigPhrase"></div>
   </div>
 </dialog>
 
@@ -1088,89 +1071,6 @@ const plannedExpensesByDay = {
     }
   ]
 };
-
-/* =====================================================================
-   FRASES EN JAPONÉS  ·  [español, japonés, romaji]
-   ===================================================================== */
-const PHRASES = [
-  ["Lo básico", "🙂", [
-    ["Buenos días", "おはようございます", "ohayō gozaimasu"],
-    ["Hola / buenas tardes", "こんにちは", "konnichiwa"],
-    ["Buenas noches", "こんばんは", "konbanwa"],
-    ["Gracias", "ありがとうございます", "arigatō gozaimasu"],
-    ["Perdone / disculpe", "すみません", "sumimasen"],
-    ["Por favor", "お願いします", "onegai shimasu"],
-    ["Sí", "はい", "hai"],
-    ["No", "いいえ", "iie"],
-    ["No entiendo", "わかりません", "wakarimasen"],
-    ["No hablo japonés", "日本語が話せません", "nihongo ga hanasemasen"],
-    ["¿Habla inglés?", "英語を話せますか", "eigo o hanasemasu ka"],
-    ["Lo siento", "ごめんなさい", "gomen nasai"],
-    ["¿Dónde está el baño?", "トイレはどこですか", "toire wa doko desu ka"],
-    ["¿Cuánto cuesta?", "いくらですか", "ikura desu ka"]
-  ]],
-  ["Restaurante", "🍜", [
-    ["Somos dos", "二人です", "futari desu"],
-    ["¿Hay carta en inglés?", "英語のメニューはありますか", "eigo no menyū wa arimasu ka"],
-    ["Esto, por favor (señalando)", "これをください", "kore o kudasai"],
-    ["¿Qué recomienda?", "おすすめは何ですか", "osusume wa nan desu ka"],
-    ["¿Cuánto hay que esperar?", "どのくらい待ちますか", "dono kurai machimasu ka"],
-    ["Agua, por favor", "お水をください", "omizu o kudasai"],
-    ["Una cerveza, por favor", "ビールをください", "bīru o kudasai"],
-    ["Sin wasabi, por favor", "わさび抜きでお願いします", "wasabi nuki de onegai shimasu"],
-    ["Que no pique mucho, por favor", "辛さ控えめでお願いします", "karasa hikaeme de onegai shimasu"],
-    ["Tengo alergia", "アレルギーがあります", "arerugī ga arimasu"],
-    ["¿Se puede pagar con tarjeta?", "カードで払えますか", "kādo de haraemasu ka"],
-    ["La cuenta, por favor", "お会計お願いします", "okaikei onegai shimasu"],
-    ["Para llevar", "持ち帰りで", "mochikaeri de"],
-    ["Estaba buenísimo", "とても美味しかったです", "totemo oishikatta desu"],
-    ["Antes de empezar a comer", "いただきます", "itadakimasu"],
-    ["Al terminar de comer", "ごちそうさまでした", "gochisōsama deshita"]
-  ]],
-  ["Trenes y metro", "🚆", [
-    ["¿Dónde está la estación?", "駅はどこですか", "eki wa doko desu ka"],
-    ["¿De qué andén sale?", "何番線ですか", "nanbansen desu ka"],
-    ["¿Este tren va a Kioto?", "この電車は京都に行きますか", "kono densha wa Kyōto ni ikimasu ka"],
-    ["¿Dónde está la taquilla de JR?", "みどりの窓口はどこですか", "midori no madoguchi wa doko desu ka"],
-    ["Dos billetes, por favor", "切符を二枚お願いします", "kippu o nimai onegai shimasu"],
-    ["Quiero asiento reservado", "指定席をお願いします", "shiteiseki o onegai shimasu"],
-    ["¿Dónde están las consignas?", "コインロッカーはどこですか", "koin rokkā wa doko desu ka"],
-    ["He perdido el tren", "電車に乗り遅れました", "densha ni noriokuremashita"],
-    ["¿Puedo recargar esta tarjeta?", "チャージをお願いします", "chāji o onegai shimasu"]
-  ]],
-  ["Tiendas", "🛍", [
-    ["Solo estoy mirando", "見ているだけです", "mite iru dake desu"],
-    ["Me llevo esto", "これにします", "kore ni shimasu"],
-    ["¿Hay otra talla?", "他のサイズはありますか", "hoka no saizu wa arimasu ka"],
-    ["Libre de impuestos, por favor", "免税でお願いします", "menzei de onegai shimasu"],
-    ["Una bolsa, por favor", "袋をください", "fukuro o kudasai"],
-    ["¿Me lo puede envolver para regalo?", "贈り物用に包んでもらえますか", "okurimono yō ni tsutsunde moraemasu ka"]
-  ]],
-  ["Hotel", "🏨", [
-    ["Tengo una reserva", "予約しています", "yoyaku shite imasu"],
-    ["¿Pueden guardarme las maletas?", "荷物を預かってもらえますか", "nimotsu o azukatte moraemasu ka"],
-    ["¿A qué hora es la salida?", "チェックアウトは何時ですか", "chekku auto wa nanji desu ka"],
-    ["¿Hay wifi?", "Wi-Fiはありますか", "waifai wa arimasu ka"],
-    ["Quiero enviar estas maletas", "この荷物を送りたいです", "kono nimotsu o okuritai desu"]
-  ]],
-  ["Por la calle", "🧭", [
-    ["Me he perdido", "道に迷いました", "michi ni mayoimashita"],
-    ["¿Cómo llego aquí? (enseñando el mapa)", "ここにはどう行きますか", "koko ni wa dō ikimasu ka"],
-    ["¿Me hace una foto, por favor?", "写真を撮ってもらえますか", "shashin o totte moraemasu ka"],
-    ["¿Se pueden hacer fotos?", "写真を撮ってもいいですか", "shashin o totte mo ii desu ka"],
-    ["¿Está abierto?", "開いていますか", "aite imasu ka"]
-  ]],
-  ["Problemas", "🆘", [
-    ["Ayuda, por favor", "助けてください", "tasukete kudasai"],
-    ["Me encuentro mal", "気分が悪いです", "kibun ga warui desu"],
-    ["Me duele aquí (señalando)", "ここが痛いです", "koko ga itai desu"],
-    ["¿Dónde hay una farmacia?", "薬局はどこですか", "yakkyoku wa doko desu ka"],
-    ["¿Dónde hay un hospital?", "病院はどこですか", "byōin wa doko desu ka"],
-    ["He perdido la cartera", "財布をなくしました", "saifu o nakushimashita"],
-    ["Llame a la policía, por favor", "警察を呼んでください", "keisatsu o yonde kudasai"],
-    ["Llame a una ambulancia, por favor", "救急車を呼んでください", "kyūkyūsha o yonde kudasai"]
-  ]]
-];
 
 /* =====================================================================
    SITIOS CON COORDENADAS  ·  [nombre, lat, lon, ciudad, qué es]
@@ -1888,76 +1788,50 @@ function renderTodo() {
 }
 
 /* =====================================================================
-   FRASES
+   TRADUCIR · abre la app instalada, y si no, la web
    ===================================================================== */
-const TTS = typeof speechSynthesis !== "undefined";
-let phraseCat = 0, phraseQuery = "";
-if (TTS) { try { speechSynthesis.getVoices(); } catch { } }
+const isAndroid = /android/i.test(navigator.userAgent);
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-function speak(text) {
-  if (!TTS) { toast("Este móvil no puede leer en voz alta"); return; }
-  try {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "ja-JP"; u.rate = 0.8;
-    const v = (speechSynthesis.getVoices() || []).find(x => /^ja/i.test(x.lang || ""));
-    if (v) u.voice = v;
-    speechSynthesis.speak(u);
-  } catch { toast("No se pudo reproducir"); }
-}
-const allPhrases = () => PHRASES.flatMap((c, ci) => c[2].map((p, pi) => ({ es: p[0], ja: p[1], ro: p[2], ci, pi })));
-const phraseAt = (ci, pi) => { const p = PHRASES[ci]?.[2]?.[pi]; return p ? { es: p[0], ja: p[1], ro: p[2], ci, pi } : null; };
+const TRANSLATE_WEB = "https://translate.google.com/?sl=ja&tl=es&op=translate";
+const LENS_WEB = "https://lens.google.com/";
+const androidIntent = (pkg, url, fallback) =>
+  `intent://${url.replace(/^https:\/\//, "")}#Intent;scheme=https;package=${pkg};S.browser_fallback_url=${encodeURIComponent(fallback)};end`;
 
-function phraseRow(p) {
-  return `<button class="phrase" data-action="big-phrase" data-ci="${p.ci}" data-pi="${p.pi}">
-    <span><span class="es">${esc(p.es)}</span><span class="ja">${esc(p.ja)}</span><span class="ro">${esc(p.ro)}</span></span>
-    ${TTS ? `<span class="say" data-action="say" data-ci="${p.ci}" data-pi="${p.pi}" role="button" aria-label="Escuchar">🔊</span>` : ""}
-  </button>`;
+function openApp(kind) {
+  const web = kind === "lens" ? LENS_WEB : TRANSLATE_WEB;
+  const pkg = kind === "lens" ? "com.google.android.googlequicksearchbox" : "com.google.android.apps.translate";
+  const url = isAndroid ? androidIntent(pkg, web, web) : web;
+  const w = window.open(url, "_blank", "noopener");
+  if (!w) location.href = url;
 }
+
 function renderPhrases() {
-  const q = phraseQuery.trim().toLowerCase();
-  let body;
-  if (q) {
-    const norm = t => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    const hits = allPhrases().filter(p => norm(p.es).includes(norm(q)) || norm(p.ro).includes(norm(q)) || p.ja.includes(q));
-    body = hits.length ? hits.map(phraseRow).join("") : `<div class="empty">Ninguna frase coincide con “${esc(phraseQuery)}”.</div>`;
-  } else {
-    body = PHRASES[phraseCat][2].map((p, pi) => phraseRow({ es: p[0], ja: p[1], ro: p[2], ci: phraseCat, pi })).join("");
-  }
   $("#phrasesView").innerHTML = `
     <div class="grid">
       <div>
         <section class="card">
-          <h3>🈯 Frases para enseñar</h3>
-          <p class="section-note">Toca una frase para verla en grande y enseñar la pantalla.${TTS ? " El altavoz la pronuncia." : ""} Funciona sin conexión.</p>
-          <input id="phraseSearch" class="srch" type="search" placeholder="Buscar: cuenta, baño, tren…" value="${esc(phraseQuery)}" autocomplete="off">
-          ${q ? "" : `<div class="catbar">${PHRASES.map((c, i) => `<button class="${i === phraseCat ? "on" : ""}" data-action="phrase-cat" data-i="${i}">${c[1]} ${c[0]}</button>`).join("")}</div>`}
-          ${body}
+          <h3>🈯 Traducir</h3>
+          <div class="bigbtns">
+            <button class="bigbtn" data-action="open-translate">
+              <span class="bi">📷</span>
+              <span><b>Traducir cartel o menú</b><small>Abre Google Traductor para apuntar con la cámara</small></span>
+            </button>
+            <button class="bigbtn" data-action="open-lens">
+              <span class="bi">🔍</span>
+              <span><b>¿Qué es esto?</b><small>Abre Google Lens para fotografiar un monumento o un sitio</small></span>
+            </button>
+          </div>
+          <p class="muted" style="margin-top:14px">La primera vez elige japonés → español; luego lo recuerda.</p>
         </section>
       </div>
       <aside>
         <section class="card">
-          <h3>📷 Traducir una foto</h3>
-          <p class="section-note">Para una carta o un cartel, lo mejor es Google Traductor con la cámara: apuntas y lo traduce encima. Es gratis.</p>
-          <div class="tools">
-            <a class="btn red" target="_blank" rel="noopener" href="https://translate.google.com/?sl=ja&tl=es&op=images">📷 Traducir con la cámara</a>
-            <a class="btn" target="_blank" rel="noopener" href="https://translate.google.com/?sl=ja&tl=es&op=translate">⌨️ Escribir y traducir</a>
-          </div>
-          <p class="muted" style="margin-top:12px">Antes del viaje, en la app de Google Traductor: Ajustes → Idiomas sin conexión → descargar <b>japonés</b>. Así funciona sin cobertura.</p>
-        </section>
-        <section class="card">
-          <h3>🗣 Cómo usarlo allí</h3>
-          <p class="section-note">En Japón, enseñar la pantalla funciona mejor que intentar pronunciar. Toca la frase, sale en grande y se la pones delante.</p>
-          <p class="section-note">La transcripción en cursiva es solo una guía: léela como si fuera español, con las vocales marcadas y sin acentuar ninguna sílaba.</p>
+          <h3>📶 Para que funcione sin cobertura</h3>
+          <p class="section-note">En la app de Google Traductor: <b>Ajustes → Idiomas sin conexión</b> y descarga <b>japonés</b> y <b>español</b> antes del viaje. La cámara de Lens sí necesita conexión siempre.</p>
         </section>
       </aside>
     </div>`;
-}
-function openBigPhrase(ci, pi) {
-  const p = phraseAt(ci, pi); if (!p) return;
-  $("#bigPhrase").innerHTML = `<div class="big-es">${esc(p.es)}</div><div class="big-ja">${esc(p.ja)}</div><div class="big-ro">${esc(p.ro)}</div>
-    ${TTS ? `<div class="sheet-actions"><button class="btn red big" data-action="say" data-ci="${ci}" data-pi="${pi}">🔊 Escuchar</button></div>` : ""}`;
-  $("#phraseDialog").showModal();
 }
 
 /* =====================================================================
@@ -2178,9 +2052,8 @@ document.addEventListener("click", ev => {
     case "open-settings": if (el.closest("#moreDialog")) $("#moreDialog").close(); openSettings(); break;
     case "open-fx": if (el.closest("dialog")) el.closest("dialog").close(); openFx(); break;
     case "open-more": $("#moreDialog").showModal(); break;
-    case "phrase-cat": phraseCat = +el.dataset.i; phraseQuery = ""; renderPhrases(); break;
-    case "say": ev.stopPropagation(); { const p = phraseAt(+el.dataset.ci, +el.dataset.pi); if (p) speak(p.ja); } break;
-    case "big-phrase": openBigPhrase(+el.dataset.ci, +el.dataset.pi); break;
+    case "open-translate": openApp("translate"); break;
+    case "open-lens": openApp("lens"); break;
     case "locate": locate(); break;
     case "fx-refresh": refreshRate(true); break;
     case "fx-quick": $("#fxJpy").value = fmtNum(+el.dataset.jpy, 0); fxConvert("jpy"); break;
@@ -2223,13 +2096,6 @@ document.addEventListener("submit", ev => {
     const k = f.elements.key.value.trim();
     if (k.length < 20) { toast("Esa clave parece incompleta"); return; }
     localStorage.setItem("jp3_token", k); location.reload();
-  }
-});
-document.addEventListener("input", ev => {
-  if (ev.target.id === "phraseSearch") {
-    phraseQuery = ev.target.value;
-    renderPhrases();
-    const f = $("#phraseSearch"); if (f) { f.focus(); f.setSelectionRange(f.value.length, f.value.length); }
   }
 });
 document.addEventListener("change", ev => {

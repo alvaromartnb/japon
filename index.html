@@ -319,6 +319,41 @@ select{max-width:100%}
 .bar i b:first-child{border-radius:999px 0 0 999px}
 .bar i b:last-child{border-radius:0 999px 999px 0}
 @media(max-width:560px){.fx-quick{grid-template-columns:repeat(3,1fr)}}
+
+/* ============ v22 · frases y dónde estoy ============ */
+.only-mobile{display:none!important}
+.tab.more .ico{font-weight:900;letter-spacing:.08em}
+.catbar{display:flex;gap:6px;overflow:auto;margin:0 0 14px;padding-bottom:2px;scrollbar-width:none}
+.catbar::-webkit-scrollbar{display:none}
+.catbar button{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px;font-weight:800;font-size:.85rem}
+.catbar button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.srch{width:100%;margin-bottom:12px}
+.phrase{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:0;border-top:1px solid var(--line);background:none;padding:13px 0;color:inherit}
+.phrase:first-child{border-top:0}
+.phrase .es{display:block;font-size:.84rem;color:var(--muted);font-weight:750}
+.phrase .ja{display:block;font-size:1.22rem;font-weight:800;letter-spacing:.01em;margin:3px 0 2px;overflow-wrap:anywhere}
+.phrase .ro{display:block;font-size:.78rem;color:var(--muted);font-style:italic}
+.phrase .say{flex:0 0 auto;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:1.2rem;display:grid;place-items:center}
+.phrase .say:active{background:var(--soft)}
+.big-ja{font-size:clamp(2rem,9vw,3.2rem);font-weight:900;line-height:1.3;letter-spacing:.01em;text-align:center;margin:18px 0;overflow-wrap:anywhere}
+.big-es{text-align:center;color:var(--muted);font-weight:750}
+.big-ro{text-align:center;color:var(--muted);font-style:italic;font-size:.9rem;margin-top:6px}
+.tools{display:grid;gap:8px;grid-template-columns:1fr 1fr}
+.tools a{text-align:center}
+.poi{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;border-top:1px solid var(--line);padding:14px 0}
+.poi:first-child{border-top:0}
+.poi .dist{font-weight:900;font-size:.9rem;white-space:nowrap;color:var(--red)}
+.poi b{display:block;overflow-wrap:anywhere}
+.poi small{display:block;color:var(--muted);margin-top:3px;line-height:1.45}
+.poi .pin{font-size:1.2rem}
+.more-list{display:grid;gap:8px}
+.more-list button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px;font-weight:800;font-size:.95rem;color:inherit}
+.more-list button .ico{font-size:1.35rem}
+.more-list button .count{margin-left:auto;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:.72rem;display:inline-grid;place-items:center}
+@media(max-width:850px){
+  .only-mobile{display:flex!important}
+  .only-desktop{display:none!important}
+}
   </style>
 </head>
 <body>
@@ -339,8 +374,11 @@ select{max-width:100%}
     <button class="tab active" data-action="view" data-view="day"><span class="ico">📅</span><span class="lbl">Día a día</span></button>
     <button class="tab" data-action="view" data-view="expenses"><span class="ico">💶</span><span class="lbl">Gastos</span></button>
     <button class="tab add" data-action="add-expense" aria-label="Apuntar gasto"><span class="ico">＋</span><span class="lbl">Apuntar gasto</span></button>
-    <button class="tab" data-action="view" data-view="todo"><span class="ico">✅</span><span class="lbl">Pendientes</span><span id="todoCount" class="count" hidden></span></button>
-    <button class="tab" data-action="open-fx"><span class="ico">💱</span><span class="lbl">Conversor</span></button>
+    <button class="tab" data-action="view" data-view="phrases"><span class="ico">💬</span><span class="lbl">Frases</span></button>
+    <button class="tab only-desktop" data-action="view" data-view="where"><span class="ico">📍</span><span class="lbl">Dónde estoy</span></button>
+    <button class="tab only-desktop" data-action="view" data-view="todo"><span class="ico">✅</span><span class="lbl">Pendientes</span><span id="todoCount" class="count" hidden></span></button>
+    <button class="tab only-desktop" data-action="open-fx"><span class="ico">💱</span><span class="lbl">Conversor</span></button>
+    <button class="tab only-mobile" data-action="open-more"><span class="ico">⋯</span><span class="lbl">Más</span><span id="moreCount" class="count" hidden></span></button>
   </nav>
 
   <div id="banner"></div>
@@ -424,7 +462,13 @@ select{max-width:100%}
   <!-- ================= VISTA: PENDIENTES ================= -->
   <div class="view" data-view="todo" hidden><div id="todoView"></div></div>
 
-  <footer>Viaje a Japón · Vio y Álvaro · v21 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+  <!-- ================= VISTA: FRASES ================= -->
+  <div class="view" data-view="phrases" hidden><div id="phrasesView"></div></div>
+
+  <!-- ================= VISTA: DÓNDE ESTOY ================= -->
+  <div class="view" data-view="where" hidden><div id="whereView"></div></div>
+
+  <footer>Viaje a Japón · Vio y Álvaro · v22 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
 </div>
 
 <!-- Diálogo: gasto -->
@@ -463,6 +507,27 @@ select{max-width:100%}
     <div id="fxQuick" class="fx-quick"></div>
     <p class="muted">Tipo de referencia del mercado. El banco puede cobrar algo más por la tarjeta.</p>
     <div class="sheet-actions"><button class="btn" data-action="fx-refresh">Actualizar tipo</button><button class="btn red" data-action="fx-to-expense">Apuntar como gasto</button></div>
+  </div>
+</dialog>
+
+<!-- Diálogo: frase en grande -->
+<dialog id="phraseDialog" class="sheet">
+  <div class="sheet-in">
+    <div class="sheet-head"><h3>Enseña la pantalla</h3><button type="button" class="iconbtn" data-action="close-dialog" aria-label="Cerrar">×</button></div>
+    <div id="bigPhrase"></div>
+  </div>
+</dialog>
+
+<!-- Diálogo: más secciones -->
+<dialog id="moreDialog" class="sheet">
+  <div class="sheet-in">
+    <div class="sheet-head"><h3>Más</h3><button type="button" class="iconbtn" data-action="close-dialog" aria-label="Cerrar">×</button></div>
+    <div class="more-list">
+      <button data-action="view" data-view="todo"><span class="ico">✅</span>Pendientes<span id="moreTodoCount" class="count" hidden></span></button>
+      <button data-action="view" data-view="where"><span class="ico">📍</span>Dónde estoy</button>
+      <button data-action="open-fx"><span class="ico">💱</span>Conversor yen ⇄ euro</button>
+      <button data-action="open-settings"><span class="ico">⚙️</span>Ajustes</button>
+    </div>
   </div>
 </dialog>
 
@@ -1022,6 +1087,137 @@ const plannedExpensesByDay = {
 };
 
 /* =====================================================================
+   FRASES EN JAPONÉS  ·  [español, japonés, romaji]
+   ===================================================================== */
+const PHRASES = [
+  ["Lo básico", "🙂", [
+    ["Buenos días", "おはようございます", "ohayō gozaimasu"],
+    ["Hola / buenas tardes", "こんにちは", "konnichiwa"],
+    ["Buenas noches", "こんばんは", "konbanwa"],
+    ["Gracias", "ありがとうございます", "arigatō gozaimasu"],
+    ["Perdone / disculpe", "すみません", "sumimasen"],
+    ["Por favor", "お願いします", "onegai shimasu"],
+    ["Sí", "はい", "hai"],
+    ["No", "いいえ", "iie"],
+    ["No entiendo", "わかりません", "wakarimasen"],
+    ["No hablo japonés", "日本語が話せません", "nihongo ga hanasemasen"],
+    ["¿Habla inglés?", "英語を話せますか", "eigo o hanasemasu ka"],
+    ["Lo siento", "ごめんなさい", "gomen nasai"],
+    ["¿Dónde está el baño?", "トイレはどこですか", "toire wa doko desu ka"],
+    ["¿Cuánto cuesta?", "いくらですか", "ikura desu ka"]
+  ]],
+  ["Restaurante", "🍜", [
+    ["Somos dos", "二人です", "futari desu"],
+    ["¿Hay carta en inglés?", "英語のメニューはありますか", "eigo no menyū wa arimasu ka"],
+    ["Esto, por favor (señalando)", "これをください", "kore o kudasai"],
+    ["¿Qué recomienda?", "おすすめは何ですか", "osusume wa nan desu ka"],
+    ["¿Cuánto hay que esperar?", "どのくらい待ちますか", "dono kurai machimasu ka"],
+    ["Agua, por favor", "お水をください", "omizu o kudasai"],
+    ["Una cerveza, por favor", "ビールをください", "bīru o kudasai"],
+    ["Sin wasabi, por favor", "わさび抜きでお願いします", "wasabi nuki de onegai shimasu"],
+    ["Que no pique mucho, por favor", "辛さ控えめでお願いします", "karasa hikaeme de onegai shimasu"],
+    ["Tengo alergia", "アレルギーがあります", "arerugī ga arimasu"],
+    ["¿Se puede pagar con tarjeta?", "カードで払えますか", "kādo de haraemasu ka"],
+    ["La cuenta, por favor", "お会計お願いします", "okaikei onegai shimasu"],
+    ["Para llevar", "持ち帰りで", "mochikaeri de"],
+    ["Estaba buenísimo", "とても美味しかったです", "totemo oishikatta desu"],
+    ["Antes de empezar a comer", "いただきます", "itadakimasu"],
+    ["Al terminar de comer", "ごちそうさまでした", "gochisōsama deshita"]
+  ]],
+  ["Trenes y metro", "🚆", [
+    ["¿Dónde está la estación?", "駅はどこですか", "eki wa doko desu ka"],
+    ["¿De qué andén sale?", "何番線ですか", "nanbansen desu ka"],
+    ["¿Este tren va a Kioto?", "この電車は京都に行きますか", "kono densha wa Kyōto ni ikimasu ka"],
+    ["¿Dónde está la taquilla de JR?", "みどりの窓口はどこですか", "midori no madoguchi wa doko desu ka"],
+    ["Dos billetes, por favor", "切符を二枚お願いします", "kippu o nimai onegai shimasu"],
+    ["Quiero asiento reservado", "指定席をお願いします", "shiteiseki o onegai shimasu"],
+    ["¿Dónde están las consignas?", "コインロッカーはどこですか", "koin rokkā wa doko desu ka"],
+    ["He perdido el tren", "電車に乗り遅れました", "densha ni noriokuremashita"],
+    ["¿Puedo recargar esta tarjeta?", "チャージをお願いします", "chāji o onegai shimasu"]
+  ]],
+  ["Tiendas", "🛍", [
+    ["Solo estoy mirando", "見ているだけです", "mite iru dake desu"],
+    ["Me llevo esto", "これにします", "kore ni shimasu"],
+    ["¿Hay otra talla?", "他のサイズはありますか", "hoka no saizu wa arimasu ka"],
+    ["Libre de impuestos, por favor", "免税でお願いします", "menzei de onegai shimasu"],
+    ["Una bolsa, por favor", "袋をください", "fukuro o kudasai"],
+    ["¿Me lo puede envolver para regalo?", "贈り物用に包んでもらえますか", "okurimono yō ni tsutsunde moraemasu ka"]
+  ]],
+  ["Hotel", "🏨", [
+    ["Tengo una reserva", "予約しています", "yoyaku shite imasu"],
+    ["¿Pueden guardarme las maletas?", "荷物を預かってもらえますか", "nimotsu o azukatte moraemasu ka"],
+    ["¿A qué hora es la salida?", "チェックアウトは何時ですか", "chekku auto wa nanji desu ka"],
+    ["¿Hay wifi?", "Wi-Fiはありますか", "waifai wa arimasu ka"],
+    ["Quiero enviar estas maletas", "この荷物を送りたいです", "kono nimotsu o okuritai desu"]
+  ]],
+  ["Por la calle", "🧭", [
+    ["Me he perdido", "道に迷いました", "michi ni mayoimashita"],
+    ["¿Cómo llego aquí? (enseñando el mapa)", "ここにはどう行きますか", "koko ni wa dō ikimasu ka"],
+    ["¿Me hace una foto, por favor?", "写真を撮ってもらえますか", "shashin o totte moraemasu ka"],
+    ["¿Se pueden hacer fotos?", "写真を撮ってもいいですか", "shashin o totte mo ii desu ka"],
+    ["¿Está abierto?", "開いていますか", "aite imasu ka"]
+  ]],
+  ["Problemas", "🆘", [
+    ["Ayuda, por favor", "助けてください", "tasukete kudasai"],
+    ["Me encuentro mal", "気分が悪いです", "kibun ga warui desu"],
+    ["Me duele aquí (señalando)", "ここが痛いです", "koko ga itai desu"],
+    ["¿Dónde hay una farmacia?", "薬局はどこですか", "yakkyoku wa doko desu ka"],
+    ["¿Dónde hay un hospital?", "病院はどこですか", "byōin wa doko desu ka"],
+    ["He perdido la cartera", "財布をなくしました", "saifu o nakushimashita"],
+    ["Llame a la policía, por favor", "警察を呼んでください", "keisatsu o yonde kudasai"],
+    ["Llame a una ambulancia, por favor", "救急車を呼んでください", "kyūkyūsha o yonde kudasai"]
+  ]]
+];
+
+/* =====================================================================
+   SITIOS CON COORDENADAS  ·  [nombre, lat, lon, ciudad, qué es]
+   ===================================================================== */
+const POIS = [
+  // --- Osaka
+  ["Hotel Sobial Osaka Dome", 34.6654729, 135.4795329, "Osaka", "Nuestro hotel, junto a la estación de Taisho."],
+  ["Castillo de Osaka", 34.6873153, 135.5262013, "Osaka", "Torre reconstruida en 1931 sobre murallas del siglo XVI. Museo dentro y mirador arriba, ¥1.200. El parque y las murallas son gratis."],
+  ["Jardín Nishinomaru", 34.6866, 135.5222, "Osaka", "Jardín dentro del castillo con la mejor vista de la torre desde abajo. ¥300, cierra a las 16:30."],
+  ["Kuromon Ichiba", 34.6653511, 135.5062417, "Osaka", "Mercado cubierto de 190 años, la cocina de Osaka. Unos 150 puestos de marisco, wagyu y fruta que se comen allí mismo. Cierra a las 17:00."],
+  ["Dotonbori", 34.6689339, 135.5010679, "Osaka", "El canal con los neones gigantes y el corredor de Glico. La imagen típica de Osaka, mejor de noche."],
+  ["Hozenji Yokocho", 34.6681187, 135.5026104, "Osaka", "Callejón de piedra con farolillos a un minuto de Dotonbori. Dentro, una estatua cubierta de musgo a la que se echa agua al rezar."],
+  ["Takoyaki Wanaka", 34.6652167, 135.5033629, "Osaka", "Takoyaki: bolas de masa con pulpo hechas en plancha. Hay sala con mesas en el callejón de atrás. Cierra a las 21:00."],
+  ["Dearbros · omurice", 34.6679464, 135.5032254, "Osaka", "Omurice: tortilla rellena de arroz frito. Se pide y se paga ANTES de coger sitio. Abre 11:00–23:00."],
+  ["10 Yen Bread", 34.6678109, 135.503107, "Osaka", "Pan alargado con queso fundido con forma de moneda antigua. Cuesta ¥500. No abre hasta las 12:10."],
+  ["Kushikatsu Daruma · Dotonbori", 34.6688351, 135.502638, "Osaka", "Kushikatsu: brochetas rebozadas y fritas. La salsa del bote es común: se moja UNA sola vez. Para repetir, se usa un trozo de col."],
+  ["Osaka Tenmangu", 34.6960576, 135.5126556, "Osaka", "Santuario del dios de los estudios, gratis. Marca el extremo sur de la arcada de Tenjinbashisuji."],
+  ["Tenjinbashisuji", 34.7025467, 135.5114541, "Osaka", "La galería comercial cubierta más larga de Japón: 2,6 km y unos 600 comercios. Es donde compra la gente del barrio."],
+  ["Nakamuraya · croquetas", 34.6989, 135.5121, "Osaka", "Croquetas de patata recién fritas por unos ¥100, dentro de la arcada. Institución del barrio, suele tener cola de vecinos."],
+  ["Nakazakicho", 34.708641, 135.5042741, "Osaka", "Barrio de casas de madera de antes de la guerra convertidas en cafés y tiendas vintage. El café Utena cierra lunes y martes; Yatt abre todos los días."],
+  ["Umeda Sky Building", 34.7052686, 135.4899757, "Osaka", "Dos torres unidas arriba por una plataforma abierta a 170 m, con una escalera mecánica suspendida en el vacío. ¥2.000, abre hasta las 22:30."],
+  ["IZUMO · unagi", 34.6963563, 135.4867078, "Osaka", "Anguila de río asada al carbón con salsa dulce sobre arroz. Cierra de 15:00 a 17:00 y suele haber cola. Raciones enormes."],
+  ["Ichimaru Ramen", 34.6924166, 135.4749556, "Osaka", "Plan B del unagi, a 15 min andando. Ramen de caldo denso. CIERRA LOS DOMINGOS."],
+  ["Shin-Umeda Shokudogai", 34.7035, 135.4977, "Osaka", "Más de 100 locales diminutos bajo las vías, con aspecto de los años 50. Dentro están Okonomiyaki Kiji y el kushikatsu Matsuba."],
+  ["Shitenno-ji", 34.6544581, 135.5165239, "Osaka", "El primer templo oficial de Japón, del año 593. Mercadillo de unos 300 puestos los días 21 y 22 de cada mes, de 8:00 a 16:00."],
+  ["Isshin-ji", 34.6528733, 135.5109152, "Osaka", "Templo con puerta de acero y cristal de los años 90 y dos guardianes de bronce gigantes. Abre a las 5:00 y es gratis."],
+  ["Tsutenkaku · Shinsekai", 34.6524, 135.5063, "Osaka", "La torre del barrio retro de 1912. Mirador ¥1.500, abierto hasta las 21:45."],
+  ["Sumiyoshi Taisha", 34.6123945, 135.4937612, "Osaka", "Uno de los santuarios más antiguos de Japón, con arquitectura anterior a la influencia china. El puente Sorihashi está nada más entrar. Gratis."],
+
+  // --- Kioto
+  ["Hotel Resol Trinity Kyoto", 35.0116524, 135.7659746, "Kioto", "Nuestro hotel, junto a Kyoto Shiyakusho-mae. Tiene baño japonés incluido."],
+  ["Fushimi Inari", 34.9676945, 135.7791876, "Kioto", "Miles de torii naranjas formando túneles por la montaña. Gratis y abierto 24 h. Subir entero son 2–3 h; la mayoría sube 30–40 min."],
+  ["Nishiki", 35.0050258, 135.764723, "Kioto", "Calle cubierta de 400 m, la cocina de Kioto. Encurtidos, tofu, pescado y dulces. Muchos puestos no aceptan tarjeta."],
+  ["Pontocho", 35.0039339, 135.7710439, "Kioto", "Callejón estrechísimo junto al río Kamo, empedrado y con farolillos. De noche es cuando tiene sentido."],
+  ["Kiyomizu-dera", 34.9946662, 135.784661, "Kioto", "Templo del año 778 con una terraza de madera enorme construida sin un solo clavo. ¥500, abre a las 6:00. Ir pronto es clave."],
+  ["Sannenzaka", 34.9966644, 135.781008, "Kioto", "Calle en cuesta empedrada con casas de madera antiguas, bajando desde Kiyomizu-dera."],
+  ["Ninenzaka", 34.9983989, 135.7808431, "Kioto", "La continuación de Sannenzaka, con vistas a la pagoda de Yasaka. Tiendas y casas de té."],
+  ["Chion-in", 35.0051988, 135.7833827, "Kioto", "Su puerta de entrada es la más grande de madera de todo Japón, 24 m de alto. Gratis por fuera."],
+  ["Yasaka", 35.0036559, 135.7785534, "Kioto", "Santuario de faroles en pleno Gion, gratis y abierto 24 h. Al anochecer los encienden todos."],
+  ["Gion", 35.0035, 135.7752, "Kioto", "El barrio de las casas de té de madera. Al caer la tarde es cuando se ve algo de ambiente."],
+  ["Bosque de bambú de Arashiyama", 35.0168187, 135.6713013, "Kioto", "Sendero de 500 m entre cañas de bambú de diez metros. Gratis y se llena rápido: ir temprano."],
+  ["Tenryu-ji", 35.0158, 135.6739, "Kioto", "Templo junto al bosque de bambú, con un jardín de estanque del siglo XIV que nunca ha sido rediseñado. ¥500."],
+  ["Puente Togetsukyo", 35.0128769, 135.6777748, "Kioto", "El puente de madera sobre el río con la montaña detrás. Literalmente, el puente que cruza la luna."],
+  ["Nijo", 35.0140379, 135.7484258, "Kioto", "El palacio del shogun: salas de tatami con puertas en pan de oro y los suelos ruiseñor, que chirrían al pisarlos. Última entrada a las 16:00. El palacio Ninomaru cierra los martes de diciembre."],
+  ["Kinkaku-ji", 35.03937, 135.7292431, "Kioto", "El Pabellón Dorado, recubierto de pan de oro y reflejado en un estanque. ¥500, cierra a las 17:00."],
+  ["Nishiki Tenmangu", 35.0051, 135.7678, "Kioto", "Santuario al final de la arcada de Nishiki, con un buey de bronce al que la gente frota la cabeza. Gratis y corto."],
+  ["Honno-ji", 35.0109, 135.7676, "Kioto", "El templo donde Oda Nobunaga fue traicionado y murió en 1582. A dos minutos del hotel. Gratis."]
+];
+
+/* =====================================================================
    APP · a partir de aquí no hace falta tocar nada
    ===================================================================== */
 const COLLECTIONS = ["expenses", "notes", "checks", "tasks", "ideas"];
@@ -1427,7 +1623,13 @@ function renderCountdown() {
   const t = dateNum(todayId()), s = dateNum(TRIP_START), e = dateNum(TRIP_END);
   $("#countdown").textContent = t < s ? (s - t === 1 ? "¡Mañana empieza!" : `Faltan ${s - t} días`) : t <= e ? `Día ${t - s + 1} de ${e - s + 1}` : "Viaje terminado";
 }
-function renderTodoCount() { const n = pendingCount(), el = $("#todoCount"); el.hidden = !n; el.textContent = n; }
+function renderTodoCount() {
+  const n = pendingCount();
+  ["#todoCount", "#moreCount", "#moreTodoCount"].forEach(sel => {
+    const el = $(sel); if (!el) return;
+    el.hidden = !n; el.textContent = n;
+  });
+}
 function renderBanner() {
   const parts = [];
   if (SYNC.owner && !token) parts.push(`<div class="banner"><p>Este móvil no está conectado: lo que apuntes no lo verá el otro.</p><div class="actions"><button class="btn red" data-action="open-settings">Conectar</button></div></div>`);
@@ -1443,6 +1645,8 @@ function setView(v) {
   document.querySelectorAll(".tab[data-view]").forEach(t => t.classList.toggle("active", t.dataset.view === v));
   if (v === "expenses") renderExpensesView();
   if (v === "todo") renderTodo();
+  if (v === "phrases") renderPhrases();
+  if (v === "where") renderWhere();
   if (v === "day") renderDaysBar();
   window.scrollTo({ top: 0, behavior: "instant" });
 }
@@ -1680,6 +1884,147 @@ function renderTodo() {
 }
 
 /* =====================================================================
+   FRASES
+   ===================================================================== */
+const TTS = typeof speechSynthesis !== "undefined";
+let phraseCat = 0, phraseQuery = "";
+if (TTS) { try { speechSynthesis.getVoices(); } catch { } }
+
+function speak(text) {
+  if (!TTS) { toast("Este móvil no puede leer en voz alta"); return; }
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "ja-JP"; u.rate = 0.8;
+    const v = (speechSynthesis.getVoices() || []).find(x => /^ja/i.test(x.lang || ""));
+    if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  } catch { toast("No se pudo reproducir"); }
+}
+const allPhrases = () => PHRASES.flatMap((c, ci) => c[2].map((p, pi) => ({ es: p[0], ja: p[1], ro: p[2], ci, pi })));
+const phraseAt = (ci, pi) => { const p = PHRASES[ci]?.[2]?.[pi]; return p ? { es: p[0], ja: p[1], ro: p[2], ci, pi } : null; };
+
+function phraseRow(p) {
+  return `<button class="phrase" data-action="big-phrase" data-ci="${p.ci}" data-pi="${p.pi}">
+    <span><span class="es">${esc(p.es)}</span><span class="ja">${esc(p.ja)}</span><span class="ro">${esc(p.ro)}</span></span>
+    ${TTS ? `<span class="say" data-action="say" data-ci="${p.ci}" data-pi="${p.pi}" role="button" aria-label="Escuchar">🔊</span>` : ""}
+  </button>`;
+}
+function renderPhrases() {
+  const q = phraseQuery.trim().toLowerCase();
+  let body;
+  if (q) {
+    const norm = t => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const hits = allPhrases().filter(p => norm(p.es).includes(norm(q)) || norm(p.ro).includes(norm(q)) || p.ja.includes(q));
+    body = hits.length ? hits.map(phraseRow).join("") : `<div class="empty">Ninguna frase coincide con “${esc(phraseQuery)}”.</div>`;
+  } else {
+    body = PHRASES[phraseCat][2].map((p, pi) => phraseRow({ es: p[0], ja: p[1], ro: p[2], ci: phraseCat, pi })).join("");
+  }
+  $("#phrasesView").innerHTML = `
+    <div class="grid">
+      <div>
+        <section class="card">
+          <h3>💬 Frases en japonés</h3>
+          <p class="section-note">Toca una frase para verla en grande y enseñar la pantalla.${TTS ? " El altavoz la pronuncia." : ""} Funciona sin conexión.</p>
+          <input id="phraseSearch" class="srch" type="search" placeholder="Buscar: cuenta, baño, tren…" value="${esc(phraseQuery)}" autocomplete="off">
+          ${q ? "" : `<div class="catbar">${PHRASES.map((c, i) => `<button class="${i === phraseCat ? "on" : ""}" data-action="phrase-cat" data-i="${i}">${c[1]} ${c[0]}</button>`).join("")}</div>`}
+          ${body}
+        </section>
+      </div>
+      <aside>
+        <section class="card">
+          <h3>📷 Traducir una foto</h3>
+          <p class="section-note">Para una carta o un cartel, lo mejor es Google Traductor con la cámara: apuntas y lo traduce encima. Es gratis.</p>
+          <div class="tools">
+            <a class="btn red" target="_blank" rel="noopener" href="https://translate.google.com/?sl=ja&tl=es&op=images">📷 Traducir con la cámara</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://translate.google.com/?sl=ja&tl=es&op=translate">⌨️ Escribir y traducir</a>
+          </div>
+          <p class="muted" style="margin-top:12px">Antes del viaje, en la app de Google Traductor: Ajustes → Idiomas sin conexión → descargar <b>japonés</b>. Así funciona sin cobertura.</p>
+        </section>
+        <section class="card">
+          <h3>🗣 Cómo usarlo allí</h3>
+          <p class="section-note">En Japón, enseñar la pantalla funciona mejor que intentar pronunciar. Toca la frase, sale en grande y se la pones delante.</p>
+          <p class="section-note">La transcripción en cursiva es solo una guía: léela como si fuera español, con las vocales marcadas y sin acentuar ninguna sílaba.</p>
+        </section>
+      </aside>
+    </div>`;
+}
+function openBigPhrase(ci, pi) {
+  const p = phraseAt(ci, pi); if (!p) return;
+  $("#bigPhrase").innerHTML = `<div class="big-es">${esc(p.es)}</div><div class="big-ja">${esc(p.ja)}</div><div class="big-ro">${esc(p.ro)}</div>
+    ${TTS ? `<div class="sheet-actions"><button class="btn red big" data-action="say" data-ci="${ci}" data-pi="${pi}">🔊 Escuchar</button></div>` : ""}`;
+  $("#phraseDialog").showModal();
+}
+
+/* =====================================================================
+   DÓNDE ESTOY
+   ===================================================================== */
+let fix = null, locating = false, locError = "";
+function distKm(a, b, c, d) {
+  const R = 6371, t = Math.PI / 180;
+  const dLat = (c - a) * t, dLon = (d - b) * t;
+  const x = Math.sin(dLat / 2) ** 2 + Math.cos(a * t) * Math.cos(c * t) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(x)));
+}
+const fmtDist = km => km < 1 ? `${Math.round(km * 1000 / 10) * 10} m` : `${fmtNum(km, km < 10 ? 1 : 0)} km`;
+function locate() {
+  if (!navigator.geolocation) { locError = "Este navegador no puede dar la ubicación."; renderWhere(); return; }
+  locating = true; locError = ""; renderWhere();
+  navigator.geolocation.getCurrentPosition(
+    pos => { fix = { lat: pos.coords.latitude, lon: pos.coords.longitude, acc: pos.coords.accuracy, at: Date.now() }; locating = false; renderWhere(); },
+    err => {
+      locating = false;
+      locError = err.code === 1 ? "Has denegado el permiso de ubicación. Actívalo para este sitio en los ajustes del navegador."
+        : err.code === 3 ? "La ubicación ha tardado demasiado. Prueba otra vez al aire libre."
+          : "No se ha podido obtener la ubicación.";
+      renderWhere();
+    },
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 });
+}
+function renderWhere() {
+  let list = "";
+  if (fix) {
+    const near = POIS.map(p => ({ name: p[0], lat: p[1], lon: p[2], city: p[3], what: p[4], km: distKm(fix.lat, fix.lon, p[1], p[2]) }))
+      .sort((a, b) => a.km - b.km).slice(0, 6);
+    const far = near[0].km > 40;
+    list = `<section class="card">
+      <h3>${far ? "🌍 Lo más cercano del viaje" : "📍 Lo que tienes al lado"}</h3>
+      ${far ? `<p class="section-note">Estás a ${fmtDist(near[0].km)} del sitio más cercano que tenemos apuntado, así que seguramente no estés en Japón todavía.</p>` : ""}
+      ${near.map(p => `<div class="poi"><span class="pin">📍</span><div><b>${esc(p.name)}</b><small>${esc(p.what)}</small>
+        <div class="actions"><a class="btn soft small" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}&travelmode=walking">🚶 Cómo llegar</a></div></div>
+        <span class="dist">${fmtDist(p.km)}</span></div>`).join("")}
+      <p class="muted" style="margin-top:12px">Precisión de unos ${Math.round(fix.acc)} m · ${timeAgo(fix.at)}</p>
+    </section>`;
+  }
+  $("#whereView").innerHTML = `
+    <div class="grid">
+      <div>
+        <section class="card">
+          <h3>📍 Dónde estoy</h3>
+          <p class="section-note">Usa el GPS para decirte qué sitios del viaje tienes cerca y qué son. No necesita conexión una vez cargada la web.</p>
+          ${locError ? `<p style="color:var(--red);font-weight:750">${esc(locError)}</p>` : ""}
+          <div class="actions"><button class="btn red big" data-action="locate" ${locating ? "disabled" : ""}>${locating ? "Buscando…" : fix ? "🔄 Actualizar ubicación" : "📍 Usar mi ubicación"}</button></div>
+        </section>
+        ${list}
+      </div>
+      <aside>
+        <section class="card">
+          <h3>📷 Qué es este edificio</h3>
+          <p class="section-note">Para reconocer algo que no esté en nuestra lista, haz la foto con Google Lens: identifica monumentos, estatuas y carteles. Es gratis.</p>
+          <div class="tools">
+            <a class="btn red" target="_blank" rel="noopener" href="https://lens.google.com/">🔍 Abrir Google Lens</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=tourist+attractions+near+me">🗺 Ver qué hay alrededor</a>
+          </div>
+        </section>
+        <section class="card">
+          <h3>ℹ️ Qué sitios conoce</h3>
+          <p class="section-note">Ahora mismo tiene ${POIS.length} sitios de <b>Osaka</b> y <b>Kioto</b> con su explicación. Nara, Takayama y Tokio están pendientes de añadir.</p>
+        </section>
+      </aside>
+    </div>`;
+}
+
+/* =====================================================================
    CONVERSOR
    ===================================================================== */
 let fxLast = "jpy";
@@ -1808,7 +2153,7 @@ document.addEventListener("click", ev => {
   const el = ev.target.closest("[data-action]"); if (!el) return;
   const id = el.dataset.id;
   switch (el.dataset.action) {
-    case "view": setView(el.dataset.view); break;
+    case "view": if (el.closest("dialog")) el.closest("dialog").close(); setView(el.dataset.view); break;
     case "go-day":
       if (!el.dataset.day) break;
       if (el.closest("dialog")) el.closest("dialog").close();
@@ -1826,8 +2171,13 @@ document.addEventListener("click", ev => {
     case "delete-task": if (confirm("¿Quitar esta tarea?")) store.del("tasks", id); break;
     case "delete-idea": if (confirm("¿Quitar este elemento?")) store.del("ideas", id); break;
     case "delete-doc": deleteDoc(id); break;
-    case "open-settings": openSettings(); break;
-    case "open-fx": openFx(); break;
+    case "open-settings": if (el.closest("#moreDialog")) $("#moreDialog").close(); openSettings(); break;
+    case "open-fx": if (el.closest("dialog")) el.closest("dialog").close(); openFx(); break;
+    case "open-more": $("#moreDialog").showModal(); break;
+    case "phrase-cat": phraseCat = +el.dataset.i; phraseQuery = ""; renderPhrases(); break;
+    case "say": ev.stopPropagation(); { const p = phraseAt(+el.dataset.ci, +el.dataset.pi); if (p) speak(p.ja); } break;
+    case "big-phrase": openBigPhrase(+el.dataset.ci, +el.dataset.pi); break;
+    case "locate": locate(); break;
     case "fx-refresh": refreshRate(true); break;
     case "fx-quick": $("#fxJpy").value = fmtNum(+el.dataset.jpy, 0); fxConvert("jpy"); break;
     case "fx-to-expense": {
@@ -1869,6 +2219,13 @@ document.addEventListener("submit", ev => {
     const k = f.elements.key.value.trim();
     if (k.length < 20) { toast("Esa clave parece incompleta"); return; }
     localStorage.setItem("jp3_token", k); location.reload();
+  }
+});
+document.addEventListener("input", ev => {
+  if (ev.target.id === "phraseSearch") {
+    phraseQuery = ev.target.value;
+    renderPhrases();
+    const f = $("#phraseSearch"); if (f) { f.focus(); f.setSelectionRange(f.value.length, f.value.length); }
   }
 });
 document.addEventListener("change", ev => {

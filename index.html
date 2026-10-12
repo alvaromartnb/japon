@@ -459,7 +459,7 @@ select{max-width:100%}
   <!-- ================= VISTA: FRASES ================= -->
   <div class="view" data-view="phrases" hidden><div id="phrasesView"></div></div>
 
-  <footer>Viaje a Japón · Vio y Álvaro · v25 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+  <footer>Viaje a Japón · Vio y Álvaro · v26 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
 </div>
 
 <!-- Diálogo: gasto -->
@@ -659,9 +659,11 @@ const daysData = [
    ["09:25 aprox.","Llegada JR Kyoto","Seguir a Kyoto City Subway."],
    ["09:35 aprox.","Kyoto → Kyoto Shiyakusho-mae","Karasuma Line dirección Kokusaikaikan → cambio en Karasuma Oike → Tozai Line → Kyoto Shiyakusho-mae. ~11 min · ¥260/persona (≈ 1,44 €)."],
    ["09:50–10:00","Hotel Resol Trinity Kyoto","Salida 9 de Zest Oike; con maletas mejor salida 11 (ascensor/escalera mecánica). Hotel ~2 min andando. Dejar maletas."],
-   ["10:30","Fushimi Inari","Torii y subida parcial según ganas."],
-   ["14:00","Nishiki / centro","Comida y paseo por el centro."],
-   ["19:00","Pontocho / Gion","Cena y paseo nocturno."]
+   ["10:10","Hotel → Sanjo (Keihan)","Andando ~6 min. Coger el Keihan dirección Yodoyabashi: tren LOCAL o SEMI-EXPRESS, los expresos no paran en Fushimi-Inari."],
+   ["10:30–13:30","Fushimi Inari","Los miles de torii naranjas. La subida entera al monte son ~2 h ida y vuelta; con llegar al mirador de Yotsutsuji (~40 min) ya se ve lo mejor y hay menos gente."],
+   ["14:00–16:00","Nishiki Market","La calle cubierta de puestos de comida de Kioto, 400 m. Comer por partes de puesto en puesto."],
+   ["16:00–19:00","Centro y río Kamo","Teramachi y Shinkyogoku (arcadas comerciales) están pegadas a Nishiki, y el paseo del río Kamo queda a 5 min."],
+   ["19:00","Pontocho","Callejón estrecho junto al río, lleno de restaurantes. Cena y paseo nocturno; vuelta al hotel andando (~12 min)."]
   ],
   activities:[
    ["Fushimi Inari Taisha","Recorrido por los torii. No es obligatorio subir hasta arriba.","Principal"],
@@ -678,7 +680,11 @@ const daysData = [
    ["Hotel Sobial / JR Taisho","JR Osaka Station","🚆 JR Osaka Loop Line 外回り (Outer Loop) vía Nishikujo → Osaka. Objetivo: salir sobre 08:20. ~13 min · ¥200/persona (≈ 1,11 €) · ICOCA. No reservar.","https://www.google.com/maps/dir/?api=1&origin=Hotel+Sobial+Osaka+Dome&destination=Osaka+Station&travelmode=transit","Ruta a Osaka Station"],
    ["JR Osaka Station","JR Kyoto Station","🚆 TREN OBJETIVO: JR Kyoto Line SPECIAL RAPID / 新快速. Horario de referencia laborable 2026: 08:56 salida de Osaka, actualmente andén 9, dirección Kusatsu; llegada ~09:25. ~29–30 min · ¥580/persona (≈ 3,22 €). NO necesita reserva: entrar con ICOCA. Si lo perdemos, hay otros 新快速 cada ~10–15 min. Revisar hora/andén cerca del viaje.","https://www.google.com/maps/dir/?api=1&origin=Osaka+Station&destination=Kyoto+Station&travelmode=transit","Abrir ruta en Maps"],
    ["Kyoto Station","Hotel Resol Trinity Kyoto","🚇 Kyoto Subway: Karasuma Line dirección Kokusaikaikan → Karasuma Oike → cambiar a Tozai Line → Kyoto Shiyakusho-mae. ~11 min · ¥260/persona (≈ 1,44 €). Salida 9 de Zest Oike; con maletas, salida 11 tiene ascensor/escalera mecánica. Hotel ~2 min andando.","https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station&destination=Hotel+Resol+Trinity+Kyoto&travelmode=transit","Ruta al hotel"],
-   ["Kioto","Fushimi Inari","Tren local; cerraremos estación exacta después de dejar maletas."]
+   ["Hotel / Sanjo (Keihan)","Fushimi-Inari (Keihan)","🚉 Andando ~6 min del hotel a Sanjo Station (Keihan). Keihan Main Line dirección Yodoyabashi, tren LOCAL o SEMI-EXPRESS (los expresos NO paran en Fushimi-Inari). 5 paradas · ~9 min · ¥220/persona (≈ 1,22 €) · ICOCA. De la estación a los torii, ~5 min andando.","https://www.google.com/maps/dir/?api=1&origin=Hotel+Resol+Trinity+Kyoto%2C+Kyoto%2C+Japan&destination=Fushimi+Inari+Taisha%2C+Kyoto%2C+Japan&travelmode=transit","Ruta a Fushimi Inari"],
+   ["Fushimi-Inari (Keihan)","Gion-Shijo","🚉 Mismo Keihan de vuelta, dirección Demachiyanagi. ~7 min · ¥220/persona (≈ 1,22 €) · ICOCA. Desde Gion-Shijo: Pontocho queda cruzando el río (~4 min) y Nishiki ~10 min andando.","https://www.google.com/maps/dir/?api=1&origin=Fushimi+Inari+Taisha%2C+Kyoto%2C+Japan&destination=Nishiki+Market%2C+Kyoto%2C+Japan&travelmode=transit","Ruta de vuelta al centro"]
+  ],
+  routes:[
+   ["Kioto · llegada, Fushimi Inari y centro","Hotel Resol Trinity → Fushimi Inari (torii) → Nishiki Market → Pontocho → hotel. El tramo de ida y el de vuelta se hacen en Keihan aunque Maps lo dibuje andando; del centro al hotel sí son ~12 min a pie. <strong>BLOQUE REAL CON VISITA + COMIDA + CENA: ~8 H</strong>.","https://www.google.com/maps/dir/?api=1&origin=Hotel+Resol+Trinity+Kyoto%2C+Kyoto%2C+Japan&destination=Hotel+Resol+Trinity+Kyoto%2C+Kyoto%2C+Japan&travelmode=walking&waypoints=Fushimi+Inari+Taisha%2C+Kyoto%2C+Japan%7CNishiki+Market%2C+Kyoto%2C+Japan%7CPontocho+Alley%2C+Kyoto%2C+Japan"]
   ],
   reservations:[["🏨","Hotel Resol Trinity Kyoto","23–26 dic · 162 € · confirmada"],["♨️","Baño público · Hotel Resol Trinity Kyoto","No es onsen termal. Gran baño japonés Oike-no-Yu en 1F, solo para huéspedes. Horario oficial: 15:00–02:00 y 05:00–10:00. Llevar las toallas de la habitación.","https://www.resol-hotel.jp/trinity-kyoto/spa/","Web oficial del baño"]]
  },
@@ -1778,14 +1784,20 @@ const isAndroid = /android/i.test(navigator.userAgent);
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
 const TRANSLATE_WEB = "https://translate.google.com/?sl=ja&tl=es&op=translate";
-const LENS_WEB = "https://lens.google.com/";
+const LENS_WEB = "https://lens.google.com/upload";
+const GOOGLE_WEB = "https://www.google.com/";
 const androidIntent = (pkg, url, fallback) =>
   `intent://${url.replace(/^https:\/\//, "")}#Intent;scheme=https;package=${pkg};S.browser_fallback_url=${encodeURIComponent(fallback)};end`;
 
+const APPS = {
+  translate: { web: TRANSLATE_WEB, pkg: "com.google.android.apps.translate" },
+  lens:      { web: LENS_WEB,      pkg: "com.google.android.googlequicksearchbox" },
+  google:    { web: GOOGLE_WEB,    pkg: "com.google.android.googlequicksearchbox" }
+};
+
 function openApp(kind) {
-  const web = kind === "lens" ? LENS_WEB : TRANSLATE_WEB;
-  const pkg = kind === "lens" ? "com.google.android.googlequicksearchbox" : "com.google.android.apps.translate";
-  const url = isAndroid ? androidIntent(pkg, web, web) : web;
+  const a = APPS[kind] || APPS.google;
+  const url = isAndroid ? androidIntent(a.pkg, a.web, a.web) : a.web;
   const w = window.open(url, "_blank", "noopener");
   if (!w) location.href = url;
 }
@@ -1803,14 +1815,14 @@ function renderPhrases() {
             </button>
             <button class="bigbtn" data-action="open-lens">
               <span class="bi">🔍</span>
-              <span><b>¿Qué es esto?</b><small>Abre Google Lens para fotografiar un monumento o un sitio</small></span>
+              <span><b>¿Qué es esto?</b><small>Cámara de Google Lens para fotografiar un monumento</small></span>
             </button>
             <button class="bigbtn" data-action="locate" ${locating ? "disabled" : ""}>
               <span class="bi">📍</span>
               <span><b>${locating ? "Buscando…" : "¿Dónde estoy?"}</b><small>Qué sitios del viaje tienes cerca, sin salir de aquí</small></span>
             </button>
           </div>
-          <p class="muted" style="margin-top:14px">La primera vez elige japonés → español; luego lo recuerda.</p>
+          <p class="muted" style="margin-top:14px">En Traducir, la primera vez elige japonés → español; luego lo recuerda. Si Lens no abre la cámara directamente, <button class="linkbtn" data-action="open-google">abre Google</button> y toca el icono de la cámara de la barra de búsqueda.</p>
         </section>
         ${whereCard()}
       </div>
@@ -2018,6 +2030,7 @@ document.addEventListener("click", ev => {
     case "open-fx": if (el.closest("dialog")) el.closest("dialog").close(); openFx(); break;
     case "open-translate": openApp("translate"); break;
     case "open-lens": openApp("lens"); break;
+    case "open-google": openApp("google"); break;
     case "locate": locate(); break;
     case "fx-refresh": refreshRate(true); break;
     case "fx-quick": $("#fxJpy").value = fmtNum(+el.dataset.jpy, 0); fxConvert("jpy"); break;

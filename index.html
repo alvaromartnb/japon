@@ -193,6 +193,14 @@ button.expense:hover{background:#f3efe9}
 /* pendientes */
 .check{flex:0 0 auto;width:28px;height:28px;border-radius:9px;border:2px solid #d5cabe;background:#fff;display:grid;place-items:center;color:#fff;font-weight:900;font-size:.95rem;padding:0}
 .check.on{background:var(--green);border-color:var(--green)}
+.buyrow{display:flex;gap:11px;align-items:flex-start;padding:12px 10px;border-radius:15px;background:#faf8f5;margin-top:8px}
+.buyrow.urge{background:#fdf1f2;box-shadow:inset 3px 0 0 var(--red)}
+.buytop > b{display:block}
+.buyrow small b{color:var(--ink)}
+.buyrow small{display:block;color:var(--muted);margin-top:4px;line-height:1.45}
+.buytop{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.when{flex:0 0 auto;border-radius:999px;padding:3px 9px;font-size:.72rem;font-weight:800;background:#eceae6;color:var(--muted);white-space:nowrap}
+.when.on{background:var(--red);color:#fff}
 .done-row b{text-decoration:line-through;color:var(--muted)}
 .done-row small{opacity:.8}
 .reservation small.by{color:var(--green);font-weight:750}
@@ -459,7 +467,7 @@ select{max-width:100%}
   <!-- ================= VISTA: FRASES ================= -->
   <div class="view" data-view="phrases" hidden><div id="phrasesView"></div></div>
 
-  <footer>Viaje a Japón · Vio y Álvaro · v28 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+  <footer>Viaje a Japón · Vio y Álvaro · v29 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
 </div>
 
 <!-- Diálogo: gasto -->
@@ -686,7 +694,8 @@ const daysData = [
   routes:[
    ["Kioto · llegada, Fushimi Inari y centro","Hotel Resol Trinity → Fushimi Inari (torii) → Nishiki Market → Pontocho → hotel. El tramo de ida y el de vuelta se hacen en Keihan aunque Maps lo dibuje andando; del centro al hotel sí son ~12 min a pie. <strong>BLOQUE REAL CON VISITA + COMIDA + CENA: ~8 H</strong>.","https://www.google.com/maps/dir/?api=1&origin=Hotel+Resol+Trinity+Kyoto%2C+Kyoto%2C+Japan&destination=Hotel+Resol+Trinity+Kyoto%2C+Kyoto%2C+Japan&travelmode=walking&waypoints=Fushimi+Inari+Taisha%2C+Kyoto%2C+Japan%7CNishiki+Market%2C+Kyoto%2C+Japan%7CPontocho+Alley%2C+Kyoto%2C+Japan"]
   ],
-  reservations:[["🏨","Hotel Resol Trinity Kyoto","23–26 dic · 162 € · confirmada"],["♨️","Baño público · Hotel Resol Trinity Kyoto","No es onsen termal. Gran baño japonés Oike-no-Yu en 1F, solo para huéspedes. Horario oficial: 15:00–02:00 y 05:00–10:00. Llevar las toallas de la habitación.","https://www.resol-hotel.jp/trinity-kyoto/spa/","Web oficial del baño"]]
+  reservations:[["🏨","Hotel Resol Trinity Kyoto","23–26 dic · 162 € · confirmada"],
+   ["🧳","PREGUNTAR AL LLEGAR · Envío de maletas a Takayama","PENDIENTE · al hacer el check-in, preguntar en recepción <b>cuántos días tarda</b> una maleta de Kioto a Takayama Ouan. Takayama está metido en la montaña y desde Kioto puede tardar DOS días, no uno: si se mandan el 25 por la tarde y llegamos la noche del 26, puede que no estén allí. Si tardan dos días hay que mandarlas el 24 o llevarlas con nosotros."],["♨️","Baño público · Hotel Resol Trinity Kyoto","No es onsen termal. Gran baño japonés Oike-no-Yu en 1F, solo para huéspedes. Horario oficial: 15:00–02:00 y 05:00–10:00. Llevar las toallas de la habitación.","https://www.resol-hotel.jp/trinity-kyoto/spa/","Web oficial del baño"]]
  },
  {id:"2026-12-24",label:"Jue 24",city:"Kioto",title:"Higashiyama + Gion",subtitle:"Kiyomizu-dera · Sannenzaka · Ninenzaka · Nochebuena",
   timeline:[
@@ -1062,6 +1071,33 @@ const plannedExpensesByDay = {
     }
   ]
 };
+
+/* =====================================================================
+   CALENDARIO DE COMPRAS · cuándo se puede reservar cada cosa
+   ===================================================================== */
+const BUY_DATES = [
+ {key:"buy-cena24", open:"2026-10-01", day:"2026-12-24", what:"Reservar la cena de Nochebuena en Kioto",
+  why:"Lo más urgente de la lista. El 24 de diciembre no es una cena familiar en Japón, es <b>la</b> noche de parejas del año: los sitios buenos sacan menú de Navidad en octubre y se llenan semanas antes."},
+ {key:"buy-cena31", open:"2026-10-01", day:"2026-12-31", what:"Reservar la cena de Nochevieja en Tokio",
+  why:"Aquí el problema es el contrario: muchísimos restaurantes <b>cierran</b> del 30 de diciembre al 3 de enero. Los que abren hacen menú cerrado y se reservan con mucha antelación."},
+ {key:"buy-ene1", open:"2026-10-01", day:"2027-01-01", what:"Dejar mirado qué abre el 1 de enero",
+  why:"No hay nada que reservar, pero es el día del año con más cosas cerradas en Japón. Hay que elegir dónde comer antes de salir de casa o acabamos en un konbini."},
+ {key:"buy-teamlab", open:"2026-11-01", day:"2027-01-04", what:"Vigilar las entradas de teamLab Borderless",
+  why:"No tienen fecha fija de venta: las sacan por tandas con dos o tres meses de margen. El 4 de enero sigue siendo festivo allí y vuela. Hay que mirarlo cada pocos días y comprar el día que aparezca.",
+  link:"https://www.teamlab.art/e/borderless-azabudai/", linkText:"Web de teamLab"},
+ {key:"buy-hida26", open:"2026-11-26", hour:"02:00", day:"2026-12-26", what:"Reservar el Hida · Nagoya → Takayama",
+  why:"<b>El que más riesgo tiene de llenarse.</b> Sale a la venta exactamente un mes antes, a las 10:00 de Japón = las 02:00 de la madrugada aquí. Es sábado, principio de temporada de esquí y el Hida es un tren corto, de pocos vagones."},
+ {key:"buy-bus28", open:"2026-11-28", day:"2026-12-28", what:"Reservar el bus a Shirakawa-go",
+  why:"Nohi Bus abre reservas un mes antes. Tarifa prevista para esas fechas: ¥2.900 ida o ¥5.800 ida y vuelta por persona (subida a partir del 1 de diciembre, confirmar al pagar).",
+  link:"https://www.nouhibus.co.jp/english/", linkText:"Nohi Bus"},
+ {key:"buy-tren29", open:"2026-11-29", hour:"02:00", day:"2026-12-29", what:"Reservar Hida 11 + Kagayaki 512",
+  why:"También a las 10:00 de Japón = 02:00 aquí. Vamos en dirección contraria a la salida masiva de Tokio, así que hay más margen que el día 26, pero del 28 de diciembre al 6 de enero los expresos suelen ser <b>todo asiento reservado</b>: sin reserva no se puede subir ni de pie."},
+ {key:"buy-esim", open:"2026-12-05", day:"2026-12-21", what:"Comprar las dos eSIM de Sakura Mobile",
+  why:"Sin prisa, pero mejor tenerlas instaladas y probadas unos días antes de volar, no en el aeropuerto."},
+ {key:"buy-vjw", open:"2026-12-13", day:"2026-12-20", what:"Rellenar Visit Japan Web y guardar los QR",
+  why:"Inmigración y aduanas, los dos, y para los dos. Guardar captura de pantalla por si al aterrizar no hay cobertura.",
+  link:"https://www.vjw.digital.go.jp/", linkText:"Visit Japan Web"}
+];
 
 /* =====================================================================
    SITIOS CON COORDENADAS  ·  [nombre, lat, lon, ciudad, qué es]
@@ -1508,7 +1544,10 @@ function autoPending() {
   return out;
 }
 const tasksArr = () => Object.entries(S.cols.tasks).map(([id, t]) => ({ id, ...t })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-const pendingCount = () => autoPending().filter(a => !S.cols.checks[a.key]?.done).length + tasksArr().filter(t => !t.done).length;
+const buyOpen = () => BUY_DATES.filter(b => dateNum(b.open) - dateNum(todayId()) <= 0);
+const pendingCount = () => autoPending().filter(a => !S.cols.checks[a.key]?.done).length
+  + tasksArr().filter(t => !t.done).length
+  + buyOpen().filter(b => !S.cols.checks[b.key]?.done).length;
 
 /* =====================================================================
    RENDER · cabecera y navegación
@@ -1746,6 +1785,37 @@ function renderExpensesView() {
 /* =====================================================================
    RENDER · pendientes
    ===================================================================== */
+const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const fechaLarga = id => { const [y, m, d] = id.split("-").map(Number); return `${d} de ${MESES[m - 1]}`; };
+
+function buyCard() {
+  const hoy = dateNum(todayId());
+  const rows = [...BUY_DATES].sort((a, b) => dateNum(a.open) - dateNum(b.open)).map(b => {
+    const done = !!S.cols.checks[b.key]?.done;
+    const n = dateNum(b.open) - hoy;
+    const abierto = n <= 0;
+    const etiqueta = abierto ? "YA" : n === 1 ? "mañana" : `${n} días`;
+    const cuando = abierto
+      ? "Se puede hacer ya"
+      : `A partir del ${fechaLarga(b.open)}${b.hour ? ` · ${b.hour} de la madrugada, hora española` : ""}`;
+    const dia = dayById(b.day);
+    return `<div class="buyrow${done ? " done-row" : ""}${abierto && !done ? " urge" : ""}">
+      <button class="check${done ? " on" : ""}" data-action="toggle-check" data-key="${b.key}" aria-pressed="${done}" aria-label="Marcar como hecho">${done ? "✓" : ""}</button>
+      <div style="flex:1;min-width:0">
+        <div class="buytop"><b>${b.what}</b><span class="when${abierto ? " on" : ""}">${etiqueta}</span></div>
+        <small><b>${cuando}</b></small>
+        <small>${b.why}</small>
+        <div class="actions">${dia ? `<button class="btn small" data-action="go-day" data-day="${b.day}">📅 ${dia.label} · ${dia.city}</button>` : ""}${b.link ? ext(b.link, `↗ ${b.linkText || "Abrir"}`, "btn soft small") : ""}</div>
+      </div></div>`;
+  }).join("");
+  const abiertas = buyOpen().filter(b => !S.cols.checks[b.key]?.done).length;
+  return `<section class="card">
+    <h3>🗓 Calendario de compras</h3>
+    <p class="section-note">En Japón los trenes salen a la venta <b>exactamente un mes antes, a las 10:00 de allí</b>, que son las 02:00 aquí. Ni un día antes. ${abiertas ? `Ahora mismo hay <b>${abiertas}</b> ${abiertas === 1 ? "cosa" : "cosas"} que ya se ${abiertas === 1 ? "puede" : "pueden"} hacer.` : "Ahora mismo no hay nada que se pueda hacer todavía."}</p>
+    ${rows}
+  </section>`;
+}
+
 function renderTodo() {
   const auto = autoPending(), custom = tasksArr();
   const total = auto.length + custom.length;
@@ -1769,6 +1839,7 @@ function renderTodo() {
             <button class="btn red">Añadir</button>
           </form>
         </section>
+        ${buyCard()}
         <section class="card"><h3>📝 Nuestras tareas</h3>${customHtml || `<div class="empty">Añadid arriba lo que se os ocurra: comprar, reservar, llevar…</div>`}</section>
       </div>
       <aside>

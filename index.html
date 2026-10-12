@@ -459,7 +459,7 @@ select{max-width:100%}
   <!-- ================= VISTA: FRASES ================= -->
   <div class="view" data-view="phrases" hidden><div id="phrasesView"></div></div>
 
-  <footer>Viaje a Japón · Vio y Álvaro · v26 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+  <footer>Viaje a Japón · Vio y Álvaro · v27 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
 </div>
 
 <!-- Diálogo: gasto -->
@@ -1783,21 +1783,13 @@ function renderTodo() {
 const isAndroid = /android/i.test(navigator.userAgent);
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-const TRANSLATE_WEB = "https://translate.google.com/?sl=ja&tl=es&op=translate";
-const LENS_WEB = "https://lens.google.com/upload";
 const GOOGLE_WEB = "https://www.google.com/";
+const GOOGLE_PKG = "com.google.android.googlequicksearchbox";
 const androidIntent = (pkg, url, fallback) =>
   `intent://${url.replace(/^https:\/\//, "")}#Intent;scheme=https;package=${pkg};S.browser_fallback_url=${encodeURIComponent(fallback)};end`;
 
-const APPS = {
-  translate: { web: TRANSLATE_WEB, pkg: "com.google.android.apps.translate" },
-  lens:      { web: LENS_WEB,      pkg: "com.google.android.googlequicksearchbox" },
-  google:    { web: GOOGLE_WEB,    pkg: "com.google.android.googlequicksearchbox" }
-};
-
-function openApp(kind) {
-  const a = APPS[kind] || APPS.google;
-  const url = isAndroid ? androidIntent(a.pkg, a.web, a.web) : a.web;
+function openGoogle() {
+  const url = isAndroid ? androidIntent(GOOGLE_PKG, GOOGLE_WEB, GOOGLE_WEB) : GOOGLE_WEB;
   const w = window.open(url, "_blank", "noopener");
   if (!w) location.href = url;
 }
@@ -1811,18 +1803,18 @@ function renderPhrases() {
           <div class="bigbtns">
             <button class="bigbtn" data-action="open-translate">
               <span class="bi">📷</span>
-              <span><b>Traducir</b></span>
+              <span><b>Traducir</b><small>Toca el icono de la cámara y arriba elige <strong>Traducir</strong>. Apunta a un cartel o una carta.</small></span>
             </button>
             <button class="bigbtn" data-action="open-lens">
               <span class="bi">🔍</span>
-              <span><b>¿Qué es esto?</b><small>Cámara de Google Lens para fotografiar un monumento</small></span>
+              <span><b>¿Qué es esto?</b><small>Toca el icono de la cámara y arriba elige <strong>Buscar</strong>. Haz la foto a un monumento o un sitio.</small></span>
             </button>
             <button class="bigbtn" data-action="locate" ${locating ? "disabled" : ""}>
               <span class="bi">📍</span>
               <span><b>${locating ? "Buscando…" : "¿Dónde estoy?"}</b><small>Qué sitios del viaje tienes cerca, sin salir de aquí</small></span>
             </button>
           </div>
-          <p class="muted" style="margin-top:14px">En Traducir, la primera vez elige japonés → español; luego lo recuerda. Si Lens no abre la cámara directamente, <button class="linkbtn" data-action="open-google">abre Google</button> y toca el icono de la cámara de la barra de búsqueda.</p>
+          <p class="muted" style="margin-top:14px">Los dos abren la app de Google: el icono de la cámara está a la derecha de la barra de búsqueda. En Traducir, la primera vez elige japonés → español; luego lo recuerda.</p>
         </section>
         ${whereCard()}
       </div>
@@ -2028,9 +2020,7 @@ document.addEventListener("click", ev => {
     case "delete-doc": deleteDoc(id); break;
     case "open-settings": openSettings(); break;
     case "open-fx": if (el.closest("dialog")) el.closest("dialog").close(); openFx(); break;
-    case "open-translate": openApp("translate"); break;
-    case "open-lens": openApp("lens"); break;
-    case "open-google": openApp("google"); break;
+    case "open-translate": case "open-lens": case "open-google": openGoogle(); break;
     case "locate": locate(); break;
     case "fx-refresh": refreshRate(true); break;
     case "fx-quick": $("#fxJpy").value = fmtNum(+el.dataset.jpy, 0); fxConvert("jpy"); break;

@@ -333,6 +333,19 @@ select{max-width:100%}
 .only-mobile{display:none!important}
 .tab.more .ico{font-weight:900;letter-spacing:.08em}
 .bigbtns{display:grid;gap:12px}
+.cobrow{display:flex;gap:2px 12px;flex-wrap:wrap;align-items:baseline;justify-content:space-between;border-top:1px solid var(--line);padding:9px 0}
+.cobrow:first-child{border-top:0}
+.cobrow span{flex:1 1 auto;min-width:0;color:var(--muted);font-weight:700;font-size:.86rem;overflow-wrap:anywhere}
+.cobrow b{flex:0 0 auto;margin-left:auto;text-align:right;font-size:.9rem;overflow-wrap:anywhere}
+.dets{border-top:1px solid var(--line);margin-top:4px}
+.dets summary{padding:12px 0;font-weight:800;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.dets summary::-webkit-details-marker{display:none}
+.dets summary::after{content:"▾";color:var(--red);font-size:1.1rem;flex:0 0 auto}
+.dets[open] summary::after{content:"▴"}
+.dets .cobs{padding-bottom:6px}
+.pasos{margin:0 0 12px;padding-left:20px}
+.pasos li{margin-bottom:9px;line-height:1.5;color:var(--muted)}
+.pasos li b{color:var(--ink)}
 .docrow{display:flex;gap:12px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:15px;padding:10px;margin-top:8px;color:inherit}
 .docrow:active{background:var(--soft)}
 .docrow img{flex:0 0 auto;width:52px;height:52px;border-radius:11px;object-fit:cover;background:#fff;border:1px solid var(--line)}
@@ -476,7 +489,7 @@ select{max-width:100%}
   <!-- ================= VISTA: FRASES ================= -->
   <div class="view" data-view="phrases" hidden><div id="phrasesView"></div></div>
 
-  <footer>Viaje a Japón · Vio y Álvaro · v31 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+  <footer>Viaje a Japón · Vio y Álvaro · v32 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
 </div>
 
 <!-- Diálogo: gasto -->
@@ -1125,6 +1138,9 @@ const BUY_DATES = [
   link:"https://www.nouhibus.co.jp/english/", linkText:"Nohi Bus"},
  {key:"buy-tren29", open:"2026-11-29", hour:"02:00", day:"2026-12-29", what:"Reservar Hida 11 + Kagayaki 512",
   why:"También a las 10:00 de Japón = 02:00 aquí. Vamos en dirección contraria a la salida masiva de Tokio, así que hay más margen que el día 26, pero del 28 de diciembre al 6 de enero los expresos suelen ser <b>todo asiento reservado</b>: sin reserva no se puede subir ni de pie."},
+ {key:"buy-airhelp", open:"2026-12-15", day:"2026-12-20", what:"Dar de alta los 4 vuelos en AirHelp",
+  why:"Va incluido en el seguro, pero <b>solo funciona si el vuelo está registrado al menos 24 h antes de salir</b>. Son los cuatro tramos: MU710, MU225, FM896 y MU709. Si luego cancelan o se retrasan más de 3 horas, reclaman ellos y te quedas el 100 %.",
+  link:"https://www.airhelp.com/es/", linkText:"AirHelp"},
  {key:"buy-esim", open:"2026-12-05", day:"2026-12-21", what:"Comprar las dos eSIM de Sakura Mobile",
   why:"Sin prisa, pero mejor tenerlas instaladas y probadas unos días antes de volar, no en el aeropuerto."},
  {key:"buy-vjw", open:"2026-12-13", day:"2026-12-20", what:"Rellenar Visit Japan Web y guardar los QR",
@@ -1850,6 +1866,77 @@ function buyCard() {
 }
 
 /* =====================================================================
+   SEGURO DE VIAJE · póliza contratada
+   ===================================================================== */
+const SEGURO = {
+  poliza: "2608953",
+  producto: "Viaje Tranquilidad",
+  aseguradora: "IMA Ibérica Asistencia",
+  marca: "Heymondo",
+  tel: "+34913536323",
+  telTexto: "+34 913 536 323",
+  desde: "20/12/2026", hasta: "06/01/2027",
+  contratado: "10/11/2026",
+  asegurados: ["Álvaro Martín Benedicto · DNI 70066433S", "Violeta Sebastian Serrano · DNI 02589335H"],
+  coberturas: [
+    ["Gastos médicos por enfermedad o accidente", "1.500.000 €"],
+    ["Dentista de urgencia", "150 €"],
+    ["Repatriación o traslado de heridos o enfermos", "Ilimitado"],
+    ["Repatriación del resto de asegurados", "Incluido"],
+    ["Regreso anticipado por fallecimiento u hospitalización de un familiar", "Incluido"],
+    ["Viaje y estancia de un familiar si uno de los dos acaba hospitalizado", "1.200 € · 80 €/día"],
+    ["Alargar el hotel por convalecencia o cuarentena médica", "1.200 € · 80 €/día"],
+    ["Servicio de intérprete", "Incluido"],
+    ["Robo o daños en el equipaje", "2.000 €"],
+    ["Retraso en la entrega del equipaje (a partir de 10 h)", "200 €"],
+    ["Interrupción del viaje ya empezado", "1.500 €"],
+    ["Retraso en la salida del transporte", "200 € · 50 € cada 6 h"],
+    ["Pérdida de enlace", "150 €"],
+    ["Equipamiento electrónico", "1.000 €"],
+    ["Responsabilidad civil privada", "60.000 €"],
+    ["Defensa penal en el extranjero", "3.000 €"],
+    ["Indemnización por accidente", "6.000 € · 12.000 € en transporte público"],
+    ["Anulación del viaje antes de salir", "3.000 €"],
+    ["Deportes de aventura", "Básico · el esquí NO entra"]
+  ]
+};
+
+function seguroCard() {
+  const cob = SEGURO.coberturas.map(c => `<div class="cobrow"><span>${c[0]}</span><b>${c[1]}</b></div>`).join("");
+  return `<section class="card">
+    <h3>🛟 Seguro de viaje</h3>
+    <p class="section-note">Si pasa algo en Japón, <b>llama antes de pagar nada</b>. En los hospitales japoneses te piden el dinero por delante, y si llamas primero lo gestionan ellos.</p>
+    <a class="btn red big" href="tel:${SEGURO.tel}">📞 Llamar a asistencia · ${SEGURO.telTexto}</a>
+    <div class="cobrow" style="margin-top:14px"><span>Póliza</span><b>${SEGURO.poliza}</b></div>
+    <div class="cobrow"><span>Producto</span><b>${SEGURO.producto}</b></div>
+    <div class="cobrow"><span>Aseguradora</span><b>${SEGURO.aseguradora} · ${SEGURO.marca}</b></div>
+    <div class="cobrow"><span>Cubre del</span><b>${SEGURO.desde} al ${SEGURO.hasta}</b></div>
+    ${SEGURO.asegurados.map(a => `<div class="cobrow"><span>Asegurado</span><b>${a}</b></div>`).join("")}
+    <details class="dets">
+      <summary>Si pasa algo: los 4 pasos</summary>
+      <ol class="pasos">
+        <li><b>Llama al ${SEGURO.telTexto}</b> o usa el chat de la app de Heymondo antes de ir a ningún sitio. Funciona 24 h y en español.</li>
+        <li><b>Di el número de póliza: ${SEGURO.poliza}.</b> Ellos te dicen a qué centro ir y si lo pagan directamente.</li>
+        <li><b>Guarda todas las facturas originales</b> y el justificante de la compañía (del retraso, del equipaje, de lo que sea). Sin original no pagan.</li>
+        <li><b>Para el médico de guardia</b>, la app tiene chat médico y videoconsulta 24 h: para una duda tonta a las 3 de la mañana es más rápido que buscar hospital.</li>
+      </ol>
+    </details>
+    <details class="dets">
+      <summary>Qué cubre exactamente</summary>
+      <div class="cobs">${cob}</div>
+      <p class="section-note" style="margin-top:12px">La anulación cubre <b>causas personales</b> (enfermedad grave, accidente, despido, juicio…), no que la aerolínea cancele el vuelo. Para eso está AirHelp, aquí abajo.</p>
+    </details>
+    <details class="dets">
+      <summary>Si China Eastern cancela o retrasa un vuelo</summary>
+      <p class="section-note">Con el seguro contrataste <b>AirHelp Plus</b> (los 4 € del final). Reclama por ti las compensaciones de vuelos cancelados o con más de 3 horas de retraso.</p>
+      <p class="section-note"><b>Hay que dar de alta cada vuelo en AirHelp al menos 24 h antes de que salga</b>, o no entra. Y si pasa algo, avisar en los 7 días siguientes.</p>
+      <p class="section-note">Además, el vuelo <b>Madrid → Shanghái</b> sale de la UE, así que el reglamento europeo obliga a China Eastern a reubicarte o devolverte el dinero, y a pagarte hotel y comidas. A la vuelta no aplica, porque sale de Japón con aerolínea no europea.</p>
+      <div class="actions"><a class="btn soft small" target="_blank" rel="noopener" href="https://www.airhelp.com/es/">↗ AirHelp</a></div>
+    </details>
+  </section>`;
+}
+
+/* =====================================================================
    DOCUMENTOS · fotos y QR guardados en el archivo privado
    ===================================================================== */
 const MAX_DOC_PX = 1100;
@@ -1928,6 +2015,7 @@ function renderTodo() {
             <button class="btn red">Añadir</button>
           </form>
         </section>
+        ${seguroCard()}
         ${docsCard()}
         ${buyCard()}
         <section class="card"><h3>📝 Nuestras tareas</h3>${customHtml || `<div class="empty">Añadid arriba lo que se os ocurra: comprar, reservar, llevar…</div>`}</section>

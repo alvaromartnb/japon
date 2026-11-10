@@ -333,6 +333,15 @@ select{max-width:100%}
 .only-mobile{display:none!important}
 .tab.more .ico{font-weight:900;letter-spacing:.08em}
 .bigbtns{display:grid;gap:12px}
+.docrow{display:flex;gap:12px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:15px;padding:10px;margin-top:8px;color:inherit}
+.docrow:active{background:var(--soft)}
+.docrow img{flex:0 0 auto;width:52px;height:52px;border-radius:11px;object-fit:cover;background:#fff;border:1px solid var(--line)}
+.docrow > span{flex:1;min-width:0}
+.docrow b{display:block;overflow-wrap:anywhere}
+.docrow small{display:block;color:var(--muted);margin-top:2px}
+.docrow .docgo{flex:0 0 auto;color:var(--red);font-weight:800;font-size:.84rem}
+.docbig{background:#fff;border-radius:15px;padding:14px;display:grid;place-items:center}
+.docbig img{width:100%;max-width:460px;height:auto;image-rendering:pixelated}
 .bigbtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:20px;padding:20px 18px;color:inherit;box-shadow:var(--shadow)}
 .bigbtn:active{background:var(--soft)}
 .bigbtn .bi{flex:0 0 auto;width:54px;height:54px;border-radius:16px;background:var(--soft);display:grid;place-items:center;font-size:1.6rem}
@@ -467,7 +476,7 @@ select{max-width:100%}
   <!-- ================= VISTA: FRASES ================= -->
   <div class="view" data-view="phrases" hidden><div id="phrasesView"></div></div>
 
-  <footer>Viaje a Japón · Vio y Álvaro · v29 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
+  <footer>Viaje a Japón · Vio y Álvaro · v30 · <button class="linkbtn" data-action="open-settings">Ajustes</button></footer>
 </div>
 
 <!-- Diálogo: gasto -->
@@ -514,6 +523,30 @@ select{max-width:100%}
   <div class="sheet-in">
     <div class="sheet-head"><h3>Ajustes</h3><button type="button" class="iconbtn" data-action="close-dialog" aria-label="Cerrar">×</button></div>
     <div id="settingsBody"></div>
+  </div>
+</dialog>
+
+<!-- Diálogo: añadir documento -->
+<dialog id="docDialog" class="sheet">
+  <div class="sheet-in">
+    <div class="sheet-head"><h3>Añadir documento</h3><button type="button" class="iconbtn" data-action="close-dialog" aria-label="Cerrar">×</button></div>
+    <form id="docForm" autocomplete="off">
+      <label class="field"><span>Qué es</span><input name="dtitle" placeholder="QR de Visit Japan Web" required maxlength="60"></label>
+      <label class="field"><span>De quién (opcional)</span><input name="dwho" placeholder="Álvaro" maxlength="30"></label>
+      <label class="field"><span>Foto o captura de pantalla</span><input name="dfile" type="file" accept="image/*" required></label>
+      <p class="muted">Se guarda en el archivo privado del viaje, al que solo llegan este móvil y el de Vio. La imagen se reduce de tamaño sola.</p>
+      <div class="sheet-actions"><button class="btn red" type="submit">Guardar</button></div>
+    </form>
+  </div>
+</dialog>
+
+<!-- Diálogo: ver documento -->
+<dialog id="docViewDialog" class="sheet">
+  <div class="sheet-in">
+    <div class="sheet-head"><h3 id="docViewTitle">Documento</h3><button type="button" class="iconbtn" data-action="close-dialog" aria-label="Cerrar">×</button></div>
+    <div id="docViewBody"></div>
+    <p class="muted">Para que lo lea el escáner, sube el brillo de la pantalla al máximo.</p>
+    <div class="sheet-actions"><button class="btn" data-action="doc-del">Borrar este documento</button></div>
   </div>
 </dialog>
 
@@ -1150,7 +1183,7 @@ const POIS = [
 /* =====================================================================
    APP · a partir de aquí no hace falta tocar nada
    ===================================================================== */
-const COLLECTIONS = ["expenses", "notes", "checks", "tasks", "ideas"];
+const COLLECTIONS = ["expenses", "notes", "checks", "tasks", "ideas", "docs"];
 const CATEGORIES = [
   ["comida", "🍜", "Comida"], ["transporte", "🚆", "Transporte"], ["alojamiento", "🏨", "Alojamiento"],
   ["entradas", "🎟", "Entradas y tours"], ["compras", "🛍", "Compras"], ["otros", "📦", "Otros"]
@@ -1816,6 +1849,62 @@ function buyCard() {
   </section>`;
 }
 
+/* =====================================================================
+   DOCUMENTOS · fotos y QR guardados en el archivo privado
+   ===================================================================== */
+const MAX_DOC_PX = 1100;
+const docsArr = () => Object.entries(S.cols.docs || {})
+  .map(([id, d]) => ({ id, ...d }))
+  .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+function shrinkImage(file) {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onerror = () => reject(new Error("No se pudo leer el archivo"));
+    fr.onload = () => {
+      const im = new Image();
+      im.onerror = () => reject(new Error("Ese archivo no es una imagen"));
+      im.onload = () => {
+        const k = Math.min(1, MAX_DOC_PX / Math.max(im.width, im.height));
+        const w = Math.max(1, Math.round(im.width * k)), h = Math.max(1, Math.round(im.height * k));
+        const c = document.createElement("canvas"); c.width = w; c.height = h;
+        const x = c.getContext("2d");
+        x.fillStyle = "#fff"; x.fillRect(0, 0, w, h);
+        x.drawImage(im, 0, 0, w, h);
+        let out = c.toDataURL("image/png");
+        if (out.length > 420000) out = c.toDataURL("image/jpeg", 0.85);
+        resolve(out);
+      };
+      im.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+
+function docsCard() {
+  const docs = docsArr();
+  const list = docs.map(d => `<button class="docrow" data-action="doc-view" data-id="${d.id}">
+      <img src="${d.img}" alt="" loading="lazy">
+      <span><b>${esc(d.title)}</b>${d.who ? `<small>${esc(d.who)}</small>` : ""}</span>
+      <span class="docgo">Ver</span>
+    </button>`).join("");
+  return `<section class="card">
+    <h3>📄 Documentos</h3>
+    <p class="section-note">Los QR y papeles que hay que enseñar, en los dos móviles y <b>sin necesidad de cobertura</b> una vez abierta la web.</p>
+    ${list || `<div class="empty">Todavía no hay ninguno.</div>`}
+    <div class="actions" style="margin-top:12px"><button class="btn red" data-action="doc-add">＋ Añadir documento</button></div>
+  </section>`;
+}
+
+function openDocView(id) {
+  const d = (S.cols.docs || {})[id]; if (!d) return;
+  docViewing = id;
+  $("#docViewTitle").textContent = d.title + (d.who ? ` · ${d.who}` : "");
+  $("#docViewBody").innerHTML = `<div class="docbig"><img src="${d.img}" alt="${esc(d.title)}"></div>`;
+  $("#docViewDialog").showModal();
+}
+let docViewing = null;
+
 function renderTodo() {
   const auto = autoPending(), custom = tasksArr();
   const total = auto.length + custom.length;
@@ -1839,6 +1928,7 @@ function renderTodo() {
             <button class="btn red">Añadir</button>
           </form>
         </section>
+        ${docsCard()}
         ${buyCard()}
         <section class="card"><h3>📝 Nuestras tareas</h3>${customHtml || `<div class="empty">Añadid arriba lo que se os ocurra: comprar, reservar, llevar…</div>`}</section>
       </div>
@@ -2086,6 +2176,14 @@ document.addEventListener("click", ev => {
     case "delete-idea": if (confirm("¿Quitar este elemento?")) store.del("ideas", id); break;
     case "delete-doc": deleteDoc(id); break;
     case "open-settings": openSettings(); break;
+    case "doc-add": $("#docForm").reset(); $("#docDialog").showModal(); break;
+    case "doc-view": openDocView(el.dataset.id); break;
+    case "doc-del": {
+      if (docViewing && confirm("¿Borrar este documento de los dos móviles?")) {
+        store.del("docs", docViewing); docViewing = null; $("#docViewDialog").close(); toast("Documento borrado");
+      }
+      break;
+    }
     case "open-fx": if (el.closest("dialog")) el.closest("dialog").close(); openFx(); break;
     case "open-translate": case "open-lens": case "open-google": openGoogle(); break;
     case "locate": locate(); break;
@@ -2109,6 +2207,27 @@ document.addEventListener("click", ev => {
     case "clear-filters": dayFilter = "all"; catFilter = "all"; renderExpensesView(); break;
   }
 });
+$("#docForm").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const f = ev.target;
+  const title = f.elements.dtitle.value.trim();
+  const who = f.elements.dwho.value.trim();
+  const file = f.elements.dfile.files[0];
+  if (!title || !file) return;
+  const btn = f.querySelector('button[type="submit"]');
+  btn.disabled = true; btn.textContent = "Guardando…";
+  try {
+    const img = await shrinkImage(file);
+    store.put("docs", uid(), { title, who, img, createdAt: Date.now() });
+    $("#docDialog").close();
+    toast("Documento guardado");
+  } catch (e) {
+    toast(e.message || "No se pudo guardar");
+  } finally {
+    btn.disabled = false; btn.textContent = "Guardar";
+  }
+});
+
 document.addEventListener("submit", ev => {
   const f = ev.target;
   if (f.id === "ideaForm") {
